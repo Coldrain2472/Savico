@@ -3,11 +3,12 @@
     using Microsoft.EntityFrameworkCore;
     using Savico.Core.Models;
     using Savico.Infrastructure.Data.Constants;
+    using Savico.Infrastructure.Data.Contracts;
 
     public class SavicoDbContext : DbContext
     {
-        public SavicoDbContext(DbContextOptions<SavicoDbContext> options) : base(options) 
-        { 
+        public SavicoDbContext(DbContextOptions<SavicoDbContext> options) : base(options)
+        {
 
         }
 
@@ -58,3 +59,4 @@
             }
         }
     }
+}
