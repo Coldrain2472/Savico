@@ -1,11 +1,12 @@
 ﻿namespace Savico.Core.Models
 {
     using Microsoft.EntityFrameworkCore;
+    using Savico.Infrastructure.Data.Contracts;
     using System.ComponentModel.DataAnnotations;
     using System.Threading.Tasks.Dataflow;
     using static Savico.Infrastructure.Data.Constants.DataConstants.UserConstants;
 
-    public class User
+    public class User : IsSoftDeletable
     {
         public User()
         {
@@ -49,6 +50,9 @@
 
         [Comment("User's profile picture")]
         public string? ProfilePicture { get; set; }
+
+        [Comment("Indicates if the user is soft-deleted")]
+        public bool IsDeleted { get; set; } = false;
 
         public ICollection<Goal> Goals { get; set; } = new HashSet<Goal>();
 

@@ -30,6 +30,9 @@
         [Comment("Budget's total amount")]
         public decimal TotalAmount { get; set; }
 
+        [Comment("Indicates if the budget is soft-deleted")]
+        public bool IsDeleted { get; set; } = false;
+
         public ICollection<Expense> Expenses { get; set; } = new HashSet<Expense>();
     }
 }

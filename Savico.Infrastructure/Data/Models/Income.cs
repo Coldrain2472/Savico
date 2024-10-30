@@ -1,12 +1,13 @@
 ﻿namespace Savico.Core.Models
 {
     using Microsoft.EntityFrameworkCore;
+    using Savico.Infrastructure.Data.Contracts;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using static Savico.Infrastructure.Data.Constants.DataConstants;
     using static Savico.Infrastructure.Data.Constants.DataConstants.IncomeConstants;
 
-    public class Income
+    public class Income : IsSoftDeletable
     {
         [Key]
         [Comment("Income identifier")]
@@ -32,5 +33,8 @@
         [Required]
         [Comment("Date of receiving the income")]
         public DateTime Date { get; set; }
+
+        [Comment("Indicates if the income is soft-deleted")]
+        public bool IsDeleted { get; set; } = false;
     }
 }

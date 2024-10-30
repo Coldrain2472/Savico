@@ -1,11 +1,12 @@
 ﻿namespace Savico.Core.Models
 {
     using Microsoft.EntityFrameworkCore;
+    using Savico.Infrastructure.Data.Contracts;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using static Savico.Infrastructure.Data.Constants.DataConstants;
 
-    public class Goal
+    public class Goal : IsSoftDeletable
     {
         [Key]
         [Comment("Goal identifier")]
@@ -31,5 +32,8 @@
         [Required]
         [Comment("Target date for reaching the goal")]
         public DateTime TargetDate { get; set; }
+
+        [Comment("Indicates if the goal is soft-deleted")]
+        public bool IsDeleted { get; set; } = false;
     }
 }

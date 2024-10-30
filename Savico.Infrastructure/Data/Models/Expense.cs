@@ -1,12 +1,13 @@
 ﻿namespace Savico.Core.Models
 {
     using Microsoft.EntityFrameworkCore;
+    using Savico.Infrastructure.Data.Contracts;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using static Savico.Infrastructure.Data.Constants.DataConstants;
     using static Savico.Infrastructure.Data.Constants.DataConstants.ExpenseConstants;
 
-    public class Expense
+    public class Expense : IsSoftDeletable
     {
         [Key]
         [Comment("Expense identifier")]
@@ -42,6 +43,9 @@
         [MaxLength(DescriptionMaxLength)]
         [Comment("Expense's description")]
         // Providing more details;  "Dinner at Italian Restaurant", "Monthly Netflix Subscription" etc..
-        public string? Description { get; set; } 
+        public string? Description { get; set; }
+
+        [Comment("Indicates if the expense is soft-deleted")]
+        public bool IsDeleted { get; set; } = false;
     }
 }
