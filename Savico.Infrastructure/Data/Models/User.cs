@@ -1,29 +1,45 @@
 ﻿namespace Savico.Core.Models
 {
+    using Microsoft.EntityFrameworkCore;
     using System.ComponentModel.DataAnnotations;
+    using static Savico.Infrastructure.Data.Constants.DataConstants.UserConstants;
 
     public class User
     {
         [Key]
+        [Comment("User identifier")]
         public Guid Id { get; set; }
 
         [Required]
-        [StringLength(100)]
-        public string Username { get; set; }
+        [MaxLength(UsernameMaxLength)]
+        [Comment("User's username")]
+        public string Username { get; set; } = null!;
 
         [Required]
-        public string FirstName { get; set; }
+        [MaxLength(FirstNameMaxLength)]
+        [Comment("User's first name")]
+        public string FirstName { get; set; } = null!;
 
         [Required]
-        public string LastName { get; set; }
+        [MaxLength(LastNameMaxLength)]
+        [Comment("User's last name")]
+        public string LastName { get; set; } = null!;
 
         [Required]
         [EmailAddress]
-        public string Email { get; set; }
+        [MaxLength(EmailMaxLength)]
+        [Comment("User's email address")]
+        public string Email { get; set; } = null!;
 
         [Required]
-        [StringLength(3)] // Example: "USD", "EUR", etc.
-        public string Currency { get; set; }
+        [MaxLength(PasswordMaxLength)]
+        [Comment("User's password")]
+        public string Password { get; set; } = null!;
+
+        [Required]
+        [StringLength(CurrencyMaxLength)] // Example: "USD", "EUR", etc.
+        [Comment("User's currency")]
+        public string Currency { get; set; } = null!;
 
         public ICollection<Goal> FinancialGoals { get; set; } = new List<Goal>();
     }
