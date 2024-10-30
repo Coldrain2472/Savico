@@ -1,7 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Savico.Core.Models
+﻿namespace Savico.Core.Models
 {
+    using System.ComponentModel.DataAnnotations;
+
     public class Budget
     {
         [Key]

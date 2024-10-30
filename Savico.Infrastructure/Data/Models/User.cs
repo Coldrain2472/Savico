@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Savico.Core.Models
+﻿namespace Savico.Core.Models
 {
+    using System.ComponentModel.DataAnnotations;
+
     public class User
     {
         [Key]
@@ -15,6 +10,12 @@ namespace Savico.Core.Models
         [Required]
         [StringLength(100)]
         public string Username { get; set; }
+
+        [Required]
+        public string FirstName { get; set; }
+
+        [Required]
+        public string LastName { get; set; }
 
         [Required]
         [EmailAddress]
