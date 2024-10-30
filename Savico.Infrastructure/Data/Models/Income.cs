@@ -5,10 +5,10 @@
     public class Income
     {
         [Key]
-        public Guid Id { get; set; }
+        public int Id { get; set; }
 
         [Required]
-        public Guid UserId { get; set; }
+        public string UserId { get; set; } = null!;
 
         [Required]
         [StringLength(100)]

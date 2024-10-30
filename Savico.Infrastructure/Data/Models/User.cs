@@ -6,6 +6,11 @@
 
     public class User
     {
+        public User()
+        {
+            this.Id = Guid.NewGuid();
+        }
+
         [Key]
         [Comment("User identifier")]
         public Guid Id { get; set; }
@@ -41,6 +46,9 @@
         [Comment("User's currency")]
         public string Currency { get; set; } = null!;
 
-        public ICollection<Goal> FinancialGoals { get; set; } = new List<Goal>();
+        [Comment("User's profile picture")]
+        public string? ProfilePicture { get; set; }
+
+        public ICollection<Goal> FinancialGoals { get; set; } = new HashSet<Goal>();
     }
 }

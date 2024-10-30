@@ -5,10 +5,10 @@
     public class Goal
     {
         [Key]
-        public Guid Id { get; set; }
+        public int Id { get; set; }
 
         [Required]
-        public Guid UserId { get; set; }
+        public string UserId { get; set; }
 
         [Required]
         [Range(0.01, double.MaxValue, ErrorMessage = "Target amount must be greater than zero.")]
