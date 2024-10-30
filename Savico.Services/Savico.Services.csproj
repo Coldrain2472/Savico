@@ -6,4 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Savico.Core\Savico.Core.csproj" />
+    <ProjectReference Include="..\Savico.Infrastructure\Savico.Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>
