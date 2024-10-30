@@ -7,7 +7,7 @@
     using static Savico.Infrastructure.Data.Constants.DataConstants;
     using static Savico.Infrastructure.Data.Constants.DataConstants.ExpenseConstants;
 
-    public class Expense : IsSoftDeletable
+    public class Expense : ISoftDeletable
     {
         [Key]
         [Comment("Expense identifier")]

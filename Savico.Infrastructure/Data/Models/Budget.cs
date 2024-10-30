@@ -1,11 +1,12 @@
 ﻿namespace Savico.Core.Models
 {
     using Microsoft.EntityFrameworkCore;
+    using Savico.Infrastructure.Data.Contracts;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using static Savico.Infrastructure.Data.Constants.DataConstants;
 
-    public class Budget
+    public class Budget : ISoftDeletable
     {
         [Key]
         [Comment("Budget identifier")]

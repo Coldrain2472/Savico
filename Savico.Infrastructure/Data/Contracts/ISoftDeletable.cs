@@ -1,6 +1,6 @@
 ﻿namespace Savico.Infrastructure.Data.Contracts
 {
-    public interface IsSoftDeletable
+    public interface ISoftDeletable
     {
         bool IsDeleted { get; set; }
     }

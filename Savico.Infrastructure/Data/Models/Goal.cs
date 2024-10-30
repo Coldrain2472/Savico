@@ -6,7 +6,7 @@
     using System.ComponentModel.DataAnnotations.Schema;
     using static Savico.Infrastructure.Data.Constants.DataConstants;
 
-    public class Goal : IsSoftDeletable
+    public class Goal : ISoftDeletable
     {
         [Key]
         [Comment("Goal identifier")]

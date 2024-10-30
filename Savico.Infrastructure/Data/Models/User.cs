@@ -6,7 +6,7 @@
     using System.Threading.Tasks.Dataflow;
     using static Savico.Infrastructure.Data.Constants.DataConstants.UserConstants;
 
-    public class User : IsSoftDeletable
+    public class User : ISoftDeletable
     {
         public User()
         {

@@ -7,7 +7,7 @@
     using static Savico.Infrastructure.Data.Constants.DataConstants;
     using static Savico.Infrastructure.Data.Constants.DataConstants.IncomeConstants;
 
-    public class Income : IsSoftDeletable
+    public class Income : ISoftDeletable
     {
         [Key]
         [Comment("Income identifier")]
