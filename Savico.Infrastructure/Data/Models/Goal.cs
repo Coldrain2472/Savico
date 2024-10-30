@@ -1,24 +1,35 @@
 ﻿namespace Savico.Core.Models
 {
+    using Microsoft.EntityFrameworkCore;
     using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using static Savico.Infrastructure.Data.Constants.DataConstants;
 
     public class Goal
     {
         [Key]
+        [Comment("Goal identifier")]
         public int Id { get; set; }
 
         [Required]
-        public string UserId { get; set; }
+        public string UserId { get; set; } = null!;
+
+        [ForeignKey(nameof(UserId))]
+        public User User { get; set; } = null!;
 
         [Required]
-        [Range(0.01, double.MaxValue, ErrorMessage = "Target amount must be greater than zero.")]
+        [Range(0.01, double.MaxValue, ErrorMessage = RangeErrorMessage)]
+        [Comment("Goal's target amount")]
         public decimal TargetAmount { get; set; }
 
         [Required]
-        [Range(0, double.MaxValue, ErrorMessage = "Current amount must be greater than or equal to zero.")]
+        [Range(0, double.MaxValue, ErrorMessage = RangeErrorMessage)]
+        // "Current amount must be greater than or equal to zero."
+        [Comment("User's current amount towards goal")]
         public decimal CurrentAmount { get; set; }
 
         [Required]
+        [Comment("Target date for reaching the goal")]
         public DateTime TargetDate { get; set; }
     }
 }

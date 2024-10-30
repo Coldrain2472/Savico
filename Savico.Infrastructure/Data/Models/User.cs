@@ -2,6 +2,7 @@
 {
     using Microsoft.EntityFrameworkCore;
     using System.ComponentModel.DataAnnotations;
+    using System.Threading.Tasks.Dataflow;
     using static Savico.Infrastructure.Data.Constants.DataConstants.UserConstants;
 
     public class User
@@ -42,13 +43,19 @@
         public string Password { get; set; } = null!;
 
         [Required]
-        [StringLength(CurrencyMaxLength)] // Example: "USD", "EUR", etc.
+        [MaxLength(CurrencyMaxLength)] // Example: "USD", "EUR", etc.
         [Comment("User's currency")]
         public string Currency { get; set; } = null!;
 
         [Comment("User's profile picture")]
         public string? ProfilePicture { get; set; }
 
-        public ICollection<Goal> FinancialGoals { get; set; } = new HashSet<Goal>();
+        public ICollection<Goal> Goals { get; set; } = new HashSet<Goal>();
+
+        public ICollection<Income> Incomes { get; set; } = new HashSet<Income>();
+
+        public ICollection<Expense> Expenses { get; set; } = new HashSet<Expense>();
+
+        public ICollection<Budget> Budgets { get; set; } = new HashSet<Budget>();
     }
 }

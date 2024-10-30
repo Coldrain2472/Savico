@@ -10,7 +10,6 @@
 
         public static class UserConstants
         {
-            // User constants
             public const int UsernameMinLength = 3;
             public const int UsernameMaxLength = 30;
 
@@ -30,24 +29,19 @@
             public const int CurrencyMaxLength = 5;
         }
 
-        public static class BudgetConstants
-        {
-            // Budget constants
-        }
-
         public static class ExpenseConstants
         {
-            // Expense constants
-        }
+            public const int CategoryMinLength = 2;
+            public const int CategoryMaxLength = 30;
 
-        public static class GoalConstants
-        {
-            // Goal constants
+            public const int DescriptionMinLength = 5;
+            public const int DescriptionMaxLength = 300;
         }
 
         public static class IncomeConstants
         {
-            // Income constants
+            public const int SourceMinLength = 5;
+            public const int SourceMaxLength = 100;
         }
     }
 }
