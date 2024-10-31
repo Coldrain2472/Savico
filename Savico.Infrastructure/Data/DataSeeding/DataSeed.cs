@@ -1,6 +1,7 @@
 ﻿namespace Savico.Infrastructure.Data.DataSeeding
 {
     using Savico.Core.Models;
+    using Savico.Infrastructure.Data.Models;
 
     public class DataSeed
     {
@@ -43,6 +44,20 @@
 
         public Goal GoalThree {  get; set; } = null!;
 
+        // Reports
+
+        public Report ReportOne {  get; set; } = null!;
+
+        public Report ReportTwo { get; set; } = null!;
+
+        // BudgetCategory
+
+        public BudgetCategory BudgetCategoryOne { get; set; } = null!;
+
+        public BudgetCategory BudgetCategoryTwo { get; set; } = null!;
+
+        public BudgetCategory BudgetCategoryThree { get; set; } = null!;
+
         private void SeedUsers()
         {
 
@@ -52,13 +67,7 @@
         {
             //BudgetOne = new Budget()
             //{
-            //    Id = 1,
-            //    UserId = "",
-            //    User = ,
-            //    StartDate = ,
-            //    EndDate = ,
-            //    TotalAmount = ,
-            //    Expenses = 
+             
             //}
         }
 
@@ -73,6 +82,16 @@
         }
 
         private void SeedGoals()
+        {
+
+        }
+
+        private void SeedReports()
+        {
+
+        }
+
+        private void SeedBudgetCategories()
         {
 
         }

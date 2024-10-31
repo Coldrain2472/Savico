@@ -1,6 +1,5 @@
 ﻿namespace Savico.Core.Models
 {
-    using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using Savico.Infrastructure.Data.Contracts;
     using System.ComponentModel.DataAnnotations;
@@ -15,10 +14,10 @@
         public int Id { get; set; }
 
         [Required]
-        public string UserId { get; set; } = null!;
+        public Guid UserId { get; set; }
 
         [ForeignKey(nameof(UserId))]
-        public IdentityUser User { get; set; } = null!;
+        public User User { get; set; } = null!;
 
         [Required]
         [MaxLength(SourceMaxLength)]

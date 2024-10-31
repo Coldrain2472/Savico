@@ -1,15 +1,16 @@
 ﻿namespace Savico.Core.Models
 {
+    using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using Savico.Infrastructure.Data.Contracts;
     using System.ComponentModel.DataAnnotations;
     using static Savico.Infrastructure.Data.Constants.DataConstants.UserConstants;
 
-    public class User : ISoftDeletable
+    public class User : IdentityUser<Guid>, ISoftDeletable
     {
-        [Key]
-        [Comment("User identifier")]
-        public Guid Id { get; set; } = Guid.NewGuid();
+        //[Key]
+        //[Comment("User identifier")]
+        //public Guid Id { get; set; } = Guid.NewGuid();
 
         [Required]
         [MaxLength(UsernameMaxLength)]
@@ -26,11 +27,11 @@
         [Comment("User's last name")]
         public string LastName { get; set; } = null!;
 
-        [Required]
-        [EmailAddress]
-        [MaxLength(EmailMaxLength)]
-        [Comment("User's email address")]
-        public string Email { get; set; } = null!;
+        //[Required]
+        //[EmailAddress]
+        //[MaxLength(EmailMaxLength)]
+        //[Comment("User's email address")]
+        //public string Email { get; set; } = null!;
 
         [Required]
         [MaxLength(PasswordMaxLength)]

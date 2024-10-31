@@ -2,13 +2,13 @@
 {
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Metadata.Builders;
-    using Savico.Core.Models;
+    using Savico.Infrastructure.Data.Models;
 
-    public class GoalConfiguration : IEntityTypeConfiguration<Goal>
+    public class ReportConfiguration : IEntityTypeConfiguration<Report>
     {
-        public void Configure(EntityTypeBuilder<Goal> builder)
+        public void Configure(EntityTypeBuilder<Report> builder)
         {
-
+            
         }
     }
 }

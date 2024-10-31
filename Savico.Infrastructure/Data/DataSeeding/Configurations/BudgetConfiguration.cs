@@ -8,8 +8,7 @@
     {
         public void Configure(EntityTypeBuilder<Budget> builder)
         {
-            builder.Property(p => p.TotalAmount)
-                .HasPrecision(18, 2);
+
         }
     }
 }

@@ -43,5 +43,11 @@
             public const int SourceMinLength = 5;
             public const int SourceMaxLength = 100;
         }
+
+        public static class BudgetCategoryConstants
+        {
+            public const int CategoryNameMinLength = 2;
+            public const int CategoryNameMaxLength = 30;
+        }
     }
 }

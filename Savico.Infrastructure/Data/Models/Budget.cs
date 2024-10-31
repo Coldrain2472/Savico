@@ -1,8 +1,8 @@
 ﻿namespace Savico.Core.Models
 {
-    using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using Savico.Infrastructure.Data.Contracts;
+    using Savico.Infrastructure.Data.Models;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using static Savico.Infrastructure.Data.Constants.DataConstants;
@@ -14,10 +14,10 @@
         public int Id { get; set; }
 
         [Required]
-        public string UserId { get; set; } = null!;
+        public Guid UserId { get; set; }
 
         [ForeignKey(nameof(UserId))]
-        public IdentityUser User { get; set; } = null!;
+        public User User { get; set; } = null!;
 
         [Required]
         [Comment("Budget's start date")]
@@ -31,6 +31,12 @@
         [Range(0.01, double.MaxValue, ErrorMessage = RangeErrorMessage)]
         [Comment("Budget's total amount")]
         public decimal TotalAmount { get; set; }
+
+        [Required]
+        public int CategoryId { get; set; }
+
+        [ForeignKey(nameof(CategoryId))]
+        public BudgetCategory Category { get; set; } = null!;
 
         [Comment("Indicates if the budget is soft-deleted")]
         public bool IsDeleted { get; set; } = false;
