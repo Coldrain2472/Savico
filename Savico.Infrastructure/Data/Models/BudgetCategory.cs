@@ -2,13 +2,11 @@
 {
     using Microsoft.EntityFrameworkCore;
     using Savico.Core.Models;
-    using Savico.Infrastructure.Data.Contracts;
     using System.ComponentModel.DataAnnotations;
     using static Savico.Infrastructure.Data.Constants.DataConstants.BudgetCategoryConstants;
 
-    public class BudgetCategory : ISoftDeletable
+    public class BudgetCategory
     {
-        [Key]
         [Comment("Budget category identifier")]
         public int Id { get; set; }
 

@@ -3,21 +3,18 @@
     using Microsoft.EntityFrameworkCore;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.ComponentModel.DataAnnotations;
-    using Savico.Infrastructure.Data.Contracts;
     using Savico.Core.Models;
 
-    public class Report : ISoftDeletable
+    public class Report
     {
-        [Key]
         [Comment("Report identifier")]
         public int Id { get; set; }
 
         [Required]
         [Comment("User who created the report")]
-        public Guid UserId { get; set; }
+        public string? UserId { get; set; }
 
-        [ForeignKey(nameof(UserId))]
-        public User User { get; set; } = null!;
+        public User? User { get; set; }
 
         [Required]
         [Comment("Start date of the report period")]

@@ -1,29 +1,25 @@
 ﻿namespace Savico.Core.Models
 {
     using Microsoft.EntityFrameworkCore;
-    using Savico.Infrastructure.Data.Contracts;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using static Savico.Infrastructure.Data.Constants.DataConstants;
     using static Savico.Infrastructure.Data.Constants.DataConstants.ExpenseConstants;
 
-    public class Expense : ISoftDeletable
+    public class Expense
     {
-        [Key]
         [Comment("Expense identifier")]
         public int Id { get; set; }
 
         [Required]
-        public Guid UserId { get; set; }
+        public string? UserId { get; set; }
 
-        [ForeignKey(nameof(UserId))]
-        public User User { get; set; } = null!;
+        public User? User { get; set; }
 
         [Required]
         public int BudgetId { get; set; }
 
-        [ForeignKey(nameof(BudgetId))]
-        public Budget Budget { get; set; } = null!;
+        public Budget? Budget { get; set; }
 
         [Required]
         [Range(0.01, double.MaxValue, ErrorMessage = RangeErrorMessage)]
@@ -34,7 +30,7 @@
         [MaxLength(CategoryMaxLength)]
         [Comment("Expense's cactegory")]
         // "Food", "Transport", "Entertainment", "Utilities"
-        public string Category { get; set; } = null!;
+        public string? Category { get; set; }
 
         [Required]
         [Comment("Date of expense")]

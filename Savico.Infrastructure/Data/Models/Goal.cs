@@ -1,22 +1,19 @@
 ﻿namespace Savico.Core.Models
 {
     using Microsoft.EntityFrameworkCore;
-    using Savico.Infrastructure.Data.Contracts;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using static Savico.Infrastructure.Data.Constants.DataConstants;
 
-    public class Goal : ISoftDeletable
+    public class Goal
     {
-        [Key]
         [Comment("Goal identifier")]
         public int Id { get; set; }
 
         [Required]
-        public Guid UserId { get; set; }
+        public string? UserId { get; set; } 
 
-        [ForeignKey(nameof(UserId))]
-        public User User { get; set; } = null!;
+        public User? User { get; set; }
 
         [Required]
         [Range(0.01, double.MaxValue, ErrorMessage = RangeErrorMessage)]

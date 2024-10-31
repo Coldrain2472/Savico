@@ -2,46 +2,41 @@
 {
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
-    using Savico.Infrastructure.Data.Contracts;
+    using Savico.Infrastructure.Data.Models;
     using System.ComponentModel.DataAnnotations;
     using static Savico.Infrastructure.Data.Constants.DataConstants.UserConstants;
 
-    public class User : IdentityUser<Guid>, ISoftDeletable
+    public class User : IdentityUser
     {
-        //[Key]
-        //[Comment("User identifier")]
-        //public Guid Id { get; set; } = Guid.NewGuid();
+        public User()
+        {
+            this.Id = Guid.NewGuid().ToString();
+        }
 
         [Required]
         [MaxLength(UsernameMaxLength)]
         [Comment("User's username")]
-        public string Username { get; set; } = null!;
+        public string? Username { get; set; }
 
         [Required]
         [MaxLength(FirstNameMaxLength)]
         [Comment("User's first name")]
-        public string FirstName { get; set; } = null!;
+        public string? FirstName { get; set; }
 
         [Required]
         [MaxLength(LastNameMaxLength)]
         [Comment("User's last name")]
-        public string LastName { get; set; } = null!;
-
-        //[Required]
-        //[EmailAddress]
-        //[MaxLength(EmailMaxLength)]
-        //[Comment("User's email address")]
-        //public string Email { get; set; } = null!;
+        public string? LastName { get; set; }
 
         [Required]
         [MaxLength(PasswordMaxLength)]
         [Comment("User's password")]
-        public string Password { get; set; } = null!;
+        public string? Password { get; set; } 
 
         [Required]
         [MaxLength(CurrencyMaxLength)] // Example: "USD", "EUR", etc.
         [Comment("User's currency")]
-        public string Currency { get; set; } = null!;
+        public string? Currency { get; set; }
 
         [Comment("User's profile picture")]
         public string? ProfilePicture { get; set; }
@@ -56,5 +51,7 @@
         public ICollection<Expense> Expenses { get; set; } = new HashSet<Expense>();
 
         public ICollection<Budget> Budgets { get; set; } = new HashSet<Budget>();
+
+        public ICollection<Report> Reports { get; set; } = new HashSet<Report>();
     }
 }

@@ -3,10 +3,9 @@
     using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
     using Savico.Core.Models;
-    using Savico.Infrastructure.Data.Contracts;
     using Savico.Infrastructure.Data.Models;
 
-    public class SavicoDbContext : IdentityDbContext
+    public class SavicoDbContext : IdentityDbContext<User>
     {
         public SavicoDbContext(DbContextOptions<SavicoDbContext> options) : base(options)
         {
@@ -65,7 +64,7 @@
 
             modelBuilder.Entity<Income>()
                 .HasOne(i => i.User)
-                .WithMany() // assuming a user can have multiple incomes
+                .WithMany(i=>i.Incomes) // a user can have multiple incomes
                 .HasForeignKey(i => i.UserId)
                 .OnDelete(DeleteBehavior.NoAction);
 
@@ -74,7 +73,7 @@
 
             modelBuilder.Entity<Expense>()
                 .HasOne(e => e.User)
-                .WithMany() // a user can have multiple expenses
+                .WithMany(u=>u.Expenses) // a user can have multiple expenses
                 .HasForeignKey(e => e.UserId)
                 .OnDelete(DeleteBehavior.NoAction);
 
@@ -89,7 +88,7 @@
 
             modelBuilder.Entity<Goal>()
                 .HasOne(g => g.User)
-                .WithMany() // a user can have multiple goals
+                .WithMany(g=>g.Goals) // a user can have multiple goals
                 .HasForeignKey(g => g.UserId)
                 .OnDelete(DeleteBehavior.NoAction);
 
@@ -98,7 +97,7 @@
 
             modelBuilder.Entity<Budget>()
                 .HasOne(b => b.User)
-                .WithMany() // a user can have multiple budgets
+                .WithMany(b=>b.Budgets) // a user can have multiple budgets
                 .HasForeignKey(b => b.UserId)
                 .OnDelete(DeleteBehavior.NoAction);
 
@@ -107,7 +106,7 @@
 
             modelBuilder.Entity<BudgetCategory>()
                 .HasMany(b => b.Budgets)
-                .WithOne()
+                .WithOne(b=>b.Category)
                 .HasForeignKey(b => b.Id)
                 .OnDelete(DeleteBehavior.NoAction);
 
@@ -116,7 +115,7 @@
 
             modelBuilder.Entity<Report>()
                 .HasOne(r => r.User)
-                .WithMany() // a user can create multiple reports
+                .WithMany(r=>r.Reports) // a user can create multiple reports
                 .HasForeignKey(r => r.UserId)
                 .OnDelete(DeleteBehavior.NoAction);
 
@@ -134,31 +133,6 @@
             modelBuilder.Entity<Budget>().HasQueryFilter(b => !b.IsDeleted);
             modelBuilder.Entity<BudgetCategory>().HasQueryFilter(bc => !bc.IsDeleted);
             modelBuilder.Entity<Report>().HasQueryFilter(r => !r.IsDeleted);
-        }
-
-        public override int SaveChanges()
-        {
-            HandleSoftDelete();
-            return base.SaveChanges();
-        }
-
-        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
-        {
-            HandleSoftDelete();
-            return base.SaveChangesAsync(cancellationToken);
-        }
-
-        private void HandleSoftDelete()
-        {
-            foreach (var entry in ChangeTracker.Entries())
-            {
-                if (entry.State == EntityState.Deleted && entry.Entity is ISoftDeletable deletableEntity)
-                {
-                    // mark as soft-deleted instead of actually removing
-                    entry.State = EntityState.Modified;
-                    deletableEntity.IsDeleted = true;
-                }
-            }
         }
     }
 }
