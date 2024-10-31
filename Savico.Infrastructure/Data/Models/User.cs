@@ -1,21 +1,16 @@
 ﻿namespace Savico.Core.Models
 {
+    using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using Savico.Infrastructure.Data.Contracts;
     using System.ComponentModel.DataAnnotations;
-    using System.Threading.Tasks.Dataflow;
     using static Savico.Infrastructure.Data.Constants.DataConstants.UserConstants;
 
     public class User : ISoftDeletable
     {
-        public User()
-        {
-            this.Id = Guid.NewGuid();
-        }
-
         [Key]
         [Comment("User identifier")]
-        public Guid Id { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
 
         [Required]
         [MaxLength(UsernameMaxLength)]

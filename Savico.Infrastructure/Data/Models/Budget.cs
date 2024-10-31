@@ -1,5 +1,6 @@
 ﻿namespace Savico.Core.Models
 {
+    using Microsoft.AspNet.Identity.EntityFramework;
     using Microsoft.EntityFrameworkCore;
     using Savico.Infrastructure.Data.Contracts;
     using System.ComponentModel.DataAnnotations;
@@ -16,7 +17,7 @@
         public string UserId { get; set; } = null!;
 
         [ForeignKey(nameof(UserId))]
-        public User User { get; set; } = null!;
+        public IdentityUser User { get; set; } = null!;
 
         [Required]
         [Comment("Budget's start date")]
