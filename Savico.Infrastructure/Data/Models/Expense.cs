@@ -1,6 +1,6 @@
 ﻿namespace Savico.Core.Models
 {
-    using Microsoft.AspNet.Identity.EntityFramework;
+    using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using Savico.Infrastructure.Data.Contracts;
     using System.ComponentModel.DataAnnotations;

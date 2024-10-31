@@ -1,12 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Savico.Infrastructure.Data.DataSeeding.Configurations
+﻿namespace Savico.Infrastructure.Data.DataSeeding.Configurations
 {
-    internal class GoalConfiguration
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.EntityFrameworkCore.Metadata.Builders;
+    using Savico.Core.Models;
+
+    public class GoalConfiguration : IEntityTypeConfiguration<Goal>
     {
+        public void Configure(EntityTypeBuilder<Goal> builder)
+        {
+            builder.Property(p => p.CurrentAmount)
+                .HasPrecision(18, 2);
+
+            builder.Property(p=>p.TargetAmount)
+                .HasPrecision(18, 2);
+        }
     }
 }
