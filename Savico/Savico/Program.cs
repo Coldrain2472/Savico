@@ -28,7 +28,6 @@ namespace Savico
                 options.Lockout.MaxFailedAccessAttempts = 5;
                 options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
             })
-                 // .AddRoles<IdentityRole<Guid>>()
                    .AddEntityFrameworkStores<SavicoDbContext>();
             builder.Services.AddControllersWithViews();
 
