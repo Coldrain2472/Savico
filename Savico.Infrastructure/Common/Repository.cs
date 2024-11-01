@@ -57,5 +57,38 @@
                 entry.State = EntityState.Detached;
             }
         }
+
+        public async Task<PagedResult<T>> GetPagedAsync<T>(
+            int pageNumber,
+            int pageSize,
+            Func<IQueryable<T>, IQueryable<T>>? includes = null,
+            Func<IQueryable<T>, IQueryable<T>>? filter = null) where T : class
+        {
+            var query = DbSet<T>().AsQueryable();
+
+            if (filter != null)
+            {
+                query = filter(query);
+            }
+
+            if (includes != null)
+            {
+                query = includes(query);
+            }
+
+            var totalCount = await query.CountAsync();
+
+            var items = await query
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return new PagedResult<T>
+            {
+                Items = items,
+                TotalCount = totalCount
+            };
+        }
+
     }
 }
