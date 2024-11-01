@@ -383,12 +383,6 @@ namespace Savico.Data.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)")
-                        .HasComment("User's password");
-
                     b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
 

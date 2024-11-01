@@ -24,11 +24,6 @@
         public string? LastName { get; set; }
 
         [Required]
-        [MaxLength(PasswordMaxLength)]
-        [Comment("User's password")]
-        public string? Password { get; set; } 
-
-        [Required]
         [MaxLength(CurrencyMaxLength)] // Example: "USD", "EUR", etc.
         [Comment("User's currency")]
         public string? Currency { get; set; }

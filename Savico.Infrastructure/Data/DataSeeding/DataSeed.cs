@@ -61,21 +61,20 @@
 
         private void SeedUsers()
         {
-            var passwordHasher = new PasswordHasher<User>();
+        //    var passwordHasher = new PasswordHasher<User>();
 
-            var user = new User
-            {
-                Id = Guid.NewGuid().ToString(),
-                UserName = "testuser",
-                NormalizedUserName = "TESTUSER",
-                Email = "testuser@example.com",
-                NormalizedEmail = "TESTUSER@EXAMPLE.COM",
-                FirstName = "John",
-                LastName = "Doe",
-                Password = passwordHasher.HashPassword(null!, "YourPassword123!"),
-                Currency = "USD",
-                IsDeleted = false
-            };
+        //    var user = new User
+        //    {
+        //        Id = Guid.NewGuid().ToString(),
+        //        UserName = "testuser",
+        //        NormalizedUserName = "TESTUSER",
+        //        Email = "testuser@example.com",
+        //        NormalizedEmail = "TESTUSER@EXAMPLE.COM",
+        //        FirstName = "John",
+        //        LastName = "Doe",
+        //        Currency = "USD",
+        //        IsDeleted = false
+        //    };
         }
 
         private void SeedBudgets()
