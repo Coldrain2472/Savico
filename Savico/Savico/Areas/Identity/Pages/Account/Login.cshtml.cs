@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using Savico.Core.Models;
+using System.Security.Claims;
 
 namespace Savico.Areas.Identity.Pages.Account
 {
