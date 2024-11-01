@@ -1,5 +1,6 @@
 ﻿namespace Savico.Infrastructure.Data.DataSeeding
 {
+    using Microsoft.AspNetCore.Identity;
     using Savico.Core.Models;
     using Savico.Infrastructure.Data.Models;
 
@@ -60,7 +61,21 @@
 
         private void SeedUsers()
         {
+            var passwordHasher = new PasswordHasher<User>();
 
+            var user = new User
+            {
+                Id = Guid.NewGuid().ToString(),
+                UserName = "testuser",
+                NormalizedUserName = "TESTUSER",
+                Email = "testuser@example.com",
+                NormalizedEmail = "TESTUSER@EXAMPLE.COM",
+                FirstName = "John",
+                LastName = "Doe",
+                Password = passwordHasher.HashPassword(null!, "YourPassword123!"),
+                Currency = "USD",
+                IsDeleted = false
+            };
         }
 
         private void SeedBudgets()

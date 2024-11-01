@@ -13,11 +13,6 @@
             this.Id = Guid.NewGuid().ToString();
         }
 
-        //[Required]
-        //[MaxLength(UsernameMaxLength)]
-        //[Comment("User's username")]
-        //public string? Username { get; set; }
-
         [Required]
         [MaxLength(FirstNameMaxLength)]
         [Comment("User's first name")]
