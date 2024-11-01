@@ -10,5 +10,11 @@
         Task RemoveAsync<T>(T entity) where T : class;
         Task RemoveRangeAsync<T>(IEnumerable<T> entities) where T : class;
         void Detach<TEntity>(TEntity entity) where TEntity : class;
+        Task<PagedResult<T>> GetPagedAsync<T>(
+        int pageNumber,
+        int pageSize,
+        Func<IQueryable<T>, IQueryable<T>>? includes = null,
+        Func<IQueryable<T>, IQueryable<T>>? filter = null) where T : class;
+
     }
 }
