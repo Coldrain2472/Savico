@@ -52,11 +52,11 @@
 
         // BudgetCategory
 
-        public BudgetCategory BudgetCategoryOne { get; set; } = null!;
+        //public BudgetCategory BudgetCategoryOne { get; set; } = null!;
 
-        public BudgetCategory BudgetCategoryTwo { get; set; } = null!;
+        //public BudgetCategory BudgetCategoryTwo { get; set; } = null!;
 
-        public BudgetCategory BudgetCategoryThree { get; set; } = null!;
+        //public BudgetCategory BudgetCategoryThree { get; set; } = null!;
 
         private void SeedUsers()
         {

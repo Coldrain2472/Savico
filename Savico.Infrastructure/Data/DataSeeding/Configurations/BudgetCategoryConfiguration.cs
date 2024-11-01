@@ -4,11 +4,11 @@
     using Microsoft.EntityFrameworkCore.Metadata.Builders;
     using Savico.Infrastructure.Data.Models;
 
-    public class BudgetCategoryConfiguration : IEntityTypeConfiguration<BudgetCategory>
-    {
-        public void Configure(EntityTypeBuilder<BudgetCategory> builder)
-        {
-           
-        }
-    }
+    //    public class BudgetCategoryConfiguration : IEntityTypeConfiguration<BudgetCategory>
+    //    {
+    //        public void Configure(EntityTypeBuilder<BudgetCategory> builder)
+    //        {
+
+    //        }
+    //    }
 }

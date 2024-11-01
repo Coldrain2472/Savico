@@ -13,10 +13,10 @@
             this.Id = Guid.NewGuid().ToString();
         }
 
-        [Required]
-        [MaxLength(UsernameMaxLength)]
-        [Comment("User's username")]
-        public string? Username { get; set; }
+        //[Required]
+        //[MaxLength(UsernameMaxLength)]
+        //[Comment("User's username")]
+        //public string? Username { get; set; }
 
         [Required]
         [MaxLength(FirstNameMaxLength)]
@@ -53,5 +53,7 @@
         public ICollection<Budget> Budgets { get; set; } = new HashSet<Budget>();
 
         public ICollection<Report> Reports { get; set; } = new HashSet<Report>();
+
+        public ICollection<ExpenseCategory> ExpenseCategories { get; set; } = new HashSet<ExpenseCategory>();
     }
 }

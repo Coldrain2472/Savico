@@ -1,6 +1,7 @@
 ﻿namespace Savico.Core.Models
 {
     using Microsoft.EntityFrameworkCore;
+    using Savico.Infrastructure.Data.Models;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using static Savico.Infrastructure.Data.Constants.DataConstants;
@@ -27,7 +28,9 @@
         public decimal Amount { get; set; }
 
         [Required]
-        [MaxLength(CategoryMaxLength)]
+        public int CategoryId {  get; set; }
+
+        [ForeignKey(nameof(CategoryId))]
         [Comment("Expense's cactegory")]
         // "Food", "Transport", "Entertainment", "Utilities"
         public string? Category { get; set; }
@@ -43,5 +46,7 @@
 
         [Comment("Indicates if the expense is soft-deleted")]
         public bool IsDeleted { get; set; } = false;
+
+        public ICollection<ExpenseCategory> ExpenseCategories {  get; set; } = new HashSet<ExpenseCategory>();
     }
 }

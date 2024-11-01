@@ -29,15 +29,17 @@
         [Comment("Budget's total amount")]
         public decimal TotalAmount { get; set; }
 
-        [Required]
-        public int CategoryId { get; set; }
+        //[Required]
+        //public int CategoryId { get; set; }
 
-        public BudgetCategory? Category { get; set; }
+        //public BudgetCategory? Category { get; set; }
 
         [Comment("Indicates if the budget is soft-deleted")]
         public bool IsDeleted { get; set; } = false;
 
         public ICollection<Expense> Expenses { get; set; } = new HashSet<Expense>();
+
+        public ICollection<Income> Incomes { get; set; } = new HashSet<Income>();   
 
         //public ICollection<BudgetCategory> BudgetCategories { get; set;} = new HashSet<BudgetCategory>();
     }

@@ -44,7 +44,7 @@
             public const int SourceMaxLength = 100;
         }
 
-        public static class BudgetCategoryConstants
+        public static class ExpenseCategoryConstants
         {
             public const int CategoryNameMinLength = 2;
             public const int CategoryNameMaxLength = 30;
