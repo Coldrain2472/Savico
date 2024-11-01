@@ -15,6 +15,6 @@
         [ForeignKey(nameof(CategoryId))]
         public Category? Category { get; set; }
 
-        public bool IsDeleted { get; set; }
+        public bool IsDeleted { get; set; } = false;
     }
 }

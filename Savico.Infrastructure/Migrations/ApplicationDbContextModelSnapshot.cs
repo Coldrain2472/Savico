@@ -193,7 +193,7 @@ namespace Savico.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Budgets");
+                    b.ToTable("Budgets", (string)null);
                 });
 
             modelBuilder.Entity("Savico.Core.Models.Expense", b =>
@@ -243,7 +243,7 @@ namespace Savico.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Expenses");
+                    b.ToTable("Expenses", (string)null);
                 });
 
             modelBuilder.Entity("Savico.Core.Models.Goal", b =>
@@ -281,7 +281,7 @@ namespace Savico.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Goals");
+                    b.ToTable("Goals", (string)null);
                 });
 
             modelBuilder.Entity("Savico.Core.Models.Income", b =>
@@ -325,7 +325,7 @@ namespace Savico.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Incomes");
+                    b.ToTable("Incomes", (string)null);
                 });
 
             modelBuilder.Entity("Savico.Core.Models.User", b =>
@@ -434,7 +434,7 @@ namespace Savico.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
                 });
 
             modelBuilder.Entity("Savico.Infrastructure.Data.Models.ExpenseCategory", b =>
@@ -457,7 +457,7 @@ namespace Savico.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("ExpenseCategories");
+                    b.ToTable("ExpenseCategories", (string)null);
                 });
 
             modelBuilder.Entity("Savico.Infrastructure.Data.Models.Report", b =>
@@ -500,7 +500,7 @@ namespace Savico.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Reports");
+                    b.ToTable("Reports", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
