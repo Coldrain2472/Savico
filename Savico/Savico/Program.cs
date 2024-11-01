@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Savico.Core.Models;
 using Savico.Data;
 using Savico.Infrastructure;
 using Savico.Infrastructure.Data;
@@ -18,8 +19,17 @@ namespace Savico
                 options.UseSqlServer(connectionString));
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-            builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<SavicoDbContext>();
+            builder.Services.AddDefaultIdentity<User>(options =>
+            {
+                options.Password.RequireDigit = true;
+                options.SignIn.RequireConfirmedAccount = false;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+                options.Lockout.MaxFailedAccessAttempts = 5;
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+            })
+                 // .AddRoles<IdentityRole<Guid>>()
+                   .AddEntityFrameworkStores<SavicoDbContext>();
             builder.Services.AddControllersWithViews();
 
             var app = builder.Build();
