@@ -9,5 +9,11 @@
 		[Required]
 		[Display(Name = "Total Amount")]
 		public decimal TotalAmount { get; set; }
+
+		[Required]
+		public DateTime StartDate { get; set; }
+
+		[Required]
+		public DateTime EndDate { get; set; }
 	}
 }
