@@ -34,7 +34,13 @@
                 return BadRequest();
             }
 
-            return View(budget);
+            var budgetViewModel = new BudgetViewModel
+            {
+                Id = budget.Id,
+                TotalAmount = budget.TotalAmount
+            };
+
+            return View(budgetViewModel);
         }
 
         [HttpGet]
@@ -91,7 +97,7 @@
         {
             if (id != budgetViewModel.Id)
             {
-                return NotFound();
+                return BadRequest();
             }
 
             if (ModelState.IsValid)
@@ -115,7 +121,6 @@
         [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
-
             var budget = await budgetService.GetBudgetByIdAsync(id);
 
             if (budget == null)
@@ -123,10 +128,17 @@
                 return BadRequest();
             }
 
-            return View(budget);
+            var budgetViewModel = new BudgetViewModel
+            {
+                Id = budget.Id,
+                TotalAmount = budget.TotalAmount
+            };
+
+            return View(budgetViewModel);
         }
 
-        [HttpPost, ActionName("Delete")]
+        // TO DO: Implement SOFT-DELETE
+        [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
