@@ -1,94 +1,96 @@
 ﻿namespace Savico.Infrastructure.Common
 {
     using Microsoft.EntityFrameworkCore;
+	using System;
+	using System.Collections.Generic;
+	using System.Linq.Expressions;
+	using System.Threading.Tasks;
 
-    public class Repository : IRepository
-    {
+	public class Repository<TEntity, TKey> : IRepository<TEntity, TKey> where TEntity : class
+	{
         private readonly DbContext dbContext;
+		private readonly DbSet<TEntity> dbSet;
 
         public Repository(SavicoDbContext dbContext)
         {
             this.dbContext = dbContext;
+			dbSet = dbContext.Set<TEntity>();
         }
 
-        private DbSet<T> DbSet<T>() where T : class
-        {
-            return dbContext.Set<T>();
-        }
+		public async Task AddAsync(TEntity entity) // adds a new entity and saves changes
+		{
+			await dbSet.AddAsync(entity);
+			await dbContext.SaveChangesAsync();
+		}
 
-        public IQueryable<T> All<T>() where T : class
-        {
-            return DbSet<T>();
-        }
+		public async Task DeleteAsync(TEntity entity) // deletes an entity and saves changes
+		{
+			dbSet.Remove(entity);
+			await dbContext.SaveChangesAsync();
+		}
 
-        public IQueryable<T> AllAsReadOnly<T>() where T : class
-        {
-            return DbSet<T>().AsNoTracking();
-        }
+		public async Task<IEnumerable<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate) // takes an expression to filter records
+		{
+			return await dbSet.Where(predicate).ToListAsync();
+		}
 
-        public async Task AddAsync<T>(T entity) where T : class
-        {
-            await DbSet<T>().AddAsync(entity);
-        }
-        public async Task RemoveAsync<T>(T entity) where T : class
-        {
-            DbSet<T>().Remove(entity);
-        }
-        public async Task RemoveRangeAsync<T>(IEnumerable<T> entities) where T : class
-        {
-            DbSet<T>().RemoveRange(entities);
-        }
+		public async Task<IEnumerable<TEntity>> GetAllAsync() // retrieves all entities from the database
+		{
+			return await dbSet.ToListAsync();
+		}
 
-        public async Task<int> SaveChangesAsync()
-        {
-            return await dbContext.SaveChangesAsync();
-        }
+		public async Task<TEntity> GetByIdAsync(TKey id) // finds a single entity by its Id.
+		{
+			return await dbSet.FindAsync(id);
+		}
 
-        public async Task<T?> GetByIdAsync<T>(object id) where T : class
-        {
-            return await DbSet<T>().FindAsync(id);
-        }
+		public async Task UpdateAsync(TEntity entity) // updates an existing entity and saves changes
+		{
+			dbSet.Update(entity);
+			await dbContext.SaveChangesAsync();
+		}
 
-        public void Detach<TEntity>(TEntity entity) where TEntity : class
-        {
-            var entry = dbContext.Entry(entity);
-            if (entry.State != EntityState.Detached)
-            {
-                entry.State = EntityState.Detached;
-            }
-        }
+		
+		//public void Detach<TEntity>(TEntity entity) where TEntity : class
+		//{
+		//    var entry = dbContext.Entry(entity);
+		//    if (entry.State != EntityState.Detached)
+		//    {
+		//        entry.State = EntityState.Detached;
+		//    }
+		//}
 
-        public async Task<PagedResult<T>> GetPagedAsync<T>(
-            int pageNumber,
-            int pageSize,
-            Func<IQueryable<T>, IQueryable<T>>? includes = null,
-            Func<IQueryable<T>, IQueryable<T>>? filter = null) where T : class
-        {
-            var query = DbSet<T>().AsQueryable();
+		//public async Task<PagedResult<T>> GetPagedAsync<T>(
+		//    int pageNumber,
+		//    int pageSize,
+		//    Func<IQueryable<T>, IQueryable<T>>? includes = null,
+		//    Func<IQueryable<T>, IQueryable<T>>? filter = null) where T : class
+		//{
+		//    var query = DbSet<T>().AsQueryable();
 
-            if (filter != null)
-            {
-                query = filter(query);
-            }
+		//    if (filter != null)
+		//    {
+		//        query = filter(query);
+		//    }
 
-            if (includes != null)
-            {
-                query = includes(query);
-            }
+		//    if (includes != null)
+		//    {
+		//        query = includes(query);
+		//    }
 
-            var totalCount = await query.CountAsync();
+		//    var totalCount = await query.CountAsync();
 
-            var items = await query
-                .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize)
-                .ToListAsync();
+		//    var items = await query
+		//        .Skip((pageNumber - 1) * pageSize)
+		//        .Take(pageSize)
+		//        .ToListAsync();
 
-            return new PagedResult<T>
-            {
-                Items = items,
-                TotalCount = totalCount
-            };
-        }
+		//    return new PagedResult<T>
+		//    {
+		//        Items = items,
+		//        TotalCount = totalCount
+		//    };
+		//}
 
-    }
+	}
 }
