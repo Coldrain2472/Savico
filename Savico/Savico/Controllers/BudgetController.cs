@@ -1,113 +1,138 @@
 ﻿namespace Savico.Controllers
 {
-	using Microsoft.AspNetCore.Mvc;
-	using Savico.Core.Models;
-	using Savico.Services;
-	using Savico.Services.Contracts;
+    using Microsoft.AspNetCore.Mvc;
+    using Savico.Core.Models;
+    using Savico.Models.ViewModels.Budget;
+    using Savico.Services;
+    using Savico.Services.Contracts;
+    using System.Security.Claims;
 
-	public class BudgetController : Controller
+    public class BudgetController : Controller
     {
-		private readonly IBudgetService budgetService;
+        private readonly IBudgetService budgetService;
 
-		public BudgetController(IBudgetService budgetService)
-		{
-			this.budgetService = budgetService;
-		}
+        public BudgetController(IBudgetService budgetService)
+        {
+            this.budgetService = budgetService;
+        }
 
-		[HttpGet]
-		public async Task<IActionResult> Index() // should display all budgets
-		{
-			var budgets = await budgetService.GetAllBudgetsAsync();
+        [HttpGet]
+        public async Task<IActionResult> Index() // should display all budgets
+        {
+            var budgetViewModels = await budgetService.GetAllBudgetsAsync(); // IEnumerable<BudgetViewModel>
 
-			return View(budgets);
-		}
+            return View(budgetViewModels);
+        }
 
-		[HttpGet]
-		public async Task<IActionResult> Details(int id) // should show details for a specific budget
-		{
-			var budget = await budgetService.GetBudgetByIdAsync(id);
+        [HttpGet]
+        public async Task<IActionResult> Details(int id) // should show details for a specific budget
+        {
+            var budget = await budgetService.GetBudgetByIdAsync(id);
 
-			if (budget == null)
-			{
-				return BadRequest();
-			}
+            if (budget == null)
+            {
+                return BadRequest();
+            }
 
-			return View(budget);
-		}
+            return View(budget);
+        }
 
-		[HttpGet]
-		public IActionResult Create()
-		{
-			return View();
-		}
+        [HttpGet]
+        public IActionResult Create()
+        {
+            var budgetViewModel = new BudgetViewModel();
 
-		[HttpPost]
-		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Create(Budget budget)
-		{
-			if (ModelState.IsValid)
-			{
-				await budgetService.AddBudgetAsync(budget);
+            return View(budgetViewModel);
+        }
 
-				return RedirectToAction(nameof(Index));
-			}
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(BudgetViewModel budgetViewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                var budget = new Budget
+                {
+                    TotalAmount = budgetViewModel.TotalAmount,
+                    UserId = User.FindFirstValue(ClaimTypes.NameIdentifier)
+                };
 
-			return View(budget);
-		}
+                await budgetService.AddBudgetAsync(budget);
 
-		[HttpGet]
-		public async Task<IActionResult> Edit(int id)
-		{
-			var budget = await budgetService.GetBudgetByIdAsync(id);
+                return RedirectToAction(nameof(Index));
+            }
 
-			if (budget == null)
-			{
-				return BadRequest();
-			}
+            return View(budgetViewModel);
+        }
 
-			return View(budget);
-		}
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var budget = await budgetService.GetBudgetByIdAsync(id);
 
-		[HttpPost]
-		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Edit(int id, Budget budget)
-		{
-			if (id != budget.Id)
-			{
-				return NotFound();
-			}
+            if (budget == null)
+            {
+                return NotFound();
+            }
 
-			if (ModelState.IsValid)
-			{
-				await budgetService.UpdateBudgetAsync(budget);
+            var budgetViewModel = new BudgetViewModel
+            {
+                Id = budget.Id,
+                TotalAmount = budget.TotalAmount
+            };
 
-				return RedirectToAction(nameof(Index));
-			}
+            return View(budgetViewModel);
 
-			return View(budget);
-		}
+        }
 
-		[HttpGet]
-		public async Task<IActionResult> Delete(int id)
-		{
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, BudgetViewModel budgetViewModel)
+        {
+            if (id != budgetViewModel.Id)
+            {
+                return NotFound();
+            }
 
-			var budget = await budgetService.GetBudgetByIdAsync(id);
+            if (ModelState.IsValid)
+            {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-			if (budget == null)
-			{
-				return BadRequest();
-			}
+                var budget = new Budget
+                {
+                    Id = budgetViewModel.Id,
+                    TotalAmount = budgetViewModel.TotalAmount,
+                    UserId = userId 
+                };
 
-			return View(budget);
-		}
+                await budgetService.UpdateBudgetAsync(budget);
+                return RedirectToAction(nameof(Index));
+            }
 
-		[HttpPost, ActionName("Delete")]
-		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> DeleteConfirmed(int id)
-		{
-			await budgetService.DeleteBudgetAsync(id);
+            return View(budgetViewModel); 
+        }
 
-			return RedirectToAction(nameof(Index));
-		}
-	}
+        [HttpGet]
+        public async Task<IActionResult> Delete(int id)
+        {
+
+            var budget = await budgetService.GetBudgetByIdAsync(id);
+
+            if (budget == null)
+            {
+                return BadRequest();
+            }
+
+            return View(budget);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            await budgetService.DeleteBudgetAsync(id);
+
+            return RedirectToAction(nameof(Index));
+        }
+    }
 }
