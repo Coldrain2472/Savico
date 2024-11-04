@@ -1,0 +1,13 @@
+﻿@using Savico.Models.ViewModels.Budget
+@model BudgetViewModel
+
+<h2>Create Budget</h2>
+
+<form asp-action="Create">
+    <div class="form-group">
+        <label asp-for="TotalAmount"></label>
+        <input asp-for="TotalAmount" class="form-control" />
+        <span asp-validation-for="TotalAmount" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Create</button>
+</form>

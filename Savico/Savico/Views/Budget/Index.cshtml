@@ -1,0 +1,29 @@
+﻿@using Savico.Models.ViewModels.Budget
+@model IEnumerable<BudgetViewModel>
+
+<h2>Budgets</h2>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Create New Budget</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.First().TotalAmount)</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var budget in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => budget.TotalAmount)</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@budget.Id" class="btn btn-warning">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@budget.Id" class="btn btn-danger">Delete</a>
+                    <a asp-action="Details" asp-route-id="@budget.Id" class="btn btn-info">Details</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
