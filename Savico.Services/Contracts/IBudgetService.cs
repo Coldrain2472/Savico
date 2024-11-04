@@ -1,10 +1,11 @@
 ﻿namespace Savico.Services.Contracts
 {
 	using Savico.Core.Models;
+    using Savico.Models.ViewModels.Budget;
 
-	public interface IBudgetService
+    public interface IBudgetService
 	{
-		Task<IEnumerable<Budget>> GetAllBudgetsAsync(); // retrieve budget data
+		Task<IEnumerable<BudgetViewModel>> GetAllBudgetsAsync(); // retrieve budget data
 
 		Task<Budget> GetBudgetByIdAsync(int id); // retrieve budget data
 

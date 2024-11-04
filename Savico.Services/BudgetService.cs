@@ -1,12 +1,13 @@
 ﻿namespace Savico.Services
 {
-	using Savico.Core.Models;
-	using Savico.Infrastructure.Common;
-	using Savico.Services.Contracts;
-	using System.Collections.Generic;
-	using System.Threading.Tasks;
+    using Savico.Core.Models;
+    using Savico.Infrastructure.Repositories.Contracts;
+    using Savico.Models.ViewModels.Budget;
+    using Savico.Services.Contracts;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
 
-	public class BudgetService : IBudgetService
+    public class BudgetService : IBudgetService
 	{
 		private readonly IRepository<Budget, int> budgetRepository;
 		private readonly IRepository<Expense, int> expenseRepository;
@@ -17,10 +18,22 @@
 			this.expenseRepository = expenseRepository;
 		}
 
-		public async Task<IEnumerable<Budget>> GetAllBudgetsAsync()
+		public async Task<IEnumerable<BudgetViewModel>> GetAllBudgetsAsync()
 		{
-			return await budgetRepository.GetAllAsync();
-		}
+            var budgets = await budgetRepository.GetAllAsync(); // IEnumerable<Budget>
+
+            if (budgets == null || !budgets.Any())
+            {
+                return Enumerable.Empty<BudgetViewModel>(); // empty list if no budgets
+            }
+
+            return budgets.Select(b => new BudgetViewModel
+            {
+                Id = b.Id,
+                TotalAmount = b.TotalAmount 
+            })
+				.ToList();
+        }
 
 		public async Task<Budget> GetBudgetByIdAsync(int id)
 		{
