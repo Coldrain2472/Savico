@@ -3,27 +3,30 @@
 
 <h2>Budgets</h2>
 
-<p>
-    <a asp-action="Create" class="btn btn-primary">Create New Budget</a>
-</p>
 <table class="table">
     <thead>
         <tr>
-            <th>@Html.DisplayNameFor(model => model.First().TotalAmount)</th>
-            <th></th>
+            <th>Total Amount</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
         @foreach (var budget in Model)
         {
             <tr>
-                <td>@Html.DisplayFor(modelItem => budget.TotalAmount)</td>
+                <td>@budget.TotalAmount</td>
+                <td>@budget.StartDate.ToShortDateString()</td>
+                <td>@budget.EndDate.ToShortDateString()</td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@budget.Id" class="btn btn-warning">Edit</a>
-                    <a asp-action="Delete" asp-route-id="@budget.Id" class="btn btn-danger">Delete</a>
-                    <a asp-action="Details" asp-route-id="@budget.Id" class="btn btn-info">Details</a>
+                    <a class="btn btn-warning btn-sm" asp-action="Edit" asp-route-id="@budget.Id">Edit</a>
+                    <a class="btn btn-info btn-sm" asp-action="Details" asp-route-id="@budget.Id">Details</a>
+                    <a class="btn btn-danger btn-sm" asp-action="Delete" asp-route-id="@budget.Id">Delete</a>
                 </td>
             </tr>
         }
     </tbody>
 </table>
+
+<a class="btn btn-primary" asp-action="Create">Create New Budget</a>
