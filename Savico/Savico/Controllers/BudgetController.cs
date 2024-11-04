@@ -6,6 +6,7 @@
     using Savico.Services;
     using Savico.Services.Contracts;
     using System.Security.Claims;
+    using Savico.Infrastructure.Data.Constants;
 
     public class BudgetController : Controller
     {
@@ -15,6 +16,8 @@
         {
             this.budgetService = budgetService;
         }
+
+        // TO DO: Fix the date format
 
         [HttpGet]
         public async Task<IActionResult> Index() // should display all budgets
@@ -37,7 +40,9 @@
             var budgetViewModel = new BudgetViewModel
             {
                 Id = budget.Id,
-                TotalAmount = budget.TotalAmount
+                TotalAmount = budget.TotalAmount,
+                StartDate = budget.StartDate,
+                EndDate = budget.EndDate
             };
 
             return View(budgetViewModel);
@@ -60,7 +65,9 @@
                 var budget = new Budget
                 {
                     TotalAmount = budgetViewModel.TotalAmount,
-                    UserId = User.FindFirstValue(ClaimTypes.NameIdentifier)
+                    UserId = User.FindFirstValue(ClaimTypes.NameIdentifier),
+                    StartDate = budgetViewModel.StartDate,
+                    EndDate = budgetViewModel.EndDate
                 };
 
                 await budgetService.AddBudgetAsync(budget);
@@ -84,7 +91,9 @@
             var budgetViewModel = new BudgetViewModel
             {
                 Id = budget.Id,
-                TotalAmount = budget.TotalAmount
+                TotalAmount = budget.TotalAmount,
+                StartDate = budget.StartDate,
+                EndDate = budget.EndDate
             };
 
             return View(budgetViewModel);
@@ -131,7 +140,9 @@
             var budgetViewModel = new BudgetViewModel
             {
                 Id = budget.Id,
-                TotalAmount = budget.TotalAmount
+                TotalAmount = budget.TotalAmount,
+                StartDate = budget.StartDate,
+                EndDate = budget.EndDate
             };
 
             return View(budgetViewModel);
