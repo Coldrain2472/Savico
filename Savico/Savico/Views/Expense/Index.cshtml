@@ -1,0 +1,38 @@
+﻿@using Savico.Core.Models.ViewModels.Expense
+@model IEnumerable<ExpenseViewModel>
+
+@{
+    ViewData["Title"] = "All Expenses";
+}
+
+<h2>Expenses</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Description</th>
+            <th>Amount</th>
+            <th>Date</th>
+            <th>Category</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var expense in Model)
+        {
+            <tr>
+                <td>@expense.Description</td>
+                <td>@expense.Amount.ToString("C")</td> <!-- Displays currency format -->
+                <td>@expense.FormattedDate</td>
+                <td>@expense.CategoryName</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@expense.Id" class="btn btn-info">Details</a>
+                    <a asp-action="Edit" asp-route-id="@expense.Id" class="btn btn-warning">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@expense.Id" class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a asp-action="Create" class="btn btn-primary">Add New Expense</a>

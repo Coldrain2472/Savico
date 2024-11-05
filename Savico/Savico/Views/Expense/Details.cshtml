@@ -1,0 +1,23 @@
+﻿@using Savico.Core.Models.ViewModels.Expense
+@model ExpenseViewModel
+
+<h2>Expense Details</h2>
+
+<div>
+    <h4>@Model.Description</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">Amount</dt>
+        <dd class="col-sm-10">@Model.Amount.ToString("C")</dd>
+
+        <dt class="col-sm-2">Date</dt>
+        <dd class="col-sm-10">@Model.FormattedDate</dd>
+
+        <dt class="col-sm-2">Category</dt>
+        <dd class="col-sm-10">@Model.CategoryName</dd>
+    </dl>
+</div>
+
+<a asp-action="Index" class="btn btn-secondary">Back to List</a>
+<a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Edit</a>
+<a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">Delete</a>
