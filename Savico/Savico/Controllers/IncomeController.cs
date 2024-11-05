@@ -79,6 +79,7 @@
             return RedirectToAction(nameof(Index));
         }
 
+
         public async Task<IActionResult> Delete(int id)
         {
             string userId = GetUserById();

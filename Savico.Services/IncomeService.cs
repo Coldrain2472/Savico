@@ -71,15 +71,14 @@
         public async Task UpdateIncomeAsync(int incomeId, IncomeInputViewModel model, string userId)
         {
             var income = await repository.GetByIdAsync(incomeId);
-            if (income != null && income.UserId == userId)
+            if (income != null)
             {
-                income.Amount = model.Amount;
                 income.Source = model.Source;
+                income.Amount = model.Amount;
+                income.Date = model.Date; 
+                income.UserId = userId; 
+
                 await repository.UpdateAsync(income);
-            }
-            else
-            {
-                throw new UnauthorizedAccessException("You cannot update this income.");
             }
         }
     }
