@@ -1,83 +1,132 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-
-namespace Savico.Controllers
+﻿namespace Savico.Controllers
 {
+    using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Mvc;
+    using Savico.Core.Models.ViewModels.Income;
+    using Savico.Services.Contracts;
+    using System.Security.Claims;
+
+    [Authorize]
     public class IncomeController : Controller
     {
-        // GET: IncomeController
-        public ActionResult Index()
+        private readonly IIncomeService incomeService;
+
+        public IncomeController(IIncomeService incomeService)
+        {
+            this.incomeService = incomeService;
+        }
+
+        [HttpGet("All")]
+        public async Task<IActionResult> All()
+        {
+            string userId = GetUserById();
+            var incomes = await incomeService.GetAllIncomesAsync(userId);
+            return View(incomes);
+        }
+
+        [HttpGet]
+        public IActionResult Create()
         {
             return View();
         }
 
-        // GET: IncomeController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-        // GET: IncomeController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: IncomeController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<IActionResult> Create(IncomeInputViewModel model)
         {
-            try
+            if (!ModelState.IsValid)
             {
-                return RedirectToAction(nameof(Index));
+                return View(model); 
             }
-            catch
-            {
-                return View();
-            }
+            string userId = GetUserById();
+            await incomeService.AddIncomeAsync(model, userId);
+
+            return RedirectToAction(nameof(All));
         }
 
-        // GET: IncomeController/Edit/5
-        public ActionResult Edit(int id)
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
         {
-            return View();
+            string userId = GetUserById();
+            var income = await incomeService.GetIncomeByIdAsync(id, userId);
+
+            if (income == null)
+            {
+                return BadRequest();
+            }
+
+            var model = new IncomeInputViewModel
+            {
+                Amount = income.Amount,
+                Source = income.Source
+            };
+
+            return View(model);
         }
 
-        // POST: IncomeController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<IActionResult> Edit(int id, IncomeInputViewModel model)
         {
-            try
+            if (!ModelState.IsValid)
             {
-                return RedirectToAction(nameof(Index));
+                return View(model);
             }
-            catch
-            {
-                return View();
-            }
+
+            string userId = GetUserById();
+            await incomeService.UpdateIncomeAsync(id, model, userId);
+
+            return RedirectToAction(nameof(All));
         }
 
-        // GET: IncomeController/Delete/5
-        public ActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            return View();
+            string userId = GetUserById();
+            var income = await incomeService.GetIncomeByIdAsync(id, userId);
+
+            if (income == null)
+            {
+                return BadRequest();
+            }
+
+            return View(income);
         }
 
-        // POST: IncomeController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            try
+            string userId = GetUserById();
+
+            await incomeService.DeleteIncomeAsync(id, userId);
+
+            return RedirectToAction(nameof(All)); 
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Details(int id)
+        {
+            string userId = GetUserById();
+            var income = await incomeService.GetIncomeByIdAsync(id, userId);
+
+            if (income == null)
             {
-                return RedirectToAction(nameof(Index));
+                return NotFound();
             }
-            catch
+
+            return View(income);
+        }
+
+        private string GetUserById()
+        {
+            string id = string.Empty;
+
+            if (User != null)
             {
-                return View();
+                id = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty;
             }
+
+            return id;
         }
     }
 }
