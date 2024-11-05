@@ -16,8 +16,8 @@
             this.incomeService = incomeService;
         }
 
-        [HttpGet("All")]
-        public async Task<IActionResult> All()
+        [HttpGet]
+        public async Task<IActionResult> Index()
         {
             string userId = GetUserById();
             var incomes = await incomeService.GetAllIncomesAsync(userId);
@@ -41,7 +41,7 @@
             string userId = GetUserById();
             await incomeService.AddIncomeAsync(model, userId);
 
-            return RedirectToAction(nameof(All));
+            return RedirectToAction(nameof(Index));
         }
 
         [HttpGet]
@@ -76,7 +76,7 @@
             string userId = GetUserById();
             await incomeService.UpdateIncomeAsync(id, model, userId);
 
-            return RedirectToAction(nameof(All));
+            return RedirectToAction(nameof(Index));
         }
 
         public async Task<IActionResult> Delete(int id)
@@ -100,7 +100,7 @@
 
             await incomeService.DeleteIncomeAsync(id, userId);
 
-            return RedirectToAction(nameof(All)); 
+            return RedirectToAction(nameof(Index)); 
         }
 
         [HttpGet]
@@ -111,7 +111,7 @@
 
             if (income == null)
             {
-                return NotFound();
+                return BadRequest();
             }
 
             return View(income);

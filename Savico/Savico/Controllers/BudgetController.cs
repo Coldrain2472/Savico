@@ -20,7 +20,7 @@
         // TO DO: Fix the date format
 
         [HttpGet]
-        public async Task<IActionResult> All() // should display all budgets
+        public async Task<IActionResult> Index() // should display all budgets
         {
             var budgetViewModels = await budgetService.GetAllBudgetsAsync(); // IEnumerable<BudgetViewModel>
 
@@ -72,7 +72,7 @@
 
                 await budgetService.AddBudgetAsync(budget);
 
-                return RedirectToAction(nameof(All));
+                return RedirectToAction(nameof(Index));
             }
 
             return View(budgetViewModel);
@@ -121,7 +121,7 @@
                 };
 
                 await budgetService.UpdateBudgetAsync(budget);
-                return RedirectToAction(nameof(All));
+                return RedirectToAction(nameof(Index));
             }
 
             return View(budgetViewModel); 
@@ -155,7 +155,7 @@
         {
             await budgetService.DeleteBudgetAsync(id);
 
-            return RedirectToAction(nameof(All));
+            return RedirectToAction(nameof(Index));
         }
     }
 }
