@@ -8,6 +8,10 @@ namespace Savico
     using Savico.Infrastructure.Repositories.Contracts;
     using Savico.Infrastructure.Repositories;
     using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.AspNetCore.Builder;
+    using Microsoft.Extensions.Configuration;
+    using System;
+    using Microsoft.Extensions.Hosting;
 
     public class Program
     {
@@ -22,7 +26,9 @@ namespace Savico
 
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-            builder.Services.AddScoped(typeof(IRepository<,>), typeof(Repository<,>));
+            //builder.Services.AddScoped(typeof(IRepository<,>), typeof(Repository<,>));
+            builder.Services.AddScoped<IRepository<Budget, int>, Repository<Budget, int>>();
+            builder.Services.AddScoped<IRepository<Income, int>, Repository<Income, int>>();
 
             builder.Services.AddScoped<IBudgetService, BudgetService>();
 
