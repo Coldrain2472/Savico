@@ -1,0 +1,36 @@
+﻿@using Savico.Core.Models.ViewModels.Income
+@model IEnumerable<IncomeViewModel>
+
+@{
+    ViewData["Title"] = "All Incomes";
+}
+
+<h1>All Incomes</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Amount</th>
+            <th>Source</th>
+            <th>Date</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var income in Model)
+        {
+            <tr>
+                <td>@income.Amount</td>
+                <td>@income.Source</td>
+                <td>@income.Date.ToShortDateString()</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@income.Id" class="btn btn-warning">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@income.Id" class="btn btn-danger">Delete</a>
+                    <a asp-action="Details" asp-route-id="@income.Id" class="btn btn-info">Details</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a asp-action="Create" class="btn btn-primary">Add New Income</a>
