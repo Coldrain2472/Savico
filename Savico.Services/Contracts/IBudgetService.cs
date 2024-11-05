@@ -1,7 +1,9 @@
 ﻿namespace Savico.Services.Contracts
 {
-	using Savico.Core.Models;
+    using Savico.Core.Models;
     using Savico.Models.ViewModels.Budget;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
 
     public interface IBudgetService
 	{
