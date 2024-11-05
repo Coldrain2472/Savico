@@ -24,8 +24,4 @@
     <ProjectReference Include="..\..\Savico.Services\Savico.Services.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Views\Expense\" />
-  </ItemGroup>
-
 </Project>

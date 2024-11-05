@@ -9,6 +9,8 @@
     [Authorize]
     public class IncomeController : Controller
     {
+        // TO DO: Fix EDIT, somehow I broke it
+
         private readonly IIncomeService incomeService;
 
         public IncomeController(IIncomeService incomeService)
@@ -19,15 +21,16 @@
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            string userId = GetUserById();
+            string userId = GetUserId();
             var incomes = await incomeService.GetAllIncomesAsync(userId);
             return View(incomes);
         }
 
         [HttpGet]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            return View();
+            var model = await incomeService.PrepareIncomeInputModelAsync();
+            return View(model);
         }
 
         [HttpPost]
@@ -36,32 +39,24 @@
         {
             if (!ModelState.IsValid)
             {
-                return View(model); 
+                return View(model);
             }
-            string userId = GetUserById();
-            await incomeService.AddIncomeAsync(model, userId);
 
+            string userId = GetUserId();
+            await incomeService.AddIncomeAsync(model, userId);
             return RedirectToAction(nameof(Index));
         }
 
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
-            string userId = GetUserById();
+            var userId = GetUserId();
             var income = await incomeService.GetIncomeByIdAsync(id, userId);
-
             if (income == null)
             {
                 return BadRequest();
             }
-
-            var model = new IncomeInputViewModel
-            {
-                Amount = income.Amount,
-                Source = income.Source
-            };
-
-            return View(model);
+            return View(income);
         }
 
         [HttpPost]
@@ -73,41 +68,24 @@
                 return View(model);
             }
 
-            string userId = GetUserById();
+            string userId = GetUserId();
             await incomeService.UpdateIncomeAsync(id, model, userId);
-
             return RedirectToAction(nameof(Index));
-        }
-
-
-        public async Task<IActionResult> Delete(int id)
-        {
-            string userId = GetUserById();
-            var income = await incomeService.GetIncomeByIdAsync(id, userId);
-
-            if (income == null)
-            {
-                return BadRequest();
-            }
-
-            return View(income);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            string userId = GetUserById();
-
+            string userId = GetUserId();
             await incomeService.DeleteIncomeAsync(id, userId);
-
-            return RedirectToAction(nameof(Index)); 
+            return RedirectToAction(nameof(Index));
         }
 
         [HttpGet]
         public async Task<IActionResult> Details(int id)
         {
-            string userId = GetUserById();
+            var userId = GetUserId();
             var income = await incomeService.GetIncomeByIdAsync(id, userId);
 
             if (income == null)
@@ -118,16 +96,9 @@
             return View(income);
         }
 
-        private string GetUserById()
+        private string GetUserId()
         {
-            string id = string.Empty;
-
-            if (User != null)
-            {
-                id = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty;
-            }
-
-            return id;
+            return User.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty;
         }
     }
 }
