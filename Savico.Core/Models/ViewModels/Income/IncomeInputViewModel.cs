@@ -10,6 +10,7 @@
         public int Id { get; set; }
 
         [Required]
+        [Range(0.00, double.MaxValue, ErrorMessage = RangeErrorMessage)]
         public decimal Amount { get; set; }
 
         [Required]
