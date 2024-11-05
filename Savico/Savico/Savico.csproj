@@ -25,7 +25,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Views\Income\" />
     <Folder Include="Views\Expense\" />
   </ItemGroup>
 

@@ -26,11 +26,12 @@ namespace Savico
 
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-            //builder.Services.AddScoped(typeof(IRepository<,>), typeof(Repository<,>));
-            builder.Services.AddScoped<IRepository<Budget, int>, Repository<Budget, int>>();
-            builder.Services.AddScoped<IRepository<Income, int>, Repository<Income, int>>();
+            
+            builder.Services.AddScoped(typeof(IRepository<,>), typeof(Repository<,>));
 
             builder.Services.AddScoped<IBudgetService, BudgetService>();
+            builder.Services.AddScoped<IIncomeService, IncomeService>();
+
 
             builder.Services.AddDefaultIdentity<User>(options =>
             {
@@ -62,7 +63,7 @@ namespace Savico
             app.UseStaticFiles();
 
             app.UseRouting();
-            // app.UseAuthentication();
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllerRoute(
