@@ -32,8 +32,8 @@
 
         [ForeignKey(nameof(CategoryId))]
         [Comment("Expense's cactegory")]
-        // "Food", "Transport", "Entertainment", "Utilities"
-        public string? Category { get; set; }
+        // "Groceries", "Transport", "Entertainment", "Utilities"
+        public Category? Category { get; set; }
 
         [Required]
         [Comment("Date of expense")]
