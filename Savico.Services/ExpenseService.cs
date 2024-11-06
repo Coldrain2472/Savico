@@ -26,20 +26,34 @@
             return model;
         }
 
-        public async Task AddExpenseAsync(ExpenseInputViewModel model, string userId)
+        public async Task AddExpenseAsync(ExpenseInputViewModel inputModel, string userId)
         {
+            var budget = await context.Budgets
+               .FirstOrDefaultAsync(b => b.UserId == userId);
+
+            if (budget == null)
+            {
+                budget = new Budget
+                {
+                    UserId = userId,
+                    TotalAmount = 0
+                };
+                context.Budgets.Add(budget);
+                await context.SaveChangesAsync();
+            }
+
             var expense = new Expense
             {
-                Description = model.Description,
-                Amount = model.Amount,
-                Date = model.Date,
-                CategoryId = model.CategoryId,
-                UserId = userId
+                Amount = inputModel.Amount,
+                Description = inputModel.Description,
+                BudgetId = budget.Id
             };
 
-            await context.Expenses.AddAsync(expense);
+            context.Expenses.Add(expense);
+
             await context.SaveChangesAsync();
         }
+
 
         public async Task EditExpenseAsync(int expenseId, ExpenseInputViewModel model, string userId)
         {
@@ -100,7 +114,7 @@
                 .Select(c => c.Name)
                 .FirstOrDefaultAsync();
 
-            return category ?? string.Empty; 
+            return category ?? string.Empty;
         }
 
         public async Task DeleteExpenseAsync(int expenseId, string userId)

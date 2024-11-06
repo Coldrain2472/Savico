@@ -47,34 +47,17 @@
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ExpenseInputViewModel model)
         {
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                // Reload categories in case of validation error
-                model.Categories = await expenseService.GetCategories();
-                return View(model);
+                var userId = GetUserId(); 
+                await expenseService.AddExpenseAsync(model, userId); 
+
+                return RedirectToAction(nameof(Index)); 
             }
 
-            string userId = GetUserId();
-            await expenseService.AddExpenseAsync(model, userId);
-
-            return RedirectToAction(nameof(Index));
+            return View(model); 
         }
-        //[HttpPost("Create")]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Create(ExpenseInputViewModel model)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return View(model);
-        //    }
-
-        //    var userId = GetUserId();
-
-        //    await expenseService.AddExpenseAsync(model, userId);
-
-        //    return RedirectToAction(nameof(Index));
-        //}
-
+        
         [HttpGet("Edit/{id}")]
         public async Task<IActionResult> Edit(int id)
         {
