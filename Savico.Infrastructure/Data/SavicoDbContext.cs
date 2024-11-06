@@ -3,6 +3,7 @@
     using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
     using Savico.Core.Models;
+    using Savico.Infrastructure.Data.DataSeeding.Configurations;
     using Savico.Infrastructure.Data.Models;
 
     public class SavicoDbContext : IdentityDbContext<User>
@@ -149,6 +150,7 @@
             //modelBuilder.ApplyConfiguration(new GoalConfiguration());
             //modelBuilder.ApplyConfiguration(new IncomeConfiguration());
             //modelBuilder.ApplyConfiguration(new UserConfiguration());
+            modelBuilder.ApplyConfiguration(new CategoryConfiguration());
 
             // configure soft delete global filter
             modelBuilder.Entity<User>().HasQueryFilter(u => !u.IsDeleted);
