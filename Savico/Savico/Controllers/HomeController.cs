@@ -5,7 +5,6 @@ namespace Savico.Controllers
     using Savico.Core.Models;
     using Savico.Core.Models.ViewModels.Home;
     using Savico.Models;
-    using Savico.Services;
     using Savico.Services.Contracts;
     using System.Diagnostics;
 

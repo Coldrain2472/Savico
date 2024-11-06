@@ -5,8 +5,6 @@ namespace Savico
     using Savico.Infrastructure;
     using Savico.Services.Contracts;
     using Savico.Services;
-    using Savico.Infrastructure.Repositories.Contracts;
-    using Savico.Infrastructure.Repositories;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.Extensions.Configuration;
@@ -26,13 +24,9 @@ namespace Savico
 
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-            
-            builder.Services.AddScoped(typeof(IRepository<,>), typeof(Repository<,>));
-
             builder.Services.AddScoped<IBudgetService, BudgetService>();
             builder.Services.AddScoped<IIncomeService, IncomeService>();
             builder.Services.AddScoped<IExpenseService, ExpenseService>();
-
 
             builder.Services.AddDefaultIdentity<User>(options =>
             {

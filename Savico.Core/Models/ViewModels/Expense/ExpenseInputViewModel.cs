@@ -22,7 +22,7 @@
 
         public IEnumerable<CategoryViewModel> Categories { get; set; } = new HashSet<CategoryViewModel>();
 
-        //public string CategoryName { get; set; } // Name of the category (e.g., Rent, Food)
+        public int BudgetId {  get; set; }
 
         public string FormattedDate => Date.ToString("dd MMM yyyy");
     }
