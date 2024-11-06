@@ -25,5 +25,7 @@
         public string FormattedDate => Date.ToString("dd MMM yyyy");
 
         public string? CategoryName { get; set; }
+
+        public string Currency { get; set; } = null!;
     }
 }

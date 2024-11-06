@@ -19,5 +19,8 @@
 
         [Required]
         public DateTime Date { get; set; }
+
+        [Required]
+        public string? Currency {  get; set; }
     }
 }
