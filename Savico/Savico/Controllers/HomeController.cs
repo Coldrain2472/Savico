@@ -1,5 +1,6 @@
 namespace Savico.Controllers
 {
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Savico.Core.Models;
@@ -21,14 +22,10 @@ namespace Savico.Controllers
             this.userManager = userManager;
         }
 
+        [Authorize]
         public async Task<IActionResult> Index()
         {
             var userId = userManager.GetUserId(User);
-
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
 
             var user = await userManager.FindByIdAsync(userId);
 
