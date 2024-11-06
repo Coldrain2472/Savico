@@ -1,21 +1,57 @@
-using Microsoft.AspNetCore.Mvc;
-using Savico.Models;
-using System.Diagnostics;
-
 namespace Savico.Controllers
 {
+    using Microsoft.AspNetCore.Identity;
+    using Microsoft.AspNetCore.Mvc;
+    using Savico.Core.Models;
+    using Savico.Core.Models.ViewModels.Home;
+    using Savico.Models;
+    using Savico.Services;
+    using Savico.Services.Contracts;
+    using System.Diagnostics;
+
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly ILogger<HomeController> logger;
+        private readonly IBudgetService budgetService;
+        private readonly UserManager<User> userManager;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, IBudgetService budgetService, UserManager<User> userManager)
         {
-            _logger = logger;
+            this.logger = logger;
+            this.budgetService = budgetService;
+            this.userManager = userManager;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var userId = userManager.GetUserId(User);
+
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            var user = await userManager.FindByIdAsync(userId);
+
+            if (user == null)
+            {
+                return BadRequest();
+            }
+
+            var totalIncome = await budgetService.GetTotalIncomeAsync(userId);
+            var totalExpenses = await budgetService.GetTotalExpenseAsync(userId);
+            var budget = await budgetService.CalculateRemainingBudgetAsync(userId);
+
+            var viewModel = new HomeViewModel
+            {
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                TotalIncome = totalIncome,
+                TotalExpense = totalExpenses,
+                Budget = (decimal)budget
+            };
+
+            return View(viewModel);
         }
 
         public IActionResult Privacy()
