@@ -4,10 +4,10 @@
 
     public interface IBudgetService
 	{
-        Task<decimal?> CalculateRemainingBudgetAsync(string userId);
+        Task<decimal?> CalculateRemainingBudgetAsync(string userId); // calculates the budget after the expenses
 
-        Task<decimal> GetTotalIncomeAsync(string userId);
+        Task<decimal> GetTotalIncomeAsync(string userId); // calculates the sum of the incomes
 
-        Task<decimal> GetTotalExpenseAsync(string userId);
+        Task<decimal> GetTotalExpenseAsync(string userId); // calculates the sum of the expenses
     }
 }

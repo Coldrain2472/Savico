@@ -13,8 +13,6 @@
 
         Task<ExpenseViewModel> GetExpenseByIdAsync(int expenseId, string userId); // retrieve an expense by a specific id
 
-        // Task UpdateExpenseAsync(int expenseId, ExpenseViewModel model, string userId); // updates an expense
-
         Task EditExpenseAsync(int expenseId, ExpenseInputViewModel model, string userId); // edits an expense
 
         Task<decimal?> CalculateRemainingBudgetAsync(string userId); // calculates the budget
