@@ -24,9 +24,6 @@
 
         public int BudgetId {  get; set; }
 
-        public string FormattedDate => Date.ToString("dd MMM yyyy");
-
-        [Required]
         public string? Currency {  get; set; }
     }
 }

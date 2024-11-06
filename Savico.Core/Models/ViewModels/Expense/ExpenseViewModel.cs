@@ -22,10 +22,8 @@
 
         public ICollection<CategoryViewModel> Categories { get; set; } = new HashSet<CategoryViewModel>();
 
-        public string FormattedDate => Date.ToString("dd MMM yyyy");
-
         public string? CategoryName { get; set; }
 
-        public string Currency { get; set; } = null!;
+        public string? Currency { get; set; }
     }
 }
