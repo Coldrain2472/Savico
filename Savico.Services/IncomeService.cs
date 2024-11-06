@@ -74,14 +74,17 @@
 
         public async Task UpdateIncomeAsync(int incomeId, IncomeInputViewModel model, string userId)
         {
-            var income = await context.Incomes.FindAsync(incomeId);
+            var income = await context.Incomes
+        .FirstOrDefaultAsync(i => i.Id == incomeId && i.UserId == userId);
+
+            //var income = await context.Incomes.FindAsync(incomeId);
             if (income != null && income.UserId == userId)
             {
                 income.Amount = model.Amount;
                 income.Source = model.Source;
                 income.Date = model.Date;
 
-                context.Incomes.Update(income);
+                //context.Incomes.Update(income);
                 await context.SaveChangesAsync();
             }
         }
@@ -89,6 +92,25 @@
         public async Task<IncomeInputViewModel> PrepareIncomeInputModelAsync()
         {
             return new IncomeInputViewModel();
+        }
+
+
+        public async Task<IncomeInputViewModel> GetIncomeForEditAsync(int id, string userId)
+        {
+            var income = await context.Incomes
+                .FirstOrDefaultAsync(i => i.Id == id && i.UserId == userId);
+
+            if (income == null)
+            {
+                return null;
+            }
+
+            return new IncomeInputViewModel
+            {
+                Id = income.Id,
+                Amount = income.Amount,
+                Source = income.Source
+            };
         }
     }
 }

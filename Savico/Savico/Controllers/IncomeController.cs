@@ -51,7 +51,7 @@
         public async Task<IActionResult> Edit(int id)
         {
             var userId = GetUserId();
-            var income = await incomeService.GetIncomeByIdAsync(id, userId);
+            var income = await incomeService.GetIncomeForEditAsync(id, userId);
             if (income == null)
             {
                 return BadRequest();

@@ -46,7 +46,8 @@
             {
                 Amount = inputModel.Amount,
                 Description = inputModel.Description,
-                BudgetId = budget.Id
+                BudgetId = budget.Id,
+                UserId = userId
             };
 
             context.Expenses.Add(expense);
