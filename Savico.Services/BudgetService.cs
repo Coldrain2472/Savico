@@ -1,79 +1,56 @@
 ﻿namespace Savico.Services
 {
-    using Savico.Core.Models;
-    using Savico.Infrastructure.Repositories.Contracts;
-    using Savico.Models.ViewModels.Budget;
+    using Microsoft.EntityFrameworkCore;
+    using Savico.Infrastructure;
     using Savico.Services.Contracts;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
 
     public class BudgetService : IBudgetService
 	{
-		private readonly IRepository<Budget, int> budgetRepository;
-		private readonly IRepository<Expense, int> expenseRepository;
+        private readonly SavicoDbContext context;
 
-		public BudgetService(IRepository<Budget, int> budgetRepository, IRepository<Expense, int> expenseRepository)
-		{
-			this.budgetRepository = budgetRepository;
-			this.expenseRepository = expenseRepository;
-		}
-
-		public async Task<IEnumerable<BudgetViewModel>> GetAllBudgetsAsync()
-		{
-            var budgets = await budgetRepository.GetAllAsync(); // IEnumerable<Budget>
-
-            if (budgets == null || !budgets.Any())
-            {
-                return Enumerable.Empty<BudgetViewModel>(); // empty list if no budgets
-            }
-
-            return budgets.Select(b => new BudgetViewModel
-            {
-                Id = b.Id,
-                TotalAmount = b.TotalAmount 
-            })
-				.ToList();
+        public BudgetService(SavicoDbContext context)
+        {
+            this.context = context;
         }
 
-		public async Task<Budget> GetBudgetByIdAsync(int id)
-		{
-			return await budgetRepository.GetByIdAsync(id);
-		}
+        public async Task<decimal?> CalculateRemainingBudgetAsync(string userId) 
+            // returns the budget (the money that we have after all the expenses)
+        {
+            var user = await context.Users
+                .Include(u => u.Budget)
+                .Include(u => u.Incomes)
+                .Include(u => u.Expenses)
+                .FirstOrDefaultAsync(u => u.Id == userId);
 
-		public async Task AddBudgetAsync(Budget budget)
-		{
-			await budgetRepository.AddAsync(budget);
-		}
+            if (user == null)
+            {
+                return null;
+            }
 
-		public async Task UpdateBudgetAsync(Budget budget)
-		{
-			await budgetRepository.UpdateAsync(budget);
-		}
+            var totalIncome = user.Incomes?.Sum(i => i.Amount); // GetTotalIncomeAsync(userId);
+            var totalExpense = user.Expenses?.Sum(e => e.Amount); // GetTotalExpenseAsync(userId);
 
-		public async Task DeleteBudgetAsync(int id)
-		{
-			var budget = await budgetRepository.GetByIdAsync(id);
+            return totalIncome - totalExpense;
+        }
 
-			if (budget != null)
-			{
-				await budgetRepository.DeleteAsync(budget);
-			}
-		}
+        public async Task<decimal> GetTotalIncomeAsync(string userId) // returns the sum of the income
+        {
+            var income = await context.Incomes
+                .Where(i => i.UserId == userId)
+                .SumAsync(i => i.Amount);
 
-		public async Task<decimal?> CalculateRemainingBudgetAsync(int budgetId)
-		{
-			var budget = await budgetRepository.GetByIdAsync(budgetId);
+            return income;
+        }
 
-			if (budget == null)
-			{
-				return null;
-			}
+        public async Task<decimal> GetTotalExpenseAsync(string userId) // return the sum of the expenses
+        {
+            var expenses = await context.Expenses
+                .Where(e => e.UserId == userId)
+                .SumAsync(e => e.Amount);
 
-			var expenses = await expenseRepository.FindAsync(e => e.BudgetId == budgetId);
-			var totalExpenses = expenses.Sum(e => e.Amount);
-
-			return budget.TotalAmount - totalExpenses;
-		}
-	}
+            return expenses;
+        }
+    }
 }
