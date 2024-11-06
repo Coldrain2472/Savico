@@ -31,6 +31,10 @@
         [Comment("User's profile picture")]
         public string? ProfilePicture { get; set; }
 
+        public int BudgetId {  get; set; }
+
+        public Budget Budget { get; set; }
+
         [Comment("Indicates if the user is soft-deleted")]
         public bool IsDeleted { get; set; } = false;
 
@@ -40,7 +44,7 @@
 
         public ICollection<Expense> Expenses { get; set; } = new HashSet<Expense>();
 
-        public ICollection<Budget> Budgets { get; set; } = new HashSet<Budget>();
+       // public ICollection<Budget> Budgets { get; set; } = new HashSet<Budget>();
 
         public ICollection<Report> Reports { get; set; } = new HashSet<Report>();
 
