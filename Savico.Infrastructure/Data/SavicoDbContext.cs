@@ -63,6 +63,11 @@
 
             //explicitly defining the relationships
 
+            modelBuilder.Entity<User>()
+                .HasOne(u => u.Budget)
+                .WithOne(u=>u.User)
+                .HasForeignKey<Budget>(b => b.UserId);
+
             modelBuilder.Entity<Income>()
                 .HasKey(i => i.Id);
 
@@ -99,11 +104,11 @@
             modelBuilder.Entity<Budget>()
                 .HasKey(b => b.Id);
 
-            modelBuilder.Entity<Budget>()
-                .HasOne(b => b.User)
-                .WithMany(b => b.Budgets) // a user can have multiple budgets
-                .HasForeignKey(b => b.UserId)
-                .OnDelete(DeleteBehavior.NoAction);
+            //modelBuilder.Entity<Budget>()
+            //    .HasOne(b => b.User)
+            //    .WithMany(b => b.Budgets) // a user can have multiple budgets
+            //    .HasForeignKey(b => b.UserId)
+            //    .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<Category>()
            .HasKey(bc => bc.Id);
