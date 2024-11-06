@@ -8,15 +8,17 @@
     using Savico.Core.Models;
     using Savico.Infrastructure;
     using Microsoft.EntityFrameworkCore;
-    using Microsoft.EntityFrameworkCore.Storage;
+    using Microsoft.AspNetCore.Identity;
 
     public class IncomeService : IIncomeService
     {
         private readonly SavicoDbContext context;
+        private readonly UserManager<User> userManager;
 
-        public IncomeService(SavicoDbContext context)
+        public IncomeService(SavicoDbContext context, UserManager<User> userManager)
         {
             this.context = context;
+            this.userManager = userManager;
         }
 
         public async Task AddIncomeAsync(IncomeInputViewModel model, string userId)
@@ -45,16 +47,22 @@
 
         public async Task<IEnumerable<IncomeViewModel>> GetAllIncomesAsync(string userId)
         {
-            return await context.Incomes
+            var user = await userManager.FindByIdAsync(userId);
+            var currency = user!.Currency;
+
+            var incomes = await context.Incomes
                 .Where(i => i.UserId == userId)
                 .Select(i => new IncomeViewModel
                 {
                     Id = i.Id,
-                    Amount = i.Amount,
                     Source = i.Source,
-                    Date = i.Date
+                    Amount = i.Amount,
+                    Date = i.Date,
+                    Currency = currency! 
                 })
                 .ToListAsync();
+
+            return incomes;
         }
 
         public async Task<IncomeViewModel> GetIncomeByIdAsync(int incomeId, string userId)

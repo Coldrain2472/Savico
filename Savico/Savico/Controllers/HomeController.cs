@@ -40,11 +40,12 @@ namespace Savico.Controllers
 
             var viewModel = new HomeViewModel
             {
-                FirstName = user.FirstName,
-                LastName = user.LastName,
+                FirstName = user.FirstName!,
+                LastName = user.LastName!,
                 TotalIncome = totalIncome,
                 TotalExpense = totalExpenses,
-                Budget = (decimal)budget
+                Budget = (decimal)budget,
+                Currency = user.Currency!
             };
 
             return View(viewModel);
