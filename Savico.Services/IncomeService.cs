@@ -38,11 +38,16 @@
         public async Task DeleteIncomeAsync(int incomeId, string userId)
         {
             var income = await context.Incomes.FindAsync(incomeId);
-            if (income != null && income.UserId == userId)
+            if (income != null && income.IsDeleted == false && income.UserId == userId)
             {
+                income.IsDeleted = true;
                 context.Incomes.Remove(income);
-                await context.SaveChangesAsync();
             }
+            //if (income != null && income.UserId == userId)
+            //{
+            //    context.Incomes.Remove(income);
+            //    await context.SaveChangesAsync();
+            //}
         }
 
         public async Task<IEnumerable<IncomeViewModel>> GetAllIncomesAsync(string userId)

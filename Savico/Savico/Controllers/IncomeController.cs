@@ -3,6 +3,7 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Savico.Core.Models.ViewModels.Income;
+    using Savico.Services;
     using Savico.Services.Contracts;
     using System.Security.Claims;
 
@@ -73,11 +74,31 @@
             return RedirectToAction(nameof(Index));
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
-            string userId = GetUserId();
+            var userId = GetUserId();
+            var income = await incomeService.GetIncomeByIdAsync(id, userId);
+            if (income == null)
+            {
+                return BadRequest();
+            }
+
+            await incomeService.DeleteIncomeAsync(id, userId);
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var userId = GetUserId();
+            var income = await incomeService.GetIncomeByIdAsync(id, userId);
+            if (income == null)
+            {
+                return BadRequest();
+            }
+
             await incomeService.DeleteIncomeAsync(id, userId);
             return RedirectToAction(nameof(Index));
         }
