@@ -4,7 +4,9 @@
     using System.Security.Claims;
     using Savico.Core.Models.ViewModels.Expense;
     using Savico.Services.Contracts;
+    using Microsoft.AspNetCore.Authorization;
 
+    [Authorize]
     public class ExpenseController : Controller
     {
         private readonly IExpenseService expenseService;
