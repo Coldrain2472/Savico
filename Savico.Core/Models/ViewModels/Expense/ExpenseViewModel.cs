@@ -8,16 +8,16 @@
     {
         public int Id { get; set; }
 
-        //[Required]
-        //[Range(0.00, double.MaxValue, ErrorMessage = RangeErrorMessage)]
+        [Required]
+        [Range(0.00, double.MaxValue, ErrorMessage = RangeErrorMessage)]
         public decimal Amount { get; set; }
 
-        //[Required]
+        [Required]
         public DateTime Date { get; set; }
 
         public string? Description { get; set; }
 
-        //[Required]
+        [Required]
         public int CategoryId { get; set; }
 
         public ICollection<CategoryViewModel> Categories { get; set; } = new HashSet<CategoryViewModel>();

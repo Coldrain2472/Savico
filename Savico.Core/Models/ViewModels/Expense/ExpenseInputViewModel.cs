@@ -20,7 +20,7 @@
         [Required]
         public int CategoryId { get; set; }
 
-        public IEnumerable<CategoryViewModel> Categories { get; set; } = new HashSet<CategoryViewModel>();
+        public ICollection<CategoryViewModel> Categories { get; set; } = new HashSet<CategoryViewModel>();
 
         public int BudgetId {  get; set; }
 
