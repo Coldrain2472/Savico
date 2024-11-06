@@ -148,19 +148,18 @@
 			var expense = await context.Expenses
 				.FirstOrDefaultAsync(e => e.Id == expenseId && e.UserId == userId);
 
-			if (expense != null && expense.UserId == userId)
-			{
-				model.Categories = await GetCategories();
-				expense.Id = expenseId;
-				expense.Amount = model.Amount;
-				expense.Description = model.Description;
-				expense.Date = model.Date;
-				expense.CategoryId = model.CategoryId;
-				expense.Description = model.Description;
-			}
+            if (expense != null && expense.UserId == userId)
+            {
+                model.Categories = await GetCategories();
 
-			//context.Expenses.Update(expense);
-			await context.SaveChangesAsync();
+                expense.Amount = model.Amount;
+                expense.Description = model.Description;
+                expense.Date = model.Date;
+                expense.CategoryId = model.CategoryId;
+
+                context.Expenses.Update(expense);
+                await context.SaveChangesAsync();
+            }
 		}
 
 		public async Task DeleteExpenseAsync(int expenseId, string userId)
