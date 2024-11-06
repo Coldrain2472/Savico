@@ -1,4 +1,7 @@
-﻿@{
+﻿@using Savico.Core.Models.ViewModels.Home
+@model HomeViewModel
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
@@ -9,7 +12,7 @@
             <div class="card text-center bg-success text-white">
                 <div class="card-body">
                     <h3>Total Income</h3>
-                    <p class="display-4">@Model.TotalIncome.ToString("C")</p>
+                    <p class="display-4">@Model.TotalIncome @Model.Currency</p>
                 </div>
             </div>
         </div>
@@ -17,7 +20,7 @@
             <div class="card text-center bg-danger text-white">
                 <div class="card-body">
                     <h3>Total Expenses</h3>
-                    <p class="display-4">@Model.TotalExpense.ToString("C")</p>
+                    <p class="display-4">@Model.TotalExpense @Model.Currency</p>
                 </div>
             </div>
         </div>
@@ -25,7 +28,7 @@
             <div class="card text-center bg-primary text-white">
                 <div class="card-body">
                     <h3>Available Budget</h3>
-                    <p class="display-4">@Model.Budget.ToString("C")</p>
+                    <p class="display-4">@Model.Budget @Model.Currency</p>
                 </div>
             </div>
         </div>

@@ -10,8 +10,8 @@
 <table class="table">
     <thead>
         <tr>
-            <th>Description</th>
             <th>Amount</th>
+            <th>Description</th>
             <th>Date</th>
             <th>Category</th>
             <th></th>
@@ -21,8 +21,8 @@
         @foreach (var expense in Model)
         {
             <tr>
+                <td>@expense.Amount @expense.Currency</td>
                 <td>@expense.Description</td>
-                <td>@expense.Amount.ToString("C")</td> <!-- Displays currency format -->
                 <td>@expense.FormattedDate</td>
                 <td>@expense.CategoryName</td>
                 <td>

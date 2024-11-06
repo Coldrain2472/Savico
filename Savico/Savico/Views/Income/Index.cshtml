@@ -20,7 +20,7 @@
         @foreach (var income in Model)
         {
             <tr>
-                <td>@income.Amount</td>
+                <td>@income.Amount @income.Currency</td>
                 <td>@income.Source</td>
                 <td>@income.Date.ToString("dd.MM.yyyy")</td>
                 <td>
