@@ -28,9 +28,6 @@
         [Comment("User's currency")]
         public string? Currency { get; set; }
 
-        [Comment("User's profile picture")]
-        public string? ProfilePicture { get; set; }
-
         public int BudgetId {  get; set; }
 
         public Budget Budget { get; set; }

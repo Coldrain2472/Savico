@@ -81,10 +81,6 @@ namespace Savico.Areas.Identity.Pages.Account
             [StringLength(30, MinimumLength = 1, ErrorMessage = "The {0} must be between {2} and {1} characters.")]
             public string LastName { get; set; }
 
-            [Display(Name = "Profile Picture URL")]
-            [DataType(DataType.Url)]
-            public string ProfilePicture {  get; set; }
-
             /// <summary>
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
@@ -140,7 +136,6 @@ namespace Savico.Areas.Identity.Pages.Account
 
                 user.FirstName = Input.FirstName;
                 user.LastName = Input.LastName;
-                user.ProfilePicture = Input.ProfilePicture;
                 user.Currency = Input.Currency;
 
                 var result = await _userManager.CreateAsync(user, Input.Password);
