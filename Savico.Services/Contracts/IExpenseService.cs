@@ -13,8 +13,6 @@
 
         Task<ExpenseViewModel> GetExpenseByIdAsync(int expenseId, string userId); // retrieve an expense by a specific id
 
-        Task EditExpenseAsync(int expenseId, ExpenseInputViewModel model, string userId); // edits an expense
-
         Task<decimal?> CalculateRemainingBudgetAsync(string userId); // calculates the budget
 
         Task<ExpenseInputViewModel> PrepareExpenseInputModelAsync(); // prepares the input model for edit/add
@@ -22,5 +20,9 @@
         Task<string> GetCategoryNameByIdAsync(int categoryId); // retrieves a category name by id
 
         Task<ICollection<CategoryViewModel>> GetCategories(); // retrieves the categories
+
+        Task<ExpenseInputViewModel> GetExpenseForEditAsync(int expenseId, string userId); // retrieves the expense for edit
+
+        Task UpdateExpenseAsync(int expenseId, ExpenseInputViewModel model, string userId); // updates and expense
     }
 }

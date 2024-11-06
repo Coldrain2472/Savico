@@ -58,33 +58,76 @@
             return View(model); 
         }
         
-        [HttpGet("Edit/{id}")]
+        [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
             var userId = GetUserId();
 
-            var expense = await expenseService.GetExpenseByIdAsync(id, userId);
+            var expense = await expenseService.GetExpenseForEditAsync(id, userId);
 
             return View(expense);
         }
 
-        [HttpPost("Edit/{id}")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, ExpenseInputViewModel model)
         {
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                return View(model);
+                var userId = GetUserId();
+
+                await expenseService.UpdateExpenseAsync(id, model, userId);
+
+                return RedirectToAction(nameof(Index)); 
             }
 
-            var userId = GetUserId();
+            model.Categories = await expenseService.GetCategories();
 
-            await expenseService.EditExpenseAsync(id, model, userId);
+            return View(model); 
 
-            return RedirectToAction(nameof(Index));
+            // ModelState.AddModelError(string.Empty, "An error occurred while updating the expense.");
+
+            //if (!ModelState.IsValid)
+            //{
+            //    return View(model);
+            //}
+
+            //var userId = GetUserId();
+
+            //await expenseService.EditExpenseAsync(id, model, userId);
+
+            //return RedirectToAction(nameof(Index));
+
+            //if (ModelState.IsValid)
+            //{
+            //    var userId = GetUserId();
+            //    await expenseService.EditExpenseAsync(model.Id, model, userId);
+            //    return RedirectToAction(nameof(Index)); 
+            //}
+
+            //model.Categories = await expenseService.GetCategories();
+
+            //return View(model);
+
+            //if (ModelState.IsValid)
+            //{
+            //    var userId = GetUserId();  // Get the user ID
+            //    var success = await expenseService.EditExpenseAsync(id, model, userId);
+
+            //    if (success)
+            //    {
+            //        return RedirectToAction(nameof(Index));  // Redirect to index on success
+            //    }
+
+            //    ModelState.AddModelError(string.Empty, "An error occurred while updating the expense.");
+            //}
+
+            //// If validation failed, repopulate the categories dropdown and return to view
+            //model.Categories = await expenseService.GetCategories();
+            //return View(model);
         }
 
-        [HttpPost("Delete/{id}")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {

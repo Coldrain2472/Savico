@@ -8,6 +8,7 @@
     using Savico.Core.Models;
     using Savico.Infrastructure;
     using Microsoft.EntityFrameworkCore;
+    using Microsoft.EntityFrameworkCore.Storage;
 
     public class IncomeService : IIncomeService
     {
@@ -109,7 +110,8 @@
             {
                 Id = income.Id,
                 Amount = income.Amount,
-                Source = income.Source
+                Source = income.Source,
+                Date = income.Date,
             };
         }
     }

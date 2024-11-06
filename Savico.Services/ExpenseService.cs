@@ -7,6 +7,7 @@
     using Savico.Infrastructure;
     using Savico.Services.Contracts;
 
+
     public class ExpenseService : IExpenseService
     {
         private readonly SavicoDbContext context;
@@ -47,7 +48,8 @@
                 Amount = inputModel.Amount,
                 Description = inputModel.Description,
                 BudgetId = budget.Id,
-                UserId = userId
+                UserId = userId,
+                CategoryId = inputModel.CategoryId
             };
 
             context.Expenses.Add(expense);
@@ -55,22 +57,34 @@
             await context.SaveChangesAsync();
         }
 
-
-        public async Task EditExpenseAsync(int expenseId, ExpenseInputViewModel model, string userId)
+        public async Task<ExpenseInputViewModel> GetExpenseForEditAsync(int expenseId, string userId)
         {
             var expense = await context.Expenses
-                .FirstOrDefaultAsync(e => e.Id == expenseId && e.UserId == userId);
+        .Where(e => e.Id == expenseId && e.UserId == userId)
+        .FirstOrDefaultAsync();
 
-            if (expense != null)
+            if (expense == null)
             {
-                expense.Description = model.Description;
-                expense.Amount = model.Amount;
-                expense.Date = model.Date;
-                expense.CategoryId = model.CategoryId;
-
-                context.Expenses.Update(expense);
-                await context.SaveChangesAsync();
+                return null; 
             }
+
+            var categories = await context.Categories
+          .Select(c => new CategoryViewModel
+          {
+              Id = c.Id,
+              Name = c.Name
+          })
+          .ToListAsync();
+
+            return new ExpenseInputViewModel
+            {
+                Id = expense.Id,
+                Description = expense.Description,
+                Amount = expense.Amount,
+                Date = expense.Date,
+                CategoryId = expense.CategoryId,
+                Categories = categories 
+            };
         }
 
         public async Task<IEnumerable<ExpenseViewModel>> GetAllExpensesAsync(string userId)
@@ -118,14 +132,29 @@
             return category ?? string.Empty;
         }
 
+        public async Task UpdateExpenseAsync(int expenseId, ExpenseInputViewModel model, string userId)
+        {
+            var expense = await context.Expenses
+                .FirstOrDefaultAsync(e => e.Id == expenseId && e.UserId == userId);
+
+            expense.Description = model.Description;
+            expense.Amount = model.Amount;
+            expense.Date = model.Date;
+            expense.CategoryId = model.CategoryId;
+
+            context.Expenses.Update(expense);
+            await context.SaveChangesAsync();
+        }
+
         public async Task DeleteExpenseAsync(int expenseId, string userId)
         {
             var expense = await context.Expenses
                 .FirstOrDefaultAsync(e => e.Id == expenseId && e.UserId == userId);
 
-            if (expense != null)
+            if (expense != null && expense.IsDeleted == false) // trying to implement soft delete?
             {
-                context.Expenses.Remove(expense);
+                expense.IsDeleted = true;
+               // context.Expenses.Remove(expense);
                 await context.SaveChangesAsync();
             }
         }
@@ -153,5 +182,6 @@
                 })
                 .ToListAsync();
         }
+
     }
 }
