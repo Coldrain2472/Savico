@@ -1,148 +1,113 @@
 ﻿namespace Savico.Controllers
 {
-    using Microsoft.AspNetCore.Mvc;
-    using System.Security.Claims;
-    using Savico.Core.Models.ViewModels.Expense;
-    using Savico.Services.Contracts;
-    using Microsoft.AspNetCore.Authorization;
+	using Microsoft.AspNetCore.Mvc;
+	using System.Security.Claims;
+	using Savico.Core.Models.ViewModels.Expense;
+	using Savico.Services.Contracts;
+	using Microsoft.AspNetCore.Authorization;
+	using Savico.Services;
 
-    [Authorize]
-    public class ExpenseController : Controller
-    {
-        private readonly IExpenseService expenseService;
+	[Authorize]
+	public class ExpenseController : Controller
+	{
+		private readonly IExpenseService expenseService;
 
-        public ExpenseController(IExpenseService expenseService)
-        {
-            this.expenseService = expenseService;
-        }
+		public ExpenseController(IExpenseService expenseService)
+		{
+			this.expenseService = expenseService;
+		}
 
-        [HttpGet("Index")]
-        public async Task<IActionResult> Index()
-        {
-            var userId = GetUserId();
+		[HttpGet]
+		public async Task<IActionResult> Index()
+		{
+			var userId = GetUserId();
 
-            var expenses = await expenseService.GetAllExpensesAsync(userId);
+			var expenses = await expenseService.GetAllExpensesAsync(userId);
 
-            return View(expenses);
-        }
+			return View(expenses);
+		}
 
-        [HttpGet("Details/{id}")]
-        public async Task<IActionResult> Details(int id)
-        {
-            var userId = GetUserId();
+		[HttpGet]
+		public async Task<IActionResult> Details(int id)
+		{
+			var userId = GetUserId();
 
-            var expense = await expenseService.GetExpenseByIdAsync(id, userId);
+			var expense = await expenseService.GetExpenseByIdAsync(id, userId);
 
-            return View(expense);
-        }
+			return View(expense);
+		}
 
-        [HttpGet]
-        public async Task<IActionResult> Create()
-        {
-            var model = await expenseService.PrepareExpenseInputModelAsync();
+		[HttpGet]
+		public async Task<IActionResult> Create()
+		{
+			var model = await expenseService.PrepareExpenseInputModelAsync(new ExpenseInputViewModel());
 
-            return View(model);
-        }
+			return View(model);
+		}
 
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(ExpenseInputViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                var userId = GetUserId(); 
-                await expenseService.AddExpenseAsync(model, userId); 
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> Create(ExpenseInputViewModel model)
+		{
+			var userId = GetUserId();
 
-                return RedirectToAction(nameof(Index)); 
-            }
+			if (ModelState.IsValid)
+			{
+				await expenseService.AddExpenseAsync(model, userId);
 
-            return View(model); 
-        }
-        
-        [HttpGet]
-        public async Task<IActionResult> Edit(int id)
-        {
-            var userId = GetUserId();
+				return RedirectToAction(nameof(Index));
+			}
 
-            var expense = await expenseService.GetExpenseForEditAsync(id, userId);
+			return View(model);
+		}
 
-            return View(expense);
-        }
+		[HttpGet]
+		public async Task<IActionResult> Edit(int id)
+		{
+			var userId = GetUserId();
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, ExpenseInputViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                var userId = GetUserId();
+			var expense = await expenseService.GetExpenseForEditAsync(id, userId);
 
-                await expenseService.UpdateExpenseAsync(id, model, userId);
+			if (expense == null)
+			{
+				return BadRequest();
+			}
 
-                return RedirectToAction(nameof(Index)); 
-            }
+			return View(expense);
+		}
 
-            model.Categories = await expenseService.GetCategories();
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> Edit(int id, ExpenseInputViewModel model)
+		{
+			var userId = GetUserId();
+			model.Categories = await expenseService.GetCategories();
 
-            return View(model); 
+			if (!ModelState.IsValid)
+			{
+				return View(model);
+			}
 
-            // ModelState.AddModelError(string.Empty, "An error occurred while updating the expense.");
+			await expenseService.UpdateExpenseAsync(id, model, userId);
 
-            //if (!ModelState.IsValid)
-            //{
-            //    return View(model);
-            //}
+			return RedirectToAction(nameof(Index));
+		}
 
-            //var userId = GetUserId();
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> Delete(int id)
+		{
+			var userId = GetUserId();
 
-            //await expenseService.EditExpenseAsync(id, model, userId);
+			await expenseService.DeleteExpenseAsync(id, userId);
 
-            //return RedirectToAction(nameof(Index));
+			return RedirectToAction(nameof(Index));
+		}
 
-            //if (ModelState.IsValid)
-            //{
-            //    var userId = GetUserId();
-            //    await expenseService.EditExpenseAsync(model.Id, model, userId);
-            //    return RedirectToAction(nameof(Index)); 
-            //}
-
-            //model.Categories = await expenseService.GetCategories();
-
-            //return View(model);
-
-            //if (ModelState.IsValid)
-            //{
-            //    var userId = GetUserId();  // Get the user ID
-            //    var success = await expenseService.EditExpenseAsync(id, model, userId);
-
-            //    if (success)
-            //    {
-            //        return RedirectToAction(nameof(Index));  // Redirect to index on success
-            //    }
-
-            //    ModelState.AddModelError(string.Empty, "An error occurred while updating the expense.");
-            //}
-
-            //// If validation failed, repopulate the categories dropdown and return to view
-            //model.Categories = await expenseService.GetCategories();
-            //return View(model);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Delete(int id)
-        {
-            var userId = GetUserId();
-
-            await expenseService.DeleteExpenseAsync(id, userId);
-
-            return RedirectToAction(nameof(Index));
-        }
-
-        private string GetUserId()
-        {
-            return User.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty;
-        }
-    }
+		private string GetUserId()
+		{
+			return User.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty;
+		}
+	}
 }
