@@ -9,6 +9,7 @@ namespace Savico.Controllers
     using Savico.Services.Contracts;
     using System.Diagnostics;
 
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> logger;
