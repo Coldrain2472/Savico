@@ -5,9 +5,6 @@
 	using Savico.Core.Models.ViewModels.Expense;
 	using Savico.Services.Contracts;
 	using Microsoft.AspNetCore.Authorization;
-	using Savico.Services;
-    using Savico.Core.Models;
-    using Savico.Infrastructure;
 
     [Authorize]
 	public class ExpenseController : Controller
