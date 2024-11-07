@@ -12,6 +12,8 @@
         [MaxLength(CategoryNameMaxLength)]
         public string? Name { get; set; }
 
-        public ICollection<ExpenseCategory> ExpenseCategories { get; set; } = new HashSet<ExpenseCategory>();
+       // public ICollection<ExpenseCategory> ExpenseCategories { get; set; } = new HashSet<ExpenseCategory>();
+
+        public ICollection<Expense> Expenses { get; set; } = new HashSet<Expense>();
     }
 }

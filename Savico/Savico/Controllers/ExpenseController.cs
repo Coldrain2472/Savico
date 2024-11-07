@@ -6,8 +6,10 @@
 	using Savico.Services.Contracts;
 	using Microsoft.AspNetCore.Authorization;
 	using Savico.Services;
+    using Savico.Core.Models;
+    using Savico.Infrastructure;
 
-	[Authorize]
+    [Authorize]
 	public class ExpenseController : Controller
 	{
 		private readonly IExpenseService expenseService;
@@ -65,34 +67,33 @@
 		[HttpGet]
 		public async Task<IActionResult> Edit(int id)
 		{
-			var userId = GetUserId();
+            var userId = GetUserId(); 
+            var expense = await expenseService.GetExpenseForEditAsync(id, userId);
 
-			var expense = await expenseService.GetExpenseForEditAsync(id, userId);
+            if (expense == null)
+            {
+                return BadRequest("Expense not found or user does not own this expense.");
+            }
 
-			if (expense == null)
-			{
-				return BadRequest();
-			}
-
-			return View(expense);
-		}
+            return View(expense);
+        }
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> Edit(int id, ExpenseInputViewModel model)
 		{
-			var userId = GetUserId();
-			model.Categories = await expenseService.GetCategories();
+            var userId = GetUserId(); 
 
-			if (!ModelState.IsValid)
-			{
-				return View(model);
-			}
+            if (!ModelState.IsValid)
+            {
+                model.Categories = await expenseService.GetCategories(); 
+                return View(model);
+            }
 
-			await expenseService.UpdateExpenseAsync(id, model, userId);
+            await expenseService.UpdateExpenseAsync(id, model, userId);
 
-			return RedirectToAction(nameof(Index));
-		}
+            return RedirectToAction(nameof(Index));
+        }
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]

@@ -41,10 +41,8 @@
 
         public ICollection<Expense> Expenses { get; set; } = new HashSet<Expense>();
 
-       // public ICollection<Budget> Budgets { get; set; } = new HashSet<Budget>();
-
         public ICollection<Report> Reports { get; set; } = new HashSet<Report>();
 
-        public ICollection<ExpenseCategory> ExpenseCategories { get; set; } = new HashSet<ExpenseCategory>();
+        //public ICollection<ExpenseCategory> ExpenseCategories { get; set; } = new HashSet<ExpenseCategory>();
     }
 }

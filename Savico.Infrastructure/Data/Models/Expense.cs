@@ -47,6 +47,8 @@
         [Comment("Indicates if the expense is soft-deleted")]
         public bool IsDeleted { get; set; } = false;
 
-        public ICollection<ExpenseCategory> ExpenseCategories {  get; set; } = new HashSet<ExpenseCategory>();
+       // public ICollection<ExpenseCategory> ExpenseCategories {  get; set; } = new HashSet<ExpenseCategory>();
+
+        public ICollection<Category> Categories {  get; set; } = new HashSet<Category>();
     }
 }

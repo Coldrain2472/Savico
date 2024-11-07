@@ -21,11 +21,9 @@
 
         public DbSet<Budget> Budgets { get; set; } = null!;
 
-        public DbSet<ExpenseCategory> ExpenseCategories { get; set; } = null!;
+        //public DbSet<ExpenseCategory> ExpenseCategories { get; set; } = null!;
 
         public DbSet<Category> Categories { get; set; } = null!;
-
-        // public DbSet<BudgetCategory> BudgetCategories { get; set; } = null!;
 
         public DbSet<Report> Reports { get; set; } = null!;
 
@@ -93,6 +91,12 @@
                 .HasForeignKey(e => e.BudgetId)
                 .OnDelete(DeleteBehavior.NoAction);
 
+            modelBuilder.Entity<Expense>()
+          .HasOne(e => e.Category)           
+          .WithMany(c => c.Expenses)         // each category has many expenses
+          .HasForeignKey(e => e.CategoryId)  
+          .OnDelete(DeleteBehavior.NoAction);
+
             modelBuilder.Entity<Goal>()
                 .HasKey(g => g.Id);
 
@@ -105,36 +109,25 @@
             modelBuilder.Entity<Budget>()
                 .HasKey(b => b.Id);
 
-            //modelBuilder.Entity<Budget>()
-            //    .HasOne(b => b.User)
-            //    .WithMany(b => b.Budgets) // a user can have multiple budgets
-            //    .HasForeignKey(b => b.UserId)
-            //    .OnDelete(DeleteBehavior.NoAction);
-
             modelBuilder.Entity<Category>()
            .HasKey(bc => bc.Id);
 
-            modelBuilder.Entity<ExpenseCategory>()
-                .HasKey(ec => new { ec.CategoryId, ec.ExpenseId });
+            //modelBuilder.Entity<ExpenseCategory>()
+            //    .HasKey(ec => new { ec.CategoryId, ec.ExpenseId });
 
-            modelBuilder.Entity<ExpenseCategory>(entity =>
-            {
-                entity.HasOne(ec => ec.Expense)
-                      .WithMany(e => e.ExpenseCategories)
-                      .HasForeignKey(ec => ec.ExpenseId)
-                      .OnDelete(DeleteBehavior.NoAction);
+            //modelBuilder.Entity<ExpenseCategory>()
+            // .HasOne(ec => ec.Expense)          
+            // .WithMany(e => e.ExpenseCategories) 
+            // .HasForeignKey(ec => ec.ExpenseId)  
+            // .OnDelete(DeleteBehavior.Restrict);  
 
-                entity.HasOne(ec => ec.Category)
-                      .WithMany(c => c.ExpenseCategories)
-                      .HasForeignKey(ec => ec.CategoryId)
-                      .OnDelete(DeleteBehavior.NoAction);
-            });
+            //// Each ExpenseCategory can have one Category
+            //modelBuilder.Entity<ExpenseCategory>()
+            //    .HasOne(ec => ec.Category)        
+            //    .WithMany(c => c.ExpenseCategories) 
+            //    .HasForeignKey(ec => ec.CategoryId);
 
-            //modelBuilder.Entity<BudgetCategory>()
-            //    .HasMany(b => b.Budgets)
-            //    .WithOne(b=>b.Category)
-            //    .HasForeignKey(b => b.Id)
-            //    .OnDelete(DeleteBehavior.NoAction);
+
 
             modelBuilder.Entity<Report>()
             .HasKey(r => r.Id);
@@ -158,8 +151,7 @@
             modelBuilder.Entity<Goal>().HasQueryFilter(g => !g.IsDeleted);
             modelBuilder.Entity<Expense>().HasQueryFilter(e => !e.IsDeleted);
             modelBuilder.Entity<Budget>().HasQueryFilter(b => !b.IsDeleted);
-            modelBuilder.Entity<ExpenseCategory>().HasQueryFilter(ec => !ec.IsDeleted);
-            // modelBuilder.Entity<BudgetCategory>().HasQueryFilter(bc => !bc.IsDeleted);
+           // modelBuilder.Entity<ExpenseCategory>().HasQueryFilter(ec => !ec.IsDeleted);
             modelBuilder.Entity<Report>().HasQueryFilter(r => !r.IsDeleted);
         }
     }
