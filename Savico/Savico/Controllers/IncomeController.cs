@@ -3,7 +3,6 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Savico.Core.Models.ViewModels.Income;
-    using Savico.Services;
     using Savico.Services.Contracts;
     using System.Security.Claims;
 
