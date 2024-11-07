@@ -73,6 +73,12 @@
         public async Task<IncomeViewModel> GetIncomeByIdAsync(int incomeId, string userId)
         {
             var income = await context.Incomes.FindAsync(incomeId);
+
+            var userCurrency = await context.Users
+                .Where(u => u.Id == userId)
+                .Select(u => u.Currency)
+                .FirstOrDefaultAsync();
+
             if (income != null && income.UserId == userId)
             {
                 return new IncomeViewModel
@@ -80,9 +86,11 @@
                     Id = income.Id,
                     Amount = income.Amount,
                     Source = income.Source,
-                    Date = income.Date
+                    Date = income.Date,
+                    Currency = userCurrency
                 };
             }
+
             return null;
         }
 
