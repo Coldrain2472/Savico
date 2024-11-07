@@ -97,18 +97,40 @@
             return RedirectToAction(nameof(Index));
         }
 
-		[HttpPost]
-		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Delete(int id)
-		{
-			var userId = GetUserId();
+        [HttpGet]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var userId = GetUserId();
 
-			await expenseService.DeleteExpenseAsync(id, userId);
+            var expense = await expenseService.GetExpenseByIdAsync(id, userId);
 
-			return RedirectToAction(nameof(Index));
-		}
+            if (expense == null)
+            {
+                return BadRequest();
+            }
 
-		private string GetUserId()
+            return View(expense);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var userId = GetUserId();
+
+            var expense = await expenseService.GetExpenseByIdAsync(id, userId);
+
+            if (expense == null)
+            {
+                return BadRequest();
+            }
+
+            await expenseService.DeleteExpenseAsync(id, userId);
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        private string GetUserId()
 		{
 			return User.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty;
 		}

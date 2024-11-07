@@ -109,7 +109,7 @@
 			var currency = user!.Currency;
 
 			var expenses = await context.Expenses
-			   .Where(e => e.UserId == userId)
+			   .Where(e => e.UserId == userId && !e.IsDeleted)
 			   .Select(e => new ExpenseViewModel
 			   {
 				   Id = e.Id,
@@ -174,16 +174,15 @@
 
 		public async Task DeleteExpenseAsync(int expenseId, string userId)
 		{
-			var expense = await context.Expenses
-				.FirstOrDefaultAsync(e => e.Id == expenseId && e.UserId == userId);
+            var expense = await context.Expenses.FindAsync(expenseId);
 
-			if (expense != null && expense.IsDeleted == false) // trying to implement soft delete?
-			{
-				expense.IsDeleted = true;
-				// context.Expenses.Remove(expense);
-				await context.SaveChangesAsync();
-			}
-		}
+            if (expense != null && !expense.IsDeleted && expense.UserId == userId)
+            {
+                expense.IsDeleted = true;
+
+                await context.SaveChangesAsync();
+            }
+        }
 
 		public async Task<decimal?> CalculateRemainingBudgetAsync(string userId)
 		{
