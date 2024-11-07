@@ -10,8 +10,6 @@
     [Authorize]
     public class IncomeController : Controller
     {
-        // TO DO: Fix EDIT, somehow I broke it
-
         private readonly IIncomeService incomeService;
 
         public IncomeController(IIncomeService incomeService)
@@ -23,14 +21,19 @@
         public async Task<IActionResult> Index()
         {
             string userId = GetUserId();
+
             var incomes = await incomeService.GetAllIncomesAsync(userId);
+
             return View(incomes);
         }
 
         [HttpGet]
         public async Task<IActionResult> Create()
         {
-            var model = await incomeService.PrepareIncomeInputModelAsync();
+            string userId = GetUserId();
+
+            var model = await incomeService.PrepareIncomeInputModelAsync(userId);
+
             return View(model);
         }
 
@@ -44,7 +47,9 @@
             }
 
             string userId = GetUserId();
+
             await incomeService.AddIncomeAsync(model, userId);
+
             return RedirectToAction(nameof(Index));
         }
 
@@ -101,20 +106,6 @@
 
             await incomeService.DeleteIncomeAsync(id, userId);
             return RedirectToAction(nameof(Index));
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> Details(int id)
-        {
-            var userId = GetUserId();
-            var income = await incomeService.GetIncomeByIdAsync(id, userId);
-
-            if (income == null)
-            {
-                return BadRequest();
-            }
-
-            return View(income);
         }
 
         private string GetUserId()

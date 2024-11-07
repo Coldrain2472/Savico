@@ -23,6 +23,9 @@
 
         public async Task AddIncomeAsync(IncomeInputViewModel model, string userId)
         {
+            var user = await userManager.FindByIdAsync(userId);
+            var userCurrency = user?.Currency;
+
             var income = new Income
             {
                 Amount = model.Amount,
@@ -103,9 +106,16 @@
             }
         }
 
-        public async Task<IncomeInputViewModel> PrepareIncomeInputModelAsync()
+        public async Task<IncomeInputViewModel> PrepareIncomeInputModelAsync(string userId)
         {
-            return new IncomeInputViewModel();
+            var user = await userManager.FindByIdAsync(userId);
+
+            var model = new IncomeInputViewModel()
+            {
+                Currency = user?.Currency
+            };
+
+            return model;
         }
 
 
@@ -119,12 +129,18 @@
                 return null;
             }
 
+            var userCurrency = await context.Users
+              .Where(u => u.Id == userId)
+              .Select(u => u.Currency)
+              .FirstOrDefaultAsync();
+
             var model = new IncomeInputViewModel
             {
                 Id = income.Id,
                 Amount = income.Amount,
                 Source = income.Source,
-                Date = income.Date
+                Date = income.Date,
+                Currency = userCurrency
             };
 
             return model;

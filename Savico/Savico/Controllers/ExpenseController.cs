@@ -42,7 +42,9 @@
 		[HttpGet]
 		public async Task<IActionResult> Create()
 		{
-			var model = await expenseService.PrepareExpenseInputModelAsync(new ExpenseInputViewModel());
+			var userId = GetUserId();
+
+			var model = await expenseService.PrepareExpenseInputModelAsync(new ExpenseInputViewModel(), userId);
 
 			return View(model);
 		}
@@ -72,7 +74,7 @@
 
             if (expense == null)
             {
-                return BadRequest("Expense not found or user does not own this expense.");
+                return BadRequest();
             }
 
             return View(expense);

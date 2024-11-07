@@ -16,7 +16,7 @@
 
         Task UpdateIncomeAsync(int incomeId, IncomeInputViewModel model, string userId); // updates an income
 
-        Task<IncomeInputViewModel> PrepareIncomeInputModelAsync(); // prepares the input model for adding/editing income
+        Task<IncomeInputViewModel> PrepareIncomeInputModelAsync(string userId); // prepares the input model for adding/editing income
 
         Task<IncomeInputViewModel> GetIncomeForEditAsync(int id, string userId); // prepares the income for edit
     }

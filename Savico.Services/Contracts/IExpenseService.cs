@@ -15,7 +15,7 @@
 
         Task<decimal?> CalculateRemainingBudgetAsync(string userId); // calculates the budget
 
-        Task<ExpenseInputViewModel> PrepareExpenseInputModelAsync(ExpenseInputViewModel inputModel); // prepares the input model for edit/add
+        Task<ExpenseInputViewModel> PrepareExpenseInputModelAsync(ExpenseInputViewModel inputModel, string userId); // prepares the input model for edit/add
 
         Task<string> GetCategoryNameByIdAsync(int categoryId); // retrieves a category name by id
 
