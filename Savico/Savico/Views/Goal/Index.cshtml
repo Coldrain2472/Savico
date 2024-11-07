@@ -1,0 +1,32 @@
+﻿@using Savico.Core.Models.ViewModels.Goal
+@model IEnumerable<GoalViewModel>
+
+<div class="container mt-5">
+    <h1>Your Goals</h1>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Target Amount</th>
+                <th>Current Amount</th>
+                <th>Target Date</th>
+                <th>Monthly Savings Needed</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var goal in Model)
+            {
+                <tr>
+                    <td>@goal.TargetAmount</td>
+                    <td>@goal.CurrentAmount</td>
+                    <td>@goal.TargetDate.ToString("dd.MM.yyyy")</td>
+                    <td>@Html.ActionLink("Calculate Monthly Savings", "CalculateMonthlySavings", new { goalId = goal.Id })</td>
+                    <td>
+                        <!-- Link to the Delete Confirmation page -->
+                        <a href="@Url.Action("DeleteConfirmation", "Goal", new { id = goal.Id })" class="btn btn-danger">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
