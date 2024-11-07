@@ -11,7 +11,8 @@
     <div class="form-group">
         <label asp-for="Amount"></label>
         <input asp-for="Amount" class="form-control" />
-        <span asp-validation-for="Amount" class="text-danger"></span>
+        @* <span asp-validation-for="Amount" class="text-danger"></span> *@
+        <span class="input-group-text">@Model.Currency</span>
     </div>
     <div class="form-group">
         <label asp-for="Source"></label>

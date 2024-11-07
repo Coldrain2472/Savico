@@ -10,20 +10,18 @@
 <table class="table">
 	<thead>
 		<tr>
-			<th>Amount</th>
-			<th>Description</th>
 			<th>Date</th>
+			<th>Amount</th>
 			<th>Category</th>
-			<th></th>
+			<th>Actions</th>
 		</tr>
 	</thead>
 	<tbody>
 		@foreach (var expense in Model)
 		{
 			<tr>
-				<td>@expense.Amount @expense.Currency</td>
-				<td>@expense.Description</td>
 				<td> @expense.Date.ToString("dd.MM.yyyy")</td>
+				<td>@expense.Amount @expense.Currency</td>
 				<td>@expense.CategoryName</td>
 				<td>
 					

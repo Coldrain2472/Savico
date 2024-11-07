@@ -10,9 +10,9 @@
 <table class="table">
     <thead>
         <tr>
+            <th>Date</th>
             <th>Amount</th>
             <th>Source</th>
-            <th>Date</th>
             <th>Actions</th>
         </tr>
     </thead>
@@ -20,12 +20,11 @@
         @foreach (var income in Model)
         {
             <tr>
+                <td>@income.Date.ToString("dd.MM.yyyy")</td>
                 <td>@income.Amount @income.Currency</td>
                 <td>@income.Source</td>
-                <td>@income.Date.ToString("dd.MM.yyyy")</td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@income.Id" class="btn btn-warning">Edit</a>
-                    <a asp-action="Details" asp-route-id="@income.Id" class="btn btn-info">Details</a>
                     <a asp-action="Delete" asp-route-id="@income.Id" class="btn btn-danger">Delete</a>
                 </td>
             </tr>
