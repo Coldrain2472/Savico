@@ -5,10 +5,8 @@
 	using Savico.Core.Models;
 	using Savico.Core.Models.ViewModels.Category;
 	using Savico.Core.Models.ViewModels.Expense;
-	using Savico.Core.Models.ViewModels.Income;
 	using Savico.Infrastructure;
 	using Savico.Services.Contracts;
-	using System.Security.Claims;
 
 
 	public class ExpenseService : IExpenseService
