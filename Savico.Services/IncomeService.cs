@@ -41,16 +41,13 @@
         public async Task DeleteIncomeAsync(int incomeId, string userId)
         {
             var income = await context.Incomes.FindAsync(incomeId);
-            if (income != null && income.IsDeleted == false && income.UserId == userId)
+
+            if (income != null && !income.IsDeleted && income.UserId == userId)
             {
                 income.IsDeleted = true;
-                context.Incomes.Remove(income);
+
+                await context.SaveChangesAsync();
             }
-            //if (income != null && income.UserId == userId)
-            //{
-            //    context.Incomes.Remove(income);
-            //    await context.SaveChangesAsync();
-            //}
         }
 
         public async Task<IEnumerable<IncomeViewModel>> GetAllIncomesAsync(string userId)
@@ -59,7 +56,7 @@
             var currency = user!.Currency;
 
             var incomes = await context.Incomes
-                .Where(i => i.UserId == userId)
+                .Where(i => i.UserId == userId && !i.IsDeleted)
                 .Select(i => new IncomeViewModel
                 {
                     Id = i.Id,
@@ -92,16 +89,15 @@
         public async Task UpdateIncomeAsync(int incomeId, IncomeInputViewModel model, string userId)
         {
             var income = await context.Incomes
-        .FirstOrDefaultAsync(i => i.Id == incomeId && i.UserId == userId);
+              .FirstOrDefaultAsync(i => i.Id == incomeId && i.UserId == userId);
 
-            //var income = await context.Incomes.FindAsync(incomeId);
             if (income != null && income.UserId == userId)
             {
                 income.Amount = model.Amount;
                 income.Source = model.Source;
                 income.Date = model.Date;
 
-                //context.Incomes.Update(income);
+                context.Incomes.Update(income);
                 await context.SaveChangesAsync();
             }
         }

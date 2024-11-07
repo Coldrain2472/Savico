@@ -79,32 +79,21 @@
             return RedirectToAction(nameof(Index));
         }
 
-        [HttpGet]
+        [HttpPost("Delete/{id}")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
             var userId = GetUserId();
+
             var income = await incomeService.GetIncomeByIdAsync(id, userId);
+            
             if (income == null)
             {
                 return BadRequest();
             }
 
             await incomeService.DeleteIncomeAsync(id, userId);
-            return RedirectToAction(nameof(Index));
-        }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var userId = GetUserId();
-            var income = await incomeService.GetIncomeByIdAsync(id, userId);
-            if (income == null)
-            {
-                return BadRequest();
-            }
-
-            await incomeService.DeleteIncomeAsync(id, userId);
             return RedirectToAction(nameof(Index));
         }
 
