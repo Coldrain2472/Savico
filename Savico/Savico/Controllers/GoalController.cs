@@ -54,7 +54,9 @@
         public async Task<IActionResult> Index()
         {
             var userId = GetUserId();
+
             var goals = await goalService.GetAllGoalsAsync(userId);
+
             return View(goals);
         }
 
