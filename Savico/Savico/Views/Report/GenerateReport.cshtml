@@ -1,0 +1,15 @@
+﻿@using Savico.Core.Models.ViewModels.Report
+@model ReportDateRangeViewModel
+
+<h2>Generate Report</h2>
+<form asp-action="Generate" method="post">
+    <div>
+        <label for="startDate">Start Date:</label>
+        <input asp-for="StartDate" type="date" id="startDate" required />
+    </div>
+    <div>
+        <label for="endDate">End Date:</label>
+        <input asp-for="EndDate" type="date" id="endDate" required />
+    </div>
+    <button type="submit">Generate Report</button>
+</form>
