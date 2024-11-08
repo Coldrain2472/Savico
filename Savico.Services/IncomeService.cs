@@ -81,7 +81,7 @@
 
             if (income != null && income.UserId == userId)
             {
-                return new IncomeViewModel
+                var incomeModel = new IncomeViewModel
                 {
                     Id = income.Id,
                     Amount = income.Amount,
@@ -89,6 +89,8 @@
                     Date = income.Date,
                     Currency = userCurrency
                 };
+
+                return incomeModel;
             }
 
             return null;
