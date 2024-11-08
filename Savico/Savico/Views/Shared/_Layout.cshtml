@@ -151,6 +151,8 @@
     <title>@ViewData["Title"] - Savico</title>
     <link href="~/css/sb-admin-2.min.css" rel="stylesheet" />
     <link href="~/css/site.css" rel="stylesheet" asp-append-version="true" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+
 </head>
 @RenderSection("Scripts", required: false)
 <body id="page-top">
@@ -164,7 +166,7 @@
                     <span>Dashboard</span>
                 </a>
             </li>
-            <li class="nav-item">
+           @*  <li class="nav-item">
                 <a class="nav-link" asp-area="" asp-controller="Income" asp-action="Index">
                     <i class="fas fa-fw fa-dollar-sign"></i>
                     <span>Income</span>
@@ -174,6 +176,35 @@
                 <a class="nav-link" asp-area="" asp-controller="Expense" asp-action="Index">
                     <i class="fas fa-fw fa-credit-card"></i>
                     <span>Expense</span>
+                </a>
+            </li> *@
+            <li class="nav-item">
+                <a class="nav-link" asp-area="" asp-controller="Income" asp-action="Index">
+                    <!-- Ensure 'All' matches the action in your controller -->
+                    <i class="fas fa-dollar-sign"></i> <!-- Font Awesome icon -->
+                    <span>Income</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" asp-area="" asp-controller="Expense" asp-action="Index">
+                    <!-- Ensure 'All' matches the action in your controller -->
+                    <i class="fas fa-money-bill-wave"></i> <!-- Font Awesome icon -->
+                    <span>Expense</span>
+                </a>
+            </li>
+            <!-- Goal Sidebar Item -->
+            <li class="nav-item">
+                <a class="nav-link" asp-area="" asp-controller="Goal" asp-action="Index">
+                    <i class="fas fa-bullseye"></i>
+                    <span>Goals</span>
+                </a>
+            </li>
+
+            <!-- Report Sidebar Item -->
+            <li class="nav-item">
+                <a class="nav-link" asp-area="" asp-controller="Report" asp-action="GenerateReport">
+                    <i class="fas fa-file-alt"></i>
+                    <span>Reports</span>
                 </a>
             </li>
         </ul>
