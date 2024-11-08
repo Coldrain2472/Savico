@@ -9,5 +9,7 @@
         public decimal CurrentAmount { get; set; }
 
         public DateTime TargetDate { get; set; }
+
+        public string? Currency {  get; set; }
     }
 }
