@@ -27,6 +27,10 @@ namespace Savico
             builder.Services.AddScoped<IBudgetService, BudgetService>();
             builder.Services.AddScoped<IIncomeService, IncomeService>();
             builder.Services.AddScoped<IExpenseService, ExpenseService>();
+            builder.Services.AddScoped<IReportService, ReportService>();
+            builder.Services.AddScoped<IGoalService, GoalService>();
+
+
 
             builder.Services.AddDefaultIdentity<User>(options =>
             {
