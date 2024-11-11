@@ -6,12 +6,12 @@
 
         public string LastName { get; set; } = null!;
 
+        public string? Currency { get; set; }
+
         public decimal TotalIncome { get; set; }
 
         public decimal TotalExpense { get; set; }
 
         public decimal Budget { get; set; }
-
-        public string Currency { get; set; } = null!;
     }
 }

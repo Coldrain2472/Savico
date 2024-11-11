@@ -15,12 +15,14 @@ namespace Savico.Controllers
         private readonly ILogger<HomeController> logger;
         private readonly IBudgetService budgetService;
         private readonly UserManager<User> userManager;
+        private readonly ITipService tipService;
 
-        public HomeController(ILogger<HomeController> logger, IBudgetService budgetService, UserManager<User> userManager)
+        public HomeController(ILogger<HomeController> logger, IBudgetService budgetService, UserManager<User> userManager, ITipService tipService)
         {
             this.logger = logger;
             this.budgetService = budgetService;
             this.userManager = userManager;
+            this.tipService = tipService;
         }
 
         [Authorize]
@@ -49,6 +51,8 @@ namespace Savico.Controllers
                 Currency = user.Currency!
             };
 
+            var tip = await tipService.GetRandomTipAsync();
+            ViewData["Tip"] = tip;
             return View(viewModel);
         }
 
