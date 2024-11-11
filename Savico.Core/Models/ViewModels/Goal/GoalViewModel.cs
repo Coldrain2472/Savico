@@ -11,5 +11,9 @@
         public DateTime TargetDate { get; set; }
 
         public string? Currency {  get; set; }
+
+        public decimal MonthlyContribution { get; set; }
+
+        public string? Description { get; set; }
     }
 }
