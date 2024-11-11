@@ -9,15 +9,25 @@
     <h1>Create Goal</h1>
 
     <form asp-action="Create" method="post">
-        <div class="form-group">
+        <div class="form-group input-group">
             <label for="TargetAmount">Target Amount</label>
-            <input type="number" step="0.01" class="form-control" id="TargetAmount" asp-for="TargetAmount" />
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
+                </div>
+                <input type="number" step="0.01" class="form-control" id="TargetAmount" asp-for="TargetAmount" />
+            </div>
             <span asp-validation-for="TargetAmount" class="text-danger"></span>
         </div>
 
-        <div class="form-group">
+        <div class="form-group input-group">
             <label for="CurrentAmount">Current Amount</label>
-            <input type="number" step="0.01" class="form-control" id="CurrentAmount" asp-for="CurrentAmount" />
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
+                </div>
+                <input type="number" step="0.01" class="form-control" id="CurrentAmount" asp-for="CurrentAmount" />
+            </div>
             <span asp-validation-for="CurrentAmount" class="text-danger"></span>
         </div>
 
@@ -26,11 +36,13 @@
             <input type="date" class="form-control" id="TargetDate" asp-for="TargetDate" />
             <span asp-validation-for="TargetDate" class="text-danger"></span>
         </div>
-        <div>
+
+        <div class="form-group">
             <label asp-for="Description"></label>
             <input asp-for="Description" class="form-control" />
             <span asp-validation-for="Description" class="text-danger"></span>
         </div>
+
         <button type="submit" class="btn btn-success btn-lg shadow-sm rounded-pill mt-3">
             <i class="fas fa-plus-circle"></i> Create Goal
         </button>
