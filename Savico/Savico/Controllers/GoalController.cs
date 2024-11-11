@@ -1,6 +1,7 @@
 ﻿namespace Savico.Controllers
 {
     using Microsoft.AspNetCore.Mvc;
+    using Savico.Core.Models;
     using Savico.Core.Models.ViewModels.Goal;
     using Savico.Services.Contracts;
     using System.Security.Claims;
@@ -14,7 +15,30 @@
             this.goalService = goalService;
         }
 
-        // TO DO: Fix the functionality
+        [HttpGet]
+        public async Task<IActionResult> Index()
+        {
+            var userId = GetUserId();
+
+            var goals = await goalService.GetAllGoalsAsync(userId);
+
+            return View(goals);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Details(int id)
+        {
+            var userId = GetUserId();
+
+            var goal = await goalService.GetGoalByIdAsync(id, userId);
+
+            if (goal != null)
+            {
+                return View(goal);
+            }
+
+            return BadRequest();
+        }
 
         [HttpGet]
         public IActionResult Create()
@@ -37,27 +61,36 @@
         }
 
         [HttpGet]
-        public async Task<IActionResult> Details(int id)
+        public async Task<IActionResult> Edit(int id)
         {
             var userId = GetUserId();
+
             var goal = await goalService.GetGoalByIdAsync(id, userId);
 
-            if (goal == null)
+            if (goal != null)
             {
-                return NotFound();
+                return View(goal);
             }
 
-            return View(goal);
+            return BadRequest();
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Index()
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(Goal updatedGoal)
         {
-            var userId = GetUserId();
+            if (ModelState.IsValid)
+            {
+                var success = await goalService.UpdateGoalAsync(updatedGoal);
 
-            var goals = await goalService.GetAllGoalsAsync(userId);
+                if (success)
+                {
+                    return RedirectToAction(nameof(Details), new { id = updatedGoal.Id }); // to do: check
+                }
 
-            return View(goals);
+                return BadRequest();
+            }
+            return View(updatedGoal);
         }
 
         [HttpPost]
@@ -65,25 +98,10 @@
         public async Task<IActionResult> Delete(int id)
         {
             var userId = GetUserId();
+
             await goalService.DeleteGoalAsync(id, userId);
+
             return RedirectToAction(nameof(Index));
-        }
-
-        [HttpGet]
-        public IActionResult CalculateMonthlySavings(int goalId)
-        {
-            var userId = GetUserId();
-            var goal = goalService.GetGoalByIdAsync(goalId, userId).Result;
-
-            if (goal == null)
-            {
-                return NotFound();
-            }
-
-            var monthlySavings = goalService.CalculateMonthlySavings(goal.TargetAmount, goal.CurrentAmount, goal.TargetDate);
-
-            ViewData["MonthlySavings"] = monthlySavings;
-            return View(goal);
         }
 
         private string GetUserId()
