@@ -49,5 +49,11 @@
             public const int CategoryNameMinLength = 2;
             public const int CategoryNameMaxLength = 30;
         }
+
+        public static class GoalConstants
+        {
+            public const int DescriptionMinLength = 3;
+            public const int DescriptionMaxLength = 500;
+        }
     }
 }
