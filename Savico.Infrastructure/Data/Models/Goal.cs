@@ -3,6 +3,7 @@
     using Microsoft.EntityFrameworkCore;
     using System.ComponentModel.DataAnnotations;
     using static Savico.Infrastructure.Data.Constants.DataConstants;
+    using static Savico.Infrastructure.Data.Constants.DataConstants.GoalConstants;
 
     public class Goal
     {
@@ -28,6 +29,13 @@
         [Required]
         [Comment("Target date for reaching the goal")]
         public DateTime TargetDate { get; set; }
+
+        [Comment("Monthly contribution towards the set goal")]
+        public decimal MonthlyContribution { get; set; } = 0;
+
+        [MaxLength(DescriptionMaxLength)]
+        [Comment("Goal description")] // "saving for my next trip to Paris" (example)
+        public string? Description {  get; set; }
 
         [Comment("Indicates if the goal is soft-deleted")]
         public bool IsDeleted { get; set; } = false;

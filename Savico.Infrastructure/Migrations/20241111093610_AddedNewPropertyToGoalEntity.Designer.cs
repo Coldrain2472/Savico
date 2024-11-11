@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Savico.Infrastructure;
 
@@ -11,9 +12,11 @@ using Savico.Infrastructure;
 namespace Savico.Data.Migrations
 {
     [DbContext(typeof(SavicoDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241111093610_AddedNewPropertyToGoalEntity")]
+    partial class AddedNewPropertyToGoalEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -258,11 +261,6 @@ namespace Savico.Data.Migrations
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)")
                         .HasComment("User's current amount towards goal");
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)")
-                        .HasComment("Goal description");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit")
