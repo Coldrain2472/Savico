@@ -3,6 +3,7 @@
     using Microsoft.AspNetCore.Mvc;
     using Savico.Core.Models;
     using Savico.Core.Models.ViewModels.Goal;
+    using Savico.Services;
     using Savico.Services.Contracts;
     using System.Security.Claims;
 
@@ -65,7 +66,7 @@
         {
             var userId = GetUserId();
 
-            var goal = await goalService.GetGoalByIdAsync(id, userId);
+            var goal = await goalService.GetGoalForEditAsync(id, userId);
 
             if (goal != null)
             {
@@ -77,32 +78,58 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Goal updatedGoal)
+        public async Task<IActionResult> Edit(int id, GoalInputViewModel model)
         {
-            if (ModelState.IsValid)
+            var userId = GetUserId();
+
+            if (!ModelState.IsValid)
             {
-                var success = await goalService.UpdateGoalAsync(updatedGoal);
+                return View(model);
+            }
 
-                if (success)
-                {
-                    return RedirectToAction(nameof(Details), new { id = updatedGoal.Id }); // to do: check
-                }
+            await goalService.UpdateGoalAsync(id, model, userId);
+            return RedirectToAction(nameof(Index));
+        }
 
+        [HttpGet]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var userId = GetUserId();
+            var goal = await goalService.GetGoalByIdAsync(id, userId);
+
+            if (goal == null)
+            {
                 return BadRequest();
             }
-            return View(updatedGoal);
+
+            return View(goal);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var userId = GetUserId();
+            var goal = await goalService.GetGoalByIdAsync(id, userId);
+
+            if (goal == null)
+            {
+                return BadRequest();
+            }
 
             await goalService.DeleteGoalAsync(id, userId);
-
             return RedirectToAction(nameof(Index));
         }
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Delete(int id)
+        //{
+        //    var userId = GetUserId();
+
+        //    await goalService.DeleteGoalAsync(id, userId);
+
+        //    return RedirectToAction(nameof(Index));
+        //}
 
         private string GetUserId()
         {
