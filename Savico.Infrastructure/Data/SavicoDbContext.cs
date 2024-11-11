@@ -27,6 +27,8 @@
 
         public DbSet<Report> Reports { get; set; } = null!;
 
+        public DbSet<Tip> Tips {  get; set; } = null!;
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -61,14 +63,14 @@
                 .HasPrecision(18, 2);
 
             modelBuilder.Entity<Goal>()
-                .Property(p=>p.MonthlyContribution)
+                .Property(p => p.MonthlyContribution)
                 .HasPrecision(18, 2);
 
             //explicitly defining the relationships
 
             modelBuilder.Entity<User>()
                 .HasOne(u => u.Budget)
-                .WithOne(u=>u.User)
+                .WithOne(u => u.User)
                 .HasForeignKey<Budget>(b => b.UserId);
 
             modelBuilder.Entity<Income>()
@@ -96,9 +98,9 @@
                 .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<Expense>()
-          .HasOne(e => e.Category)           
+          .HasOne(e => e.Category)
           .WithMany(c => c.Expenses)         // each category has many expenses
-          .HasForeignKey(e => e.CategoryId)  
+          .HasForeignKey(e => e.CategoryId)
           .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<Goal>()
@@ -131,7 +133,8 @@
             //    .WithMany(c => c.ExpenseCategories) 
             //    .HasForeignKey(ec => ec.CategoryId);
 
-
+            modelBuilder.Entity<Tip>()
+                .HasKey(t => t.Id);
 
             modelBuilder.Entity<Report>()
             .HasKey(r => r.Id);
@@ -148,6 +151,7 @@
             //modelBuilder.ApplyConfiguration(new IncomeConfiguration());
             //modelBuilder.ApplyConfiguration(new UserConfiguration());
             modelBuilder.ApplyConfiguration(new CategoryConfiguration());
+            modelBuilder.ApplyConfiguration(new TipConfiguration());
 
             // configure soft delete global filter
             modelBuilder.Entity<User>().HasQueryFilter(u => !u.IsDeleted);
@@ -155,7 +159,7 @@
             modelBuilder.Entity<Goal>().HasQueryFilter(g => !g.IsDeleted);
             modelBuilder.Entity<Expense>().HasQueryFilter(e => !e.IsDeleted);
             modelBuilder.Entity<Budget>().HasQueryFilter(b => !b.IsDeleted);
-           // modelBuilder.Entity<ExpenseCategory>().HasQueryFilter(ec => !ec.IsDeleted);
+            // modelBuilder.Entity<ExpenseCategory>().HasQueryFilter(ec => !ec.IsDeleted);
             modelBuilder.Entity<Report>().HasQueryFilter(r => !r.IsDeleted);
         }
     }
