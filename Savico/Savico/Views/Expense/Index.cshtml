@@ -2,36 +2,45 @@
 @model IEnumerable<ExpenseViewModel>
 
 @{
-	ViewData["Title"] = "All Expenses";
+    ViewData["Title"] = "All Expenses";
 }
 
 <h2>Expenses</h2>
 
 <table class="table">
-	<thead>
-		<tr>
-			<th>Date</th>
-			<th>Amount</th>
-			<th>Category</th>
-			<th>Actions</th>
-		</tr>
-	</thead>
-	<tbody>
-		@foreach (var expense in Model)
-		{
-			<tr>
-				<td> @expense.Date.ToString("dd.MM.yyyy")</td>
-				<td>@expense.Amount @expense.Currency</td>
-				<td>@expense.CategoryName</td>
-				<td>
-					
-					<a asp-action="Edit" asp-route-id="@expense.Id" class="btn btn-warning">Edit</a>
-					<a asp-action="Details" asp-route-id="@expense.Id" class="btn btn-info">Details</a>
-					<a asp-action="Delete" asp-route-id="@expense.Id" class="btn btn-danger">Delete</a>
-				</td>
-			</tr>
-		}
-	</tbody>
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Amount</th>
+            <th>Category</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var expense in Model)
+        {
+            <tr>
+                <td>@expense.Date.ToString("dd.MM.yyyy")</td>
+                <td>@expense.Amount @expense.Currency</td>
+                <td>@expense.CategoryName</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@expense.Id" class="btn btn-warning">
+                        <i class="fas fa-edit"></i> Edit
+                    </a>
+                    <a asp-action="Details" asp-route-id="@expense.Id" class="btn btn-info">
+                        <i class="fas fa-info-circle"></i> Details
+                    </a>
+                    <a asp-action="Delete" asp-route-id="@expense.Id" class="btn btn-danger">
+                        <i class="fas fa-trash-alt"></i> Delete
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
 </table>
 
-<a asp-action="Create" class="btn btn-primary">Add New Expense</a>
+<a asp-action="Create" class="btn btn-primary">
+    <i class="fas fa-plus-circle"></i> Add New Expense
+</a>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">

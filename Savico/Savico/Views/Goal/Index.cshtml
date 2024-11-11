@@ -6,9 +6,15 @@
 }
 
 <div class="container mt-5">
-    <h1>Your Goals</h1>
-
-    
+    <!-- Styled Heading -->
+    <div class="row mb-4">
+        <div class="col text-center">
+            <h1 class="display-4 text-primary font-weight-bold">
+                <i class="fas fa-trophy"></i> Your Goals
+            </h1>
+            <p class="lead text-muted">Track your financial goals and monitor your progress!</p>
+        </div>
+    </div>
 
     <table class="table table-bordered">
         <thead>
@@ -16,7 +22,6 @@
                 <th>Target Amount</th>
                 <th>Current Amount</th>
                 <th>Target Date</th>
-               @*  <th>Monthly Savings Needed</th> *@
                 <th>Monthly Goal Contribution</th>
                 <th>Actions</th>
             </tr>
@@ -24,19 +29,23 @@
         <tbody>
             @foreach (var goal in Model)
             {
-                <tr>
-                    <td>@goal.TargetAmount @goal.Currency</td>
-                    <td>@goal.CurrentAmount @goal.Currency</td>
-                    <td>@goal.TargetDate.ToString("dd.MM.yyyy")</td>
-                   @*  <td>@goal.MonthlyContribution @goal.Currency</td> *@
-                    <td>@goal.MonthlyGoalContribution @goal.Currency</td>
-                    @* <th>Monthly Goal Contribution</th> *@
-                    <td>
-                         <a asp-action="Edit" asp-route-id="@goal.Id" class="btn btn-warning">Edit</a>
-					<a asp-action="Details" asp-route-id="@goal.Id" class="btn btn-info">Details</a>
-					<a asp-action="Delete" asp-route-id="@goal.Id" class="btn btn-danger">Delete</a>
-                    </td>
-                </tr>
+                    <tr>
+                        <td>@goal.TargetAmount @goal.Currency</td>
+                        <td>@goal.CurrentAmount @goal.Currency</td>
+                        <td>@goal.TargetDate.ToString("dd.MM.yyyy")</td>
+                        <td>@goal.MonthlyGoalContribution @goal.Currency</td>
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@goal.Id" class="btn btn-warning">
+                                <i class="fas fa-edit"></i> Edit
+                            </a>
+                            <a asp-action="Details" asp-route-id="@goal.Id" class="btn btn-info">
+                                <i class="fas fa-info-circle"></i> Details
+                            </a>
+                            <a asp-action="Delete" asp-route-id="@goal.Id" class="btn btn-danger">
+                                <i class="fas fa-trash-alt"></i> Delete
+                            </a>
+                        </td>
+                    </tr>
             }
         </tbody>
     </table>
@@ -47,3 +56,6 @@
         </a>
     </div>
 </div>
+
+<!-- Font Awesome CDN -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
