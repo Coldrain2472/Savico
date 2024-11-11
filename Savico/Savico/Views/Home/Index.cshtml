@@ -5,32 +5,48 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="container">
-    <h1>Welcome, @Model.FirstName @Model.LastName!</h1>
-    <div class="row">
-        <div class="col-md-4">
-            <div class="card text-center bg-success text-white">
-                <div class="card-body">
-                    <h3>Total Income</h3>
+<div class="container mt-5">
+    <h1 class="text-center mb-4 text-primary font-weight-bold">Welcome to Your Financial Dashboard, @Model.FirstName @Model.LastName!</h1>
+
+    <div class="row text-center">
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-lg border-success text-center bg-success text-white h-100">
+                <div class="card-body p-4">
+                    <i class="fas fa-wallet fa-4x mb-3"></i>
+                    <h3 class="card-title">Total Income</h3>
                     <p class="display-4">@Model.TotalIncome @Model.Currency</p>
+                    <p class="card-text">Keep up the good work, and let's make your money grow!</p>
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="card text-center bg-danger text-white">
-                <div class="card-body">
-                    <h3>Total Expenses</h3>
+
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-lg border-danger text-center bg-danger text-white h-100">
+                <div class="card-body p-4">
+                    <i class="fas fa-credit-card fa-4x mb-3"></i>
+                    <h3 class="card-title">Total Expenses</h3>
                     <p class="display-4">@Model.TotalExpense @Model.Currency</p>
+                    <p class="card-text">Tracking expenses is the first step to financial freedom!</p>
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="card text-center bg-primary text-white">
-                <div class="card-body">
-                    <h3>Available Budget</h3>
+
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-lg border-primary text-center bg-primary text-white h-100">
+                <div class="card-body p-4">
+                    <i class="fas fa-piggy-bank fa-4x mb-3"></i>
+                    <h3 class="card-title">Available Budget</h3>
                     <p class="display-4">@Model.Budget @Model.Currency</p>
+                    <p class="card-text">Your available budget for the month—let's make it stretch!</p>
                 </div>
             </div>
         </div>
     </div>
+
+    <div class="alert alert-info text-center mt-4">
+        <strong><i class="fas fa-lightbulb"></i> Financial Tip:</strong>
+        <blockquote class="blockquote mb-0">@ViewData["Tip"]</blockquote>
+    </div>
 </div>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
