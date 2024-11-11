@@ -22,7 +22,6 @@
 
         [Required]
         [Range(0, double.MaxValue, ErrorMessage = RangeErrorMessage)]
-        // "Current amount must be greater than or equal to zero."
         [Comment("User's current amount towards goal")]
         public decimal CurrentAmount { get; set; }
 
@@ -36,6 +35,9 @@
         [MaxLength(DescriptionMaxLength)]
         [Comment("Goal description")] // "saving for my next trip to Paris" (example)
         public string? Description {  get; set; }
+
+        [Comment("Last date that a contribution was made on")]
+        public DateTime? LastContributionDate { get; set; } // nullable so that we can handle the case when no contribution has been made yet
 
         [Comment("Indicates if the goal is soft-deleted")]
         public bool IsDeleted { get; set; } = false;
