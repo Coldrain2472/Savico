@@ -29,7 +29,7 @@ namespace Savico
             builder.Services.AddScoped<IExpenseService, ExpenseService>();
             builder.Services.AddScoped<IReportService, ReportService>();
             builder.Services.AddScoped<IGoalService, GoalService>();
-
+            builder.Services.AddScoped<ITipService, TipService>();
 
 
             builder.Services.AddDefaultIdentity<User>(options =>
