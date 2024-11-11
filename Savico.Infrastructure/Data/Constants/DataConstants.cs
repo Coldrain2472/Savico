@@ -55,5 +55,11 @@
             public const int DescriptionMinLength = 3;
             public const int DescriptionMaxLength = 500;
         }
+
+        public static class TipConstants
+        {
+            public const int ContentMinLength = 2;
+            public const int ContentMaxLength = 300;
+        }
     }
 }
