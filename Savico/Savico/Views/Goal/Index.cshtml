@@ -31,10 +31,12 @@
                     <td>@goal.TargetAmount @goal.Currency</td>
                     <td>@goal.CurrentAmount @goal.Currency</td>
                     <td>@goal.TargetDate.ToString("dd.MM.yyyy")</td>
+                    <td>@goal.MonthlyContribution @goal.Currency</td>
                     <td>@Html.ActionLink("Calculate Monthly Savings", "CalculateMonthlySavings", new { goalId = goal.Id })</td>
                     <td>
                         <a href="@Url.Action("Edit", "Goal", new { id = goal.Id })" class="btn btn-warning btn-sm">Edit</a>
-                        <a href="@Url.Action("Delete", "Goal", new { id = goal.Id })" class="btn btn-danger btn-sm">Delete</a>
+                        <a href="@Url.Action("Details", "Goal", new { id = goal.Id })" class="btn btn-danger btn-sm">Delete</a>
+                         <a href="@Url.Action("Delete", "Goal", new { id = goal.Id })" class="btn btn-danger btn-sm">Delete</a>
                     </td>
                 </tr>
             }

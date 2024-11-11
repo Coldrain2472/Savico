@@ -4,6 +4,7 @@
 <div class="container mt-5">
     <h1>Delete Goal</h1>
     <p>Are you sure you want to delete the goal to reach <strong>@Model.TargetAmount</strong> by <strong>@Model.TargetDate.ToString("dd.MM.yyyy")</strong>?</p>
+    <p>Monthly Savings Needed: <strong>@Model.MonthlyContribution @Model.Currency</strong></p>  <!-- Display the monthly savings here -->
 
     <form asp-action="Delete" method="post">
         <input type="hidden" name="id" value="@Model.Id" />
