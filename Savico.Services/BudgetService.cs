@@ -38,16 +38,31 @@
 
             foreach (var goal in user.Goals.Where(g => !g.IsDeleted))
             {
-                // calculates the number of months remaining to reach the goal
-                var monthsRemaining = (goal.TargetDate - DateTime.Now).Days / 30; // approximation
-
-                if (monthsRemaining > 0)
+                // checking if the goal has been updated in the current month
+                if (!goal.LastContributionDate.HasValue || goal.LastContributionDate.Value.Month != DateTime.Now.Month)
                 {
-                    // adding the monghtly contribution to the totalgoalcontribution
-                    var monthlyContribution = (goal.TargetAmount - goal.CurrentAmount) / monthsRemaining;
-                    totalGoalContribution += monthlyContribution;
+                    // calculates the number of months remaining to reach the goal
+                    var monthsRemaining = (goal.TargetDate - DateTime.Now).Days / 30; // approximation
+                    if (monthsRemaining > 0)
+                    {
+                        // adding the monthlycontribution to the goal
+                        var monthlyContribution = (goal.TargetAmount - goal.CurrentAmount) / monthsRemaining;
+                        totalGoalContribution += monthlyContribution;
+
+                        // updating the goal's current amount
+                        goal.CurrentAmount += monthlyContribution;
+
+                        // updating the last contribution date to the current month
+                        goal.LastContributionDate = DateTime.Now;
+
+                        // saving the updated goal progress to the db
+                        context.Goals.Update(goal);
+                    }
                 }
             }
+
+
+            await context.SaveChangesAsync();
 
             var remainingBudget = totalIncome - totalExpense - totalGoalContribution;
 
