@@ -12,7 +12,9 @@
 
         public string? Currency {  get; set; }
 
-        public decimal MonthlyContribution { get; set; }
+       // public decimal MonthlyContribution { get; set; }
+
+        public decimal MonthlyGoalContribution { get; set; }
 
         public string? Description { get; set; }
     }
