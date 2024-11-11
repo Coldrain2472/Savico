@@ -8,11 +8,7 @@
 <div class="container mt-5">
     <h1>Your Goals</h1>
 
-    <div class="mb-3">
-        <a href="@Url.Action("Create", "Goal")" class="btn btn-success btn-lg shadow-sm rounded-pill">
-            <i class="fas fa-plus-circle"></i> Create Goal
-        </a>
-    </div>
+    
 
     <table class="table table-bordered">
         <thead>
@@ -20,7 +16,8 @@
                 <th>Target Amount</th>
                 <th>Current Amount</th>
                 <th>Target Date</th>
-                <th>Monthly Savings Needed</th>
+               @*  <th>Monthly Savings Needed</th> *@
+                <th>Monthly Goal Contribution</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -31,15 +28,22 @@
                     <td>@goal.TargetAmount @goal.Currency</td>
                     <td>@goal.CurrentAmount @goal.Currency</td>
                     <td>@goal.TargetDate.ToString("dd.MM.yyyy")</td>
-                    <td>@goal.MonthlyContribution @goal.Currency</td>
-                    <td>@Html.ActionLink("Calculate Monthly Savings", "CalculateMonthlySavings", new { goalId = goal.Id })</td>
+                   @*  <td>@goal.MonthlyContribution @goal.Currency</td> *@
+                    <td>@goal.MonthlyGoalContribution @goal.Currency</td>
+                    @* <th>Monthly Goal Contribution</th> *@
                     <td>
-                        <a href="@Url.Action("Edit", "Goal", new { id = goal.Id })" class="btn btn-warning btn-sm">Edit</a>
-                        <a href="@Url.Action("Details", "Goal", new { id = goal.Id })" class="btn btn-danger btn-sm">Delete</a>
-                         <a href="@Url.Action("Delete", "Goal", new { id = goal.Id })" class="btn btn-danger btn-sm">Delete</a>
+                         <a asp-action="Edit" asp-route-id="@goal.Id" class="btn btn-warning">Edit</a>
+					<a asp-action="Details" asp-route-id="@goal.Id" class="btn btn-info">Details</a>
+					<a asp-action="Delete" asp-route-id="@goal.Id" class="btn btn-danger">Delete</a>
                     </td>
                 </tr>
             }
         </tbody>
     </table>
+
+    <div class="mb-3">
+        <a href="@Url.Action("Create", "Goal")" class="btn btn-success btn-lg shadow-sm rounded-pill">
+            <i class="fas fa-plus-circle"></i> Create Goal
+        </a>
+    </div>
 </div>
