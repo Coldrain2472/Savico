@@ -20,17 +20,6 @@
             <span asp-validation-for="TargetAmount" class="text-danger"></span>
         </div>
 
-        <div class="form-group input-group">
-            <label for="CurrentAmount">Current Amount</label>
-            <div class="input-group">
-                <div class="input-group-prepend">
-                    <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
-                </div>
-                <input type="number" step="0.01" class="form-control" id="CurrentAmount" asp-for="CurrentAmount" />
-            </div>
-            <span asp-validation-for="CurrentAmount" class="text-danger"></span>
-        </div>
-
         <div class="form-group">
             <label for="TargetDate">Target Date</label>
             <input type="date" class="form-control" id="TargetDate" asp-for="TargetDate" />
@@ -47,6 +36,7 @@
             <i class="fas fa-plus-circle"></i> Create Goal
         </button>
     </form>
+
 
     <a href="@Url.Action("Index", "Goal")" class="btn btn-secondary btn-lg shadow-sm rounded-pill mt-3">
         <i class="fas fa-arrow-left"></i> Back to Goals
