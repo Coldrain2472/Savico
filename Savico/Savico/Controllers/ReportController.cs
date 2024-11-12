@@ -1,11 +1,13 @@
 ﻿namespace Savico.Controllers
 {
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Savico.Core.Models.ViewModels.Report;
     using Savico.Services;
     using Savico.Services.Contracts;
     using System.Security.Claims;
 
+    [Authorize]
     public class ReportController : Controller
     {
         private readonly IReportService reportService;
@@ -15,29 +17,86 @@
             this.reportService = reportService;
         }
 
-        [HttpGet]
-        public IActionResult Generate()
+        public async Task<IActionResult> Index()
         {
-            return View(new ReportDateRangeViewModel());
+            var userId = GetUserId();
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
+
+            var reports = await reportService.GetReportsByUserIdAsync(userId);
+
+            return View(reports);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Generate()
+        {
+            var model = new ReportInputViewModel();
+
+            return View(model);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Generate(ReportDateRangeViewModel dateRange)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Generate(ReportInputViewModel model)
         {
             if (!ModelState.IsValid)
             {
-                return View(dateRange);
+                return View(model);
             }
 
             var userId = GetUserId();
-            var reportViewModel = await reportService.GenerateReportViewModelAsync(userId, dateRange.StartDate, dateRange.EndDate);
 
-            if (reportViewModel == null)
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
+
+            var report = await reportService.GenerateReportAsync(userId, model.StartDate, model.EndDate);
+
+            return View(nameof(Index));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Details(int id)
+        {
+            var report = await reportService.GetReportByIdAsync(id);
+
+            if (report == null)
             {
                 return BadRequest();
             }
 
-            return View("ReportDetails", reportViewModel);
+            return View(report);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var report = await reportService.GetReportByIdAsync(id);
+
+            if (report == null)
+            {
+                return BadRequest();
+            }
+
+            return View(report);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var result = await reportService.DeleteReportAsync(id);
+
+            if (result)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            return BadRequest(); 
         }
 
         private string GetUserId()
