@@ -11,8 +11,6 @@
 
 		Task UpdateGoalMonthlyContributionAsync(Goal goal); // updates monthly contribution
 
-      //  Task<bool> UpdateGoalAsync(Goal updatedGoal); // indicates if the goal was updated or not
-
         Task AddGoalAsync(GoalInputViewModel model, string userId); // creates a goal
 
 		Task<GoalViewModel> GetGoalByIdAsync(int goalId, string userId); // retrieves a goal by id
@@ -24,5 +22,9 @@
         Task<IEnumerable<GoalViewModel>> GetAllGoalsAsync(string userId); // retrieves all goals
 
         Task<GoalInputViewModel> GetGoalForEditAsync(int goalId, string userId); // prepares the goal model for edit
+
+        Task MarkGoalAsAchievedAsync(int goalId, string userId); // marks a goal as "Achieved"
+
+        Task ContributeToGoalAsync(int goalId, string userId, decimal contributionAmount); // contributes money to the goal
     }
 }

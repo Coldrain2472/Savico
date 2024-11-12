@@ -110,12 +110,12 @@
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var userId = GetUserId();
-            var goal = await goalService.GetGoalByIdAsync(id, userId);
+            //var goal = await goalService.GetGoalByIdAsync(id, userId);
 
-            if (goal == null)
-            {
-                return BadRequest();
-            }
+            //if (goal == null)
+            //{
+            //    return BadRequest();
+            //}
 
             await goalService.DeleteGoalAsync(id, userId);
             return RedirectToAction(nameof(Index));

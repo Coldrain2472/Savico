@@ -18,40 +18,118 @@
             this.userManager = userManager;
         }
 
+        public async Task MarkGoalAsAchievedAsync(int goalId, string userId)
+        {
+            var goal = await context.Goals.FirstOrDefaultAsync(g => g.Id == goalId && g.UserId == userId);
+
+            if (goal != null)
+            {
+                goal.IsAchieved = true;
+
+                context.Goals.Update(goal);
+
+                await context.SaveChangesAsync();
+            }
+        }
+
+        public async Task ContributeToGoalAsync(int goalId, string userId, decimal contributionAmount)
+        {
+            var goal = await context.Goals.Include(g => g.User).ThenInclude(u => u.Budget)
+                                           .FirstOrDefaultAsync(g => g.Id == goalId && g.UserId == userId);
+
+            if (goal == null || goal.IsDeleted)
+            {
+                throw new InvalidOperationException("Goal not found.");
+            }
+
+            if (goal.IsAchieved)
+            {
+                throw new InvalidOperationException("Goal is already achieved.");
+            }
+
+            if (goal!.User!.Budget.TotalAmount >= contributionAmount)
+            {
+                // deducting the money from the available budget
+                goal.User.Budget.TotalAmount -= contributionAmount;
+
+                // updating the goal's current amount
+                goal.CurrentAmount += contributionAmount;
+
+                // check if goal is achieved after the contribution
+                if (goal.CurrentAmount >= goal.TargetAmount)
+                {
+                    goal.IsAchieved = true;
+                }
+
+                context.Goals.Update(goal);
+                context.Entry(goal.User.Budget).State = EntityState.Modified;
+                await context.SaveChangesAsync();
+            }
+            else
+            {
+                throw new InvalidOperationException("Insufficient budget for the contribution.");
+            }
+        }
+
         public decimal CalculateMonthlyContribution(Goal goal)
         {
             var remainingAmount = goal.TargetAmount - goal.CurrentAmount;
 
+            if (remainingAmount <= 0)
+            {
+                return 0; // no more contributions are needed, the goal is already achieved
+            }
+
             var remainingMonths = (goal.TargetDate.Year - DateTime.Now.Year) * 12 + goal.TargetDate.Month - DateTime.Now.Month;
 
-            if (remainingMonths > 0)
+            if (remainingMonths <= 0)
             {
-                return remainingAmount / remainingMonths;
+                return 0; // no time left for monthly contributions
             }
-            return 0; // if there are no remaining months, or the goal is already met
+
+            return remainingAmount / remainingMonths;
         }
 
-		public decimal CalculateMonthlyGoalContribution(string userId, Goal goal)
-		{
-			var user = context.Users.Include(u => u.Budget).FirstOrDefault(u => u.Id == userId);
-			if (user == null || user.Budget == null)
-				return 0;
+        public decimal CalculateMonthlyGoalContribution(string userId, Goal goal)
+        {
+            var user = context.Users.Include(u => u.Budget).FirstOrDefault(u => u.Id == userId);
+            if (user == null || user.Budget == null)
+                return 0;
 
-			var remainingAmount = goal.TargetAmount - goal.CurrentAmount;
-			var remainingMonths = (goal.TargetDate.Year - DateTime.Now.Year) * 12 + goal.TargetDate.Month - DateTime.Now.Month;
+            var remainingAmount = goal.TargetAmount - goal.CurrentAmount;
+            var remainingDays = (goal.TargetDate - DateTime.Now).Days;
+            var remainingMonths = (goal.TargetDate.Year - DateTime.Now.Year) * 12 + goal.TargetDate.Month - DateTime.Now.Month;
 
-			if (remainingMonths <= 0 || remainingAmount <= 0)
-				return 0;
+            // If the target date is today or in the past, no contribution is needed
+            if (remainingAmount <= 0)
+            {
+                return 0;
+            }
 
-			// calculates how much the user can contribute each month towards the goal based on available budget
-			var monthlyBudgetContribution = user.Budget.TotalAmount / remainingMonths;
-			var goalContributionPerMonth = remainingAmount / remainingMonths;
+            // If no remaining months, fall back to remaining days
+            if (remainingMonths <= 0)
+            {
+                if (remainingDays <= 0)
+                {
+                    return 0; // No time left for contributions
+                }
 
-			// returns the minimum of budget contribution or goal's required monthly contribution
-			return Math.Min(monthlyBudgetContribution, goalContributionPerMonth);
-		}
+                // Calculate based on remaining days
+                decimal dailyContribution = remainingAmount / remainingDays;
+                return dailyContribution * 30; // Estimate a monthly contribution based on the daily rate
+            }
 
-		public async Task UpdateGoalMonthlyContributionAsync(Goal goal)
+            // Calculate the monthly contribution to achieve the goal by the target date
+            decimal requiredMonthlyContribution = remainingAmount / remainingMonths;
+
+            // Now, calculate how much the user can contribute each month based on their available budget
+            decimal availableMonthlyBudget = user.Budget.TotalAmount / remainingMonths;
+
+            // The monthly contribution is the smaller of what is required and what the user can afford
+            return Math.Min(availableMonthlyBudget, requiredMonthlyContribution);
+        }
+
+        public async Task UpdateGoalMonthlyContributionAsync(Goal goal)
         {
             goal.MonthlyContribution = CalculateMonthlyContribution(goal);
 
@@ -63,7 +141,7 @@
         public async Task UpdateGoalAsync(int goalId, GoalInputViewModel model, string userId)
         {
             var goal = await context.Goals
-                .FirstOrDefaultAsync(g=>g.Id == goalId && g.UserId == userId);
+                .FirstOrDefaultAsync(g => g.Id == goalId && g.UserId == userId);
 
             var user = await userManager.FindByIdAsync(userId);
 
@@ -74,9 +152,14 @@
                 goal.Description = model.Description;
                 goal.TargetDate = model.TargetDate;
                 goal.CurrentAmount = model.CurrentAmount;
-               // goal.MonthlyContribution = model.MonthlyContribution;
                 goal.TargetAmount = model.TargetAmount;
                 goal.MonthlyContribution = CalculateMonthlyContribution(goal);
+
+                // mark as achieved if the current amount meets or exceeds the target amount
+                if (goal.CurrentAmount >= goal.TargetAmount)
+                {
+                    goal.IsAchieved = true;
+                }
 
                 context.Goals.Update(goal);
                 await context.SaveChangesAsync();
@@ -85,38 +168,36 @@
 
         public async Task AddGoalAsync(GoalInputViewModel model, string userId)
         {
-            var user = await userManager.Users.Include(u => u.Budget).FirstOrDefaultAsync(u => u.Id == userId);
+            var user = await userManager.Users.Include(u => u.Budget)
+                                   .FirstOrDefaultAsync(u => u.Id == userId);
 
-            if (user != null)
+            // current amount have to be always 0 at the beginning since the user hasnt started saving for the goal yet
+            var newGoal = new Goal
             {
-                var goal = new Goal
-                {
-                    UserId = userId,
-                    TargetAmount = model.TargetAmount,
-                    CurrentAmount = model.CurrentAmount,
-                    TargetDate = model.TargetDate,
-                    Description = model.Description,
-                    MonthlyContribution = CalculateMonthlyContribution(new Goal
-                    {
-                        TargetAmount = model.TargetAmount,
-                        CurrentAmount = model.CurrentAmount,
-                        TargetDate = model.TargetDate
-                    })
-                };
+                UserId = userId,
+                TargetAmount = model.TargetAmount,
+                CurrentAmount = 0, 
+                TargetDate = model.TargetDate,
+                Description = model.Description
+            };
 
-                context.Goals.Add(goal);
+            // calculating monthly contribution based on available budget and time left until the target date
+            if (user!.Budget != null)
+            {
+                int totalMonths = ((model.TargetDate.Year - DateTime.Now.Year) * 12) + (model.TargetDate.Month - DateTime.Now.Month);
+                int remainingDays = (model.TargetDate - DateTime.Now).Days;
 
-                // Deduct the current amount from the user's available budget if applicable
-                if (user.Budget != null && model.CurrentAmount > 0)
-                {
-                    user.Budget.TotalAmount -= model.CurrentAmount;
+                decimal maxMonthlyContribution = (totalMonths > 0) ? (user.Budget.TotalAmount / totalMonths) : (user.Budget.TotalAmount / (remainingDays / 30.0m));
+                newGoal.MonthlyContribution = Math.Min(maxMonthlyContribution, model.TargetAmount / totalMonths);
 
-                    // Ensure that the user's budget changes are tracked
-                    context.Users.Update(user);
-                }
+                // updating the budget to reflect the goal's contribution
+                user.Budget.TotalAmount -= newGoal.MonthlyContribution;
 
-                await context.SaveChangesAsync();
+                context.Entry(user.Budget).State = EntityState.Modified;
             }
+
+            context.Goals.Add(newGoal);
+            await context.SaveChangesAsync();
         }
 
         public async Task<GoalViewModel> GetGoalByIdAsync(int goalId, string userId)
@@ -139,7 +220,9 @@
                     CurrentAmount = goal.CurrentAmount,
                     TargetDate = goal.TargetDate,
                     Currency = userCurrency,
-                    Description = goal.Description
+                    Description = goal.Description,
+                    IsAchieved = goal.IsAchieved,
+                    MonthlyGoalContribution = CalculateMonthlyGoalContribution(userId, goal)
                 };
 
                 return goalModel;
@@ -171,7 +254,8 @@
                 TargetDate = goal.TargetDate,
                 Currency = userCurrency,
                 Description = goal.Description,
-                MonthlyContribution = goal.MonthlyContribution
+                MonthlyContribution = goal.MonthlyContribution,
+                IsAchieved = goal.IsAchieved
             };
 
             return model;
@@ -180,21 +264,24 @@
         // soft delete the goal 
         public async Task DeleteGoalAsync(int goalId, string userId)
         {
-            var goal = await context.Goals.FindAsync(goalId);
+            var goal = await context.Goals.Include(g => g.User).ThenInclude(u => u.Budget)
+                                           .FirstOrDefaultAsync(g => g.Id == goalId && g.UserId == userId);
 
-            var user = await userManager.FindByIdAsync(userId);
-
-            if (goal != null && !goal.IsDeleted && goal.UserId == userId && user != null)
+            if (goal != null && !goal.IsDeleted)
             {
-                // adds the current contributed amount back to the user's available budget
-                user.Budget.TotalAmount += goal.CurrentAmount;
+                if (goal.IsAchieved)
+                {
+                    throw new InvalidOperationException("Cannot delete an achieved goal.");
+                }
 
-                // soft delete the goal
+                // returning the contributed money to the budget
+                goal!.User!.Budget.TotalAmount += goal.CurrentAmount;
+
                 goal.IsDeleted = true;
+
                 context.Goals.Update(goal);
 
-                // updating the user's budget
-                context.Users.Update(user);
+                context.Entry(goal.User.Budget).State = EntityState.Modified;
 
                 await context.SaveChangesAsync();
             }
@@ -206,40 +293,24 @@
             var user = await userManager.FindByIdAsync(userId);
             var currency = user!.Currency;
 
-			//        var goals = await context.Goals
-			//            .Where(g => g.UserId == userId && !g.IsDeleted)
-			//            .Select(g => new GoalViewModel
-			//            {
-			//                Id = g.Id,
-			//                TargetAmount = g.TargetAmount,
-			//                CurrentAmount = g.CurrentAmount,
-			//                TargetDate = g.TargetDate,
-			//                MonthlyContribution = g.MonthlyContribution,
-			//                Description = g.Description,
-			//	MonthlyGoalContribution = CalculateMonthlyGoalContribution(userId, g)
-			//})
-			//            .ToListAsync();
+            var goals = await context.Goals
+        .Where(g => g.UserId == userId && !g.IsDeleted)
+        .ToListAsync();
 
-			//        return goals;
+            var goalViewModels = goals.Select(g => new GoalViewModel
+            {
+                Id = g.Id,
+                TargetAmount = g.TargetAmount,
+                CurrentAmount = g.CurrentAmount,
+                TargetDate = g.TargetDate,
+                //MonthlyContribution = g.MonthlyContribution,
+                Description = g.Description,
+                Currency = currency,
+                IsAchieved = g.IsAchieved,
+               MonthlyGoalContribution = CalculateMonthlyGoalContribution(userId, g)
+            }).ToList();
 
-			var goals = await context.Goals
-		.Where(g => g.UserId == userId && !g.IsDeleted)
-		.ToListAsync(); // Get the goals from the DB first
-
-			// Calculate MonthlyGoalContribution after fetching the data
-			var goalViewModels = goals.Select(g => new GoalViewModel
-			{
-				Id = g.Id,
-				TargetAmount = g.TargetAmount,
-				CurrentAmount = g.CurrentAmount,
-				TargetDate = g.TargetDate,
-				//MonthlyContribution = g.MonthlyContribution,
-				Description = g.Description,
-				// Calculate MonthlyGoalContribution here, after fetching the data
-				MonthlyGoalContribution = CalculateMonthlyGoalContribution(userId, g)
-			}).ToList();
-
-			return goalViewModels;
-		}
+            return goalViewModels;
+        }
     }
 }
