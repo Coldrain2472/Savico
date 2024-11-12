@@ -1,0 +1,30 @@
+﻿@using Savico.Core.Models.ViewModels.Report
+@model ReportViewModel
+
+@{
+    ViewData["Title"] = "Report Details";
+}
+
+<h2>Report Details</h2>
+
+<div>
+    <h4>Report Information</h4>
+    <dl class="row">
+        <dt class="col-sm-2">Start Date</dt>
+        <dd class="col-sm-10">@Model.StartDate.ToShortDateString()</dd>
+
+        <dt class="col-sm-2">End Date</dt>
+        <dd class="col-sm-10">@Model.EndDate.ToShortDateString()</dd>
+
+        <dt class="col-sm-2">Total Income</dt>
+        <dd class="col-sm-10">@Model.TotalIncome</dd>
+
+        <dt class="col-sm-2">Total Expense</dt>
+        <dd class="col-sm-10">@Model.TotalExpense</dd>
+
+        <dt class="col-sm-2">Currency</dt>
+        <dd class="col-sm-10">@Model.Currency</dd>
+    </dl>
+</div>
+
+<a href="@Url.Action("Index", "Report")" class="btn btn-secondary">Back to Reports</a>

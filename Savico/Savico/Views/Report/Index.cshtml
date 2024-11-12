@@ -1,5 +1,47 @@
-﻿@{
+﻿@using Savico.Core.Models.ViewModels.Report
+@model IEnumerable<ReportViewModel>
+
+@{
     ViewData["Title"] = "Reports";
 }
-<h1>Reports</h1>
-<p>Here, you can generate and view reports.</p>
+
+<div class="container mt-5">
+    <h1>Reports</h1>
+    <a href="@Url.Action("Generate", "Report")" class="btn btn-primary mb-3">
+        <i class="fas fa-file-alt"></i> Generate New Report
+    </a>
+
+    @if (Model != null && Model.Any())
+    {
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var report in Model)
+                {
+                    <tr>
+                        <td>@report.StartDate.ToString("dd.MM.yyyy")</td>
+                        <td>@report.EndDate.ToString("dd.MM.yyyy")</td>
+                        <td>
+                            <a href="@Url.Action("Details", "Report", new { id = report.Id })" class="btn btn-info btn-sm">
+                                <i class="fas fa-eye"></i> View Details
+                            </a>
+                            <a href="@Url.Action("Delete", "Report", new { id = report.Id })" class="btn btn-danger btn-sm">
+                                <i class="fas fa-trash-alt"></i> Delete
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>No reports available. Click "Generate New Report" to create one.</p>
+    }
+</div>
