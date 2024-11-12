@@ -41,5 +41,8 @@
 
         [Comment("Indicates if the goal is soft-deleted")]
         public bool IsDeleted { get; set; } = false;
+
+        [Comment("Indicates if the goal is achieved or not")]
+        public bool IsAchieved { get; set; } = false;
     }
 }
