@@ -124,7 +124,6 @@
             return model;
         }
 
-
         public async Task<IncomeInputViewModel> GetIncomeForEditAsync(int incomeId, string userId)
         {
             var income = await context.Incomes
@@ -151,5 +150,13 @@
 
             return model;
         }
+
+        public async Task<IEnumerable<Income>> GetIncomesForPeriodAsync(string userId, DateTime startDate, DateTime endDate)
+        {
+            return await context.Incomes
+                .Where(i => i.UserId == userId && i.Date >= startDate && i.Date <= endDate)
+                .ToListAsync();
+        }
+
     }
 }

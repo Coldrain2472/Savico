@@ -1,5 +1,6 @@
 ﻿namespace Savico.Services.Contracts
 {
+    using Savico.Core.Models;
     using Savico.Core.Models.ViewModels.Income;
     using System.Collections.Generic;
     using System.Threading.Tasks;
@@ -19,5 +20,8 @@
         Task<IncomeInputViewModel> PrepareIncomeInputModelAsync(string userId); // prepares the input model for adding/editing income
 
         Task<IncomeInputViewModel> GetIncomeForEditAsync(int id, string userId); // prepares the income for edit
+
+        Task<IEnumerable<Income>> GetIncomesForPeriodAsync(string userId, DateTime startDate, DateTime endDate);
+        // gets all the incomes for a specific period for the Report service
     }
 }

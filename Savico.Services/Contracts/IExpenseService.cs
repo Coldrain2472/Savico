@@ -1,5 +1,6 @@
 ﻿namespace Savico.Services.Contracts
 {
+    using Savico.Core.Models;
     using Savico.Core.Models.ViewModels.Category;
     using Savico.Core.Models.ViewModels.Expense;
 
@@ -15,7 +16,8 @@
 
         Task<decimal?> CalculateRemainingBudgetAsync(string userId); // calculates the budget
 
-        Task<ExpenseInputViewModel> PrepareExpenseInputModelAsync(ExpenseInputViewModel inputModel, string userId); // prepares the input model for edit/add
+        Task<ExpenseInputViewModel> PrepareExpenseInputModelAsync(ExpenseInputViewModel inputModel, string userId); 
+        // prepares the input model for edit/add
 
         Task<string> GetCategoryNameByIdAsync(int categoryId); // retrieves a category name by id
 
@@ -25,5 +27,7 @@
 
         Task UpdateExpenseAsync(int expenseId, ExpenseInputViewModel model, string userId); // updates and expense
 
-	}
+        Task<IEnumerable<Expense>> GetExpensesForPeriodAsync(string userId, DateTime startDate, DateTime endDate); 
+        // get expenses for a specific period for the Report service
+    }
 }

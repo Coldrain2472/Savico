@@ -206,5 +206,11 @@
 				.ToListAsync();
 		}
 
-	}
+        public async Task<IEnumerable<Expense>> GetExpensesForPeriodAsync(string userId, DateTime startDate, DateTime endDate)
+        {
+            return await context.Expenses
+                .Where(e => e.UserId == userId && e.Date >= startDate && e.Date <= endDate && !e.IsDeleted)
+                .ToListAsync();
+        }
+    }
 }
