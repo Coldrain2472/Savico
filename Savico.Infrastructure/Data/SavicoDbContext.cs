@@ -27,7 +27,7 @@
 
         public DbSet<Report> Reports { get; set; } = null!;
 
-        public DbSet<Tip> Tips {  get; set; } = null!;
+        public DbSet<Tip> Tips { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -98,10 +98,10 @@
                 .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<Expense>()
-          .HasOne(e => e.Category)
-          .WithMany(c => c.Expenses)         // each category has many expenses
-          .HasForeignKey(e => e.CategoryId)
-          .OnDelete(DeleteBehavior.NoAction);
+                .HasOne(e => e.Category)
+                .WithMany(c => c.Expenses)         // each category has many expenses
+                .HasForeignKey(e => e.CategoryId)
+                .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<Goal>()
                 .HasKey(g => g.Id);
