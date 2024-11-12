@@ -18,6 +18,18 @@
             this.userManager = userManager;
         }
 
+        public async Task<GoalInputViewModel> GetGoalInputViewModelAsync(string userId)
+        {
+            var user = await userManager.FindByIdAsync(userId);
+
+            var model = new GoalInputViewModel()
+            {
+                Currency = user?.Currency
+            };
+
+            return model;
+        }
+
         public async Task MarkGoalAsAchievedAsync(int goalId, string userId)
         {
             var goal = await context.Goals

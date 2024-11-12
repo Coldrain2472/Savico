@@ -42,9 +42,13 @@
         }
 
         [HttpGet]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            return View();
+            var userId = GetUserId();
+
+            var model = await goalService.GetGoalInputViewModelAsync(userId);
+
+            return View(model);
         }
 
         [HttpPost]

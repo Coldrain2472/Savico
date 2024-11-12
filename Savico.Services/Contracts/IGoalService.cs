@@ -26,5 +26,7 @@
         Task MarkGoalAsAchievedAsync(int goalId, string userId); // marks a goal as "Achieved"
 
         Task ContributeToGoalAsync(int goalId, string userId, decimal contributionAmount); // contributes money to the goal
+
+        Task<GoalInputViewModel> GetGoalInputViewModelAsync(string userId); // helps for the creation of a goal+currency
     }
 }
