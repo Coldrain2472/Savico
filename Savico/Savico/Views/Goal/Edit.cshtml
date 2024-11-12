@@ -9,48 +9,27 @@
     <h1>Edit Goal</h1>
 
     <form asp-action="Edit" method="post">
-        <input type="hidden" name="Id" value="@Model.Id" /> <!-- Hidden field for goal ID -->
-        <!-- Target Amount + Currency -->
+        <input type="hidden" name="Id" value="@Model.Id" />
+
         <div class="form-group">
             <label for="TargetAmount">Target Amount</label>
             <div class="input-group">
-                <input type="number" step="0.01" class="form-control" id="TargetAmount" asp-for="TargetAmount" />
-                <div class="input-group-append">
-                    <span class="input-group-text">@Model.Currency</span>
+                <div class="input-group-prepend">
+                    <span class="input-group-text">
+                        <i class="fas fa-coins"></i> @Model.Currency
+                    </span>
                 </div>
+                <input type="number" step="0.01" class="form-control" id="TargetAmount" asp-for="TargetAmount" />
             </div>
             <span asp-validation-for="TargetAmount" class="text-danger"></span>
         </div>
 
-        <!-- Target Date -->
         <div class="form-group">
             <label for="TargetDate">Target Date</label>
             <input type="date" class="form-control" id="TargetDate" asp-for="TargetDate" />
             <span asp-validation-for="TargetDate" class="text-danger"></span>
         </div>
 
-        <!-- Current Amount + Currency -->
-        <div class="form-group">
-            <label for="CurrentAmount">Current Amount</label>
-            <div class="input-group">
-                <input type="number" step="0.01" class="form-control" id="CurrentAmount" asp-for="CurrentAmount" />
-                <div class="input-group-append">
-                    <span class="input-group-text">@Model.Currency</span>
-                </div>
-            </div>
-            <span asp-validation-for="CurrentAmount" class="text-danger"></span>
-        </div>
-
-        <!-- Monthly Contribution + Currency -->
-        <div class="form-group">
-            <label for="MonthlyContribution">Monthly Savings Needed</label>
-            <div class="input-group">
-                <input type="text" class="form-control" id="MonthlyContribution" value="@Model.MonthlyContribution @Model.Currency" readonly />
-            </div>
-            <span asp-validation-for="MonthlyContribution" class="text-danger"></span>
-        </div>
-
-        <!-- Description -->
         <div class="form-group">
             <label for="Description">Description</label>
             <textarea class="form-control" id="Description" asp-for="Description"></textarea>
