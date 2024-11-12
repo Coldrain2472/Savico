@@ -25,7 +25,7 @@
                 .Take(1)
                 .FirstOrDefaultAsync();
 
-            return tip?.Content;
+            return tip?.Content!;
         }
     }
 }
