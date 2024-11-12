@@ -25,5 +25,7 @@
 
         [StringLength(DescriptionMaxLength, MinimumLength = DescriptionMinLength, ErrorMessage = LengthErrorMessage)]
         public string? Description {  get; set; } 
+
+        public bool IsAchieved { get; set; }
     }
 }

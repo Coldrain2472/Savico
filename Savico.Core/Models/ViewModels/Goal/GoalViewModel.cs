@@ -17,5 +17,7 @@
         public decimal MonthlyGoalContribution { get; set; }
 
         public string? Description { get; set; }
+
+        public bool IsAchieved { get; set; }
     }
 }
