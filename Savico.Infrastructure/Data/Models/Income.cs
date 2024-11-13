@@ -17,7 +17,7 @@
         public User? User { get; set; } 
 
         [Required]
-        [MaxLength(SourceMaxLength)]
+        [StringLength(SourceMaxLength, MinimumLength = SourceMinLength, ErrorMessage = LengthErrorMessage)]
         [Comment("Income's source")]
         // salary, freelance, etc...
         public string? Source { get; set; }
@@ -28,6 +28,8 @@
         public decimal Amount { get; set; }
 
         [Required]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}", ApplyFormatInEditMode = true)]
         [Comment("Date of receiving the income")]
         public DateTime Date { get; set; }
 

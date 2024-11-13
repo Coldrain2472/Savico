@@ -4,6 +4,7 @@
     using Microsoft.EntityFrameworkCore;
     using Savico.Infrastructure.Data.Models;
     using System.ComponentModel.DataAnnotations;
+    using static Savico.Infrastructure.Data.Constants.DataConstants;
     using static Savico.Infrastructure.Data.Constants.DataConstants.UserConstants;
 
     public class User : IdentityUser
@@ -14,17 +15,18 @@
         }
 
         [Required]
-        [MaxLength(FirstNameMaxLength)]
+        [StringLength(FirstNameMaxLength, MinimumLength = FirstNameMinLength, ErrorMessage = LengthErrorMessage)]
         [Comment("User's first name")]
         public string? FirstName { get; set; }
 
         [Required]
-        [MaxLength(LastNameMaxLength)]
+        [StringLength(LastNameMaxLength, MinimumLength = LastNameMinLength, ErrorMessage = LengthErrorMessage)]
         [Comment("User's last name")]
         public string? LastName { get; set; }
 
         [Required]
-        [MaxLength(CurrencyMaxLength)] // Example: "USD", "EUR", etc.
+        [StringLength(CurrencyMaxLength, MinimumLength = CurrencyMinLength, ErrorMessage = LengthErrorMessage)]
+        // example: "USD", "EUR", etc.
         [Comment("User's currency")]
         public string? Currency { get; set; }
 

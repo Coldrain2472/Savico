@@ -36,12 +36,14 @@
         public Category? Category { get; set; }
 
         [Required]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}", ApplyFormatInEditMode = true)]
         [Comment("Date of expense")]
         public DateTime Date { get; set; }
 
-        [MaxLength(DescriptionMaxLength)]
+        [StringLength(DescriptionMaxLength, MinimumLength = DescriptionMinLength, ErrorMessage = LengthErrorMessage)]
         [Comment("Expense's description")]
-        // Providing more details;  "Dinner at Italian Restaurant", "Monthly Netflix Subscription" etc..
+        // optional: providing more details;  "Dinner at a Restaurant", "Monthly Netflix Subscription" etc..
         public string? Description { get; set; }
 
         [Comment("Indicates if the expense is soft-deleted")]

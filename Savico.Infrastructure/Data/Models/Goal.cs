@@ -21,21 +21,25 @@
         public decimal TargetAmount { get; set; }
 
         [Required]
-        [Range(0, double.MaxValue, ErrorMessage = RangeErrorMessage)]
+        [Range(0.00, double.MaxValue, ErrorMessage = RangeErrorMessage)]
         [Comment("User's current amount towards goal")]
         public decimal CurrentAmount { get; set; }
 
         [Required]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}", ApplyFormatInEditMode = true)]
         [Comment("Target date for reaching the goal")]
         public DateTime TargetDate { get; set; }
 
         [Comment("Monthly contribution towards the set goal")]
         public decimal MonthlyContribution { get; set; } = 0;
 
-        [MaxLength(DescriptionMaxLength)]
-        [Comment("Goal description")] // "saving for my next trip to Paris" (example)
+        [StringLength(DescriptionMaxLength, MinimumLength = DescriptionMinLength, ErrorMessage = LengthErrorMessage)]
+        [Comment("Goal description")] // "saving for my next trip to Paris"
         public string? Description {  get; set; }
 
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}", ApplyFormatInEditMode = true)]
         [Comment("Last date that a contribution was made on")]
         public DateTime? LastContributionDate { get; set; } // nullable so that we can handle the case when no contribution has been made yet
 
