@@ -220,6 +220,8 @@
             // assigning the contribution for the goal (taking into account the remaining months and available budget)
             newGoal.MonthlyContribution = Math.Min(maxMonthlyContribution, remainingAmount / totalMonths);
 
+            newGoal.CurrentAmount += newGoal.MonthlyContribution;
+
             // deducting from the available budget
             user.Budget.TotalAmount -= newGoal.MonthlyContribution;
 
