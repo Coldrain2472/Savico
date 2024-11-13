@@ -55,11 +55,20 @@ namespace Savico.Controllers
             ViewData["Tip"] = tip;
             return View(viewModel);
         }
-
+         
+        [AllowAnonymous]
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        public IActionResult Error(int statusCode)
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            if (statusCode == 404 || statusCode == 400)
+            {
+                return View("Error404");
+            }
+            else if (statusCode == 500)
+            {
+                return View("Error500");
+            }
+            return View("Error");
         }
     }
 }

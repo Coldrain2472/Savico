@@ -53,7 +53,9 @@ namespace Savico
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseExceptionHandler("/Home/Error/500");
+                app.UseStatusCodePagesWithRedirects("/Home/Error?statusCode={0}");
+                //app.UseExceptionHandler("/Home/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
@@ -62,6 +64,9 @@ namespace Savico
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            app.UseStatusCodePagesWithReExecute("/Home/Error", "?statusCode={0}"); // for the custom error page 404
+
             app.UseAuthentication();
             app.UseAuthorization();
 
