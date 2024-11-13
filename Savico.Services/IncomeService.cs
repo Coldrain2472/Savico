@@ -23,6 +23,17 @@
 
         public async Task AddIncomeAsync(IncomeInputViewModel model, string userId)
         {
+            if (model.Amount <= 0)
+            {
+                throw new ArgumentException("Income amount must be greater than zero.");
+            }
+
+            // if the date is not in the future
+            //if (model.Date > DateTime.Now)
+            //{
+            //    throw new ArgumentException("Income date cannot be in the future.");
+            //}
+
             var user = await userManager.FindByIdAsync(userId);
             var userCurrency = user?.Currency;
 
