@@ -194,7 +194,7 @@ namespace Savico.Data.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Budgets");
+                    b.ToTable("Budgets", (string)null);
                 });
 
             modelBuilder.Entity("Savico.Core.Models.Expense", b =>
@@ -242,7 +242,7 @@ namespace Savico.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Expenses");
+                    b.ToTable("Expenses", (string)null);
                 });
 
             modelBuilder.Entity("Savico.Core.Models.Goal", b =>
@@ -298,7 +298,7 @@ namespace Savico.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Goals");
+                    b.ToTable("Goals", (string)null);
                 });
 
             modelBuilder.Entity("Savico.Core.Models.Income", b =>
@@ -342,7 +342,7 @@ namespace Savico.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Incomes");
+                    b.ToTable("Incomes", (string)null);
                 });
 
             modelBuilder.Entity("Savico.Core.Models.User", b =>
@@ -455,7 +455,7 @@ namespace Savico.Data.Migrations
 
                     b.HasIndex("ExpenseId");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
 
                     b.HasData(
                         new
@@ -565,7 +565,7 @@ namespace Savico.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Reports");
+                    b.ToTable("Reports", (string)null);
                 });
 
             modelBuilder.Entity("Savico.Infrastructure.Data.Models.Tip", b =>
@@ -583,7 +583,7 @@ namespace Savico.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Tips");
+                    b.ToTable("Tips", (string)null);
 
                     b.HasData(
                         new
