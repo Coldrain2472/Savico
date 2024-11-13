@@ -3,6 +3,8 @@
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using Savico.Core.Models;
+    using Savico.Core.Models.ViewModels.Expense;
+    using Savico.Core.Models.ViewModels.Income;
     using Savico.Core.Models.ViewModels.Report;
     using Savico.Infrastructure;
     using Savico.Infrastructure.Data.Models;
@@ -13,39 +15,11 @@
         private readonly SavicoDbContext context;
         private readonly UserManager<User> userManager;
 
-        public ReportService(SavicoDbContext context)
+        public ReportService(SavicoDbContext context, UserManager<User> userManager)
         {
             this.context = context;
+            this.userManager = userManager;
         }
-
-        //public async Task<ReportViewModel> GenerateReportAsync(string userId)
-        //{
-        //    var report = await context.Reports
-        //        .Where(r => r.UserId == userId && r.IsDeleted == false)
-        //        .FirstOrDefaultAsync();
-
-        //    if (report == null)
-        //    {
-        //        return new ReportViewModel();
-        //    }
-
-        //    var userCurrency = await context.Users
-        //       .Where(u => u.Id == userId)
-        //       .Select(u => u.Currency)
-        //       .FirstOrDefaultAsync();
-
-        //    var reportViewModel = new ReportViewModel
-        //    {
-        //        Id = report.Id,
-        //        StartDate = report.StartDate,
-        //        EndDate = report.EndDate,
-        //        TotalIncome = report.TotalIncome,
-        //        TotalExpense = report.TotalExpense,
-        //        Currency = userCurrency
-        //    };
-
-        //    return reportViewModel;
-        //}
 
         public async Task<ReportViewModel> GenerateReportAsync(string userId, DateTime startDate, DateTime endDate)
         {
@@ -75,7 +49,7 @@
             context.Reports.Add(report);
             await context.SaveChangesAsync();
 
-            var reportViewModel = new ReportViewModel
+            var reportModel = new ReportViewModel
             {
                 Id = report.Id,
                 UserId = report.UserId,
@@ -85,7 +59,7 @@
                 TotalExpense = report.TotalExpense
             };
 
-            return reportViewModel;
+            return reportModel;
         }
 
         public async Task<IEnumerable<ReportViewModel>> GetReportsByUserIdAsync(string userId)
@@ -105,7 +79,7 @@
             return reports;
         }
 
-        public async Task<ReportViewModel> GetReportByIdAsync(int id)
+        public async Task<ReportDetailsViewModel> GetReportByIdAsync(int id)
         {
             var report = await context.Reports
                 .Where(r => r.Id == id && !r.IsDeleted)
@@ -116,14 +90,38 @@
                 return null;
             }
 
-            return new ReportViewModel
+            var incomes = await context.Incomes
+                .Where(i => i.UserId == report.UserId && i.Date >= report.StartDate && i.Date <= report.EndDate && !i.IsDeleted)
+                .Select(i => new IncomeDetailsViewModel
+                {
+                    Amount = i.Amount,
+                    Date = i.Date,
+                    Source = i.Source!
+                })
+                .ToListAsync();
+
+            var expenses = await context.Expenses
+                .Where(e => e.UserId == report.UserId && e.Date >= report.StartDate && e.Date <= report.EndDate && !e.IsDeleted)
+                .Select(e => new ExpenseDetailsViewModel
+                {
+                    Amount = e.Amount,
+                    Date = e.Date,
+                    Description = e.Description
+                })
+                .ToListAsync();
+
+            var reportModel = new ReportDetailsViewModel
             {
                 Id = report.Id,
                 StartDate = report.StartDate,
                 EndDate = report.EndDate,
                 TotalIncome = report.TotalIncome,
-                TotalExpense = report.TotalExpense
+                TotalExpense = report.TotalExpense,
+                Incomes = incomes,
+                Expenses = expenses
             };
+
+            return reportModel;
         }
 
         // soft delete

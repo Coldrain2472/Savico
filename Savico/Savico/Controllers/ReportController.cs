@@ -3,7 +3,6 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Savico.Core.Models.ViewModels.Report;
-    using Savico.Services;
     using Savico.Services.Contracts;
     using System.Security.Claims;
 
@@ -56,7 +55,7 @@
 
             var report = await reportService.GenerateReportAsync(userId, model.StartDate, model.EndDate);
 
-            return View(nameof(Index));
+            return RedirectToAction(nameof(Details), new { id = report.Id });
         }
 
         [HttpGet]
