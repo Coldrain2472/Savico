@@ -1,23 +1,32 @@
 ﻿@using Savico.Core.Models.ViewModels.Report
 @model ReportDetailsViewModel
 
+@{
+    ViewData["Title"] = "Report Details";
+}
+
 <div class="text-center mb-4">
     <h2 class="display-4">Report Details</h2>
 </div>
 
 <div class="mb-4">
     <p><strong>Report Period:</strong> @Model.StartDate.ToString("dd.MM.yyyy") - @Model.EndDate.ToString("dd.MM.yyyy")</p>
-    <p><strong>Total Income:</strong> <span class="text-success">@Model.TotalIncome.ToString("C")</span></p>
-    <p><strong>Total Expense:</strong> <span class="text-danger">@Model.TotalExpense.ToString("C")</span></p>
+    <p><strong>Total Income:</strong> <span class="text-success">@Model.TotalIncome @Model.Currency</span></p>
+    <p><strong>Total Expense:</strong> <span class="text-danger">@Model.TotalExpense @Model.Currency</span></p>
 </div>
 
 <h3>Incomes</h3>
 <table class="table table-bordered table-hover">
+    <colgroup>
+        <col style="width: 30%;">
+        <col style="width: 40%;">
+        <col style="width: 30%;">
+    </colgroup>
     <thead class="thead-light">
         <tr>
             <th>Date</th>
             <th>Source</th>
-            <th>Amount</th>
+            <th class="text-end">Amount</th>
         </tr>
     </thead>
     <tbody>
@@ -28,7 +37,7 @@
                 <tr>
                     <td>@income.Date.ToString("dd.MM.yyyy")</td>
                     <td>@income.Source</td>
-                    <td class="text-success">@income.Amount.ToString("C")</td>
+                    <td class="text-success text-end">@income.Amount @Model.Currency</td>
                 </tr>
             }
         }
@@ -43,11 +52,16 @@
 
 <h3>Expenses</h3>
 <table class="table table-bordered table-hover">
+    <colgroup>
+        <col style="width: 30%;">
+        <col style="width: 40%;">
+        <col style="width: 30%;">
+    </colgroup>
     <thead class="thead-light">
         <tr>
             <th>Date</th>
             <th>Description</th>
-            <th>Amount</th>
+            <th class="text-end">Amount</th>
         </tr>
     </thead>
     <tbody>
@@ -58,7 +72,7 @@
                 <tr>
                     <td>@expense.Date.ToString("dd.MM.yyyy")</td>
                     <td>@expense.Description</td>
-                    <td class="text-danger">@expense.Amount.ToString("C")</td>
+                    <td class="text-danger text-end">@expense.Amount @Model.Currency</td>
                 </tr>
             }
         }
