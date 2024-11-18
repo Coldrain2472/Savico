@@ -9,6 +9,7 @@
     using Savico.Infrastructure;
     using Savico.Infrastructure.Data.Models;
     using Savico.Services.Contracts;
+    using System.Security.Claims;
 
     public class ReportService : IReportService
     {
@@ -30,10 +31,12 @@
 
             var incomes = await context.Incomes
                 .Where(i => i.UserId == userId && i.Date >= startDate && i.Date <= endDate && !i.IsDeleted)
+                .OrderBy(i => i.Date)
                 .SumAsync(i => i.Amount);
 
             var expenses = await context.Expenses
                 .Where(e => e.UserId == userId && e.Date >= startDate && e.Date <= endDate && !e.IsDeleted)
+                .OrderBy(e => e.Date)
                 .SumAsync(e => e.Amount);
 
             var report = new Report
@@ -49,6 +52,11 @@
             context.Reports.Add(report);
             await context.SaveChangesAsync();
 
+            var userCurrency = await context.Users
+              .Where(u => u.Id == userId)
+              .Select(u => u.Currency)
+              .FirstOrDefaultAsync();
+
             var reportModel = new ReportViewModel
             {
                 Id = report.Id,
@@ -56,7 +64,8 @@
                 StartDate = report.StartDate,
                 EndDate = report.EndDate,
                 TotalIncome = report.TotalIncome,
-                TotalExpense = report.TotalExpense
+                TotalExpense = report.TotalExpense,
+                Currency = userCurrency
             };
 
             return reportModel;
@@ -64,6 +73,11 @@
 
         public async Task<IEnumerable<ReportViewModel>> GetReportsByUserIdAsync(string userId)
         {
+            var userCurrency = await context.Users
+             .Where(u => u.Id == userId)
+             .Select(u => u.Currency)
+             .FirstOrDefaultAsync();
+
             var reports = await context.Reports
                 .Where(r => r.UserId == userId && !r.IsDeleted)
                 .Select(r => new ReportViewModel
@@ -72,7 +86,8 @@
                     StartDate = r.StartDate,
                     EndDate = r.EndDate,
                     TotalIncome = r.TotalIncome,
-                    TotalExpense = r.TotalExpense
+                    TotalExpense = r.TotalExpense,
+                    Currency = userCurrency
                 })
                 .ToListAsync();
 
@@ -98,6 +113,7 @@
                     Date = i.Date,
                     Source = i.Source!
                 })
+                .OrderBy(i=>i.Date)
                 .ToListAsync();
 
             var expenses = await context.Expenses
@@ -108,7 +124,13 @@
                     Date = e.Date,
                     Description = e.Description
                 })
+                .OrderBy(e=>e.Date)
                 .ToListAsync();
+
+            var user = await context.Users
+               .Where(u => u.Id == report.UserId)
+               .Select(u => new { u.Currency })
+               .FirstOrDefaultAsync();
 
             var reportModel = new ReportDetailsViewModel
             {
@@ -118,7 +140,8 @@
                 TotalIncome = report.TotalIncome,
                 TotalExpense = report.TotalExpense,
                 Incomes = incomes,
-                Expenses = expenses
+                Expenses = expenses,
+                Currency = user!.Currency
             };
 
             return reportModel;
