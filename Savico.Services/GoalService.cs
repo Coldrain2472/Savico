@@ -234,32 +234,31 @@
         public async Task<GoalViewModel> GetGoalByIdAsync(int goalId, string userId)
         {
             var goal = await context.Goals
-                .Where(g => g.UserId == userId && g.Id == goalId && !g.IsDeleted)
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync(g=>g.UserId == userId && g.Id ==  goalId && !g.IsDeleted);
 
             var userCurrency = await context.Users
                 .Where(u => u.Id == userId)
                 .Select(u => u.Currency)
                 .FirstOrDefaultAsync();
 
-            if (goal != null && goal.UserId == userId)
+            if (goal is null && goal!.UserId != userId) // goal == null
             {
-                var goalModel = new GoalViewModel
-                {
-                    Id = goal.Id,
-                    TargetAmount = goal.TargetAmount,
-                    CurrentAmount = goal.CurrentAmount,
-                    TargetDate = goal.TargetDate,
-                    Currency = userCurrency,
-                    Description = goal.Description,
-                    IsAchieved = goal.IsAchieved,
-                    MonthlyGoalContribution = CalculateMonthlyGoalContribution(userId, goal)
-                };
-
-                return goalModel;
+                return null;
             }
 
-            return null;
+            var goalModel = new GoalViewModel
+            {
+                Id = goal.Id,
+                TargetAmount = goal.TargetAmount,
+                CurrentAmount = goal.CurrentAmount,
+                TargetDate = goal.TargetDate,
+                Currency = userCurrency,
+                Description = goal.Description,
+                IsAchieved = goal.IsAchieved,
+                MonthlyGoalContribution = CalculateMonthlyGoalContribution(userId, goal)
+            };
+
+            return goalModel;
         }
 
         public async Task<GoalInputViewModel> GetGoalForEditAsync(int goalId, string userId)
@@ -340,7 +339,7 @@
                 Description = g.Description,
                 Currency = currency,
                 IsAchieved = g.IsAchieved,
-                MonthlyGoalContribution = CalculateMonthlyGoalContribution(userId, g)
+                MonthlyGoalContribution = g.MonthlyContribution//CalculateMonthlyGoalContribution(userId, g)
             })
                 .ToList();
 
