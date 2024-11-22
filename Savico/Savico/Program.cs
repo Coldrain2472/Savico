@@ -34,7 +34,7 @@ namespace Savico
 			builder.Services.AddScoped<ITipService, TipService>();
 
 			// configuring identity with roles
-			builder.Services.AddDefaultIdentity<User>(options =>
+			builder.Services.AddIdentity<User, IdentityRole>(options =>
 			{
 				options.Password.RequireDigit = true;
 				options.SignIn.RequireConfirmedAccount = false;
@@ -43,12 +43,15 @@ namespace Savico
 				options.Lockout.MaxFailedAccessAttempts = 5;
 				options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
 			})
-				.AddRoles<IdentityRole>()
+				//.AddRoles<IdentityRole>()
+				//.AddDefaultTokenProviders()
 				.AddEntityFrameworkStores<SavicoDbContext>();
 
 			builder.Services.AddControllersWithViews();
 
 			var app = builder.Build();
+
+			
 
 			// Configure the HTTP request pipeline.
 			if (app.Environment.IsDevelopment())
