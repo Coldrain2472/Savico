@@ -1,6 +1,7 @@
 ﻿namespace Savico.Infrastructure
 {
-    using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+	using Microsoft.AspNetCore.Identity;
+	using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
     using Savico.Core.Models;
     using Savico.Infrastructure.Data.DataSeeding.Configurations;
@@ -33,8 +34,13 @@
         {
             base.OnModelCreating(modelBuilder);
 
-            // decimal precision
-            modelBuilder.Entity<Budget>()
+			modelBuilder.Entity<IdentityUserRole<Guid>>(entity =>
+			{
+				entity.HasKey(ur => new { ur.UserId, ur.RoleId });
+			});
+
+			// decimal precision
+			modelBuilder.Entity<Budget>()
                 .Property(p => p.TotalAmount)
                 .HasPrecision(18, 2);
 
@@ -150,11 +156,13 @@
             //modelBuilder.ApplyConfiguration(new GoalConfiguration());
             //modelBuilder.ApplyConfiguration(new IncomeConfiguration());
             modelBuilder.ApplyConfiguration(new UserConfiguration());
-            modelBuilder.ApplyConfiguration(new CategoryConfiguration());
+			modelBuilder.ApplyConfiguration(new RoleConfiguration());
+			modelBuilder.ApplyConfiguration(new CategoryConfiguration());
             modelBuilder.ApplyConfiguration(new TipConfiguration());
+			modelBuilder.ApplyConfiguration(new UserRoleConfiguration());
 
-            // configure soft delete global filter
-            modelBuilder.Entity<User>().HasQueryFilter(u => !u.IsDeleted);
+			// configure soft delete global filter
+			modelBuilder.Entity<User>().HasQueryFilter(u => !u.IsDeleted);
             modelBuilder.Entity<Income>().HasQueryFilter(i => !i.IsDeleted);
             modelBuilder.Entity<Goal>().HasQueryFilter(g => !g.IsDeleted);
             modelBuilder.Entity<Expense>().HasQueryFilter(e => !e.IsDeleted);

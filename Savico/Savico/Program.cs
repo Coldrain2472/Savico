@@ -66,17 +66,15 @@ namespace Savico
 			app.UseStaticFiles();
 
 			app.UseRouting();
-			
-			app.UseStatusCodePagesWithReExecute("/Home/Error", "?statusCode={0}"); 
+
+			app.UseStatusCodePagesWithReExecute("/Home/Error", "?statusCode={0}");
 
 			app.UseAuthentication();
 			app.UseAuthorization();
 
-			await SeedRolesAndAdminAsync(app);
-
 			app.MapControllerRoute(
-	            name: "areas",
-	            pattern: "{area:exists}/{controller=Dashboard}/{action=Index}/{id?}");
+				name: "areas",
+				pattern: "{area:exists}/{controller=Dashboard}/{action=Index}/{id?}");
 
 			app.MapControllerRoute(
 				name: "default",
@@ -85,80 +83,6 @@ namespace Savico
 			app.MapRazorPages();
 
 			app.Run();
-		}
-
-		public static async Task SeedRolesAndAdminAsync(WebApplication app)
-		{
-			using (var scope = app.Services.CreateScope())
-			{
-				var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-				var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
-
-				string[] roles = { "Administrator", "User" };
-
-				// seeding roles
-				foreach (var role in roles)
-				{
-					if (!await roleManager.RoleExistsAsync(role))
-					{
-						await roleManager.CreateAsync(new IdentityRole(role));
-					}
-				}
-
-				// seeding Admin user
-				var adminEmail = "admin@admin.com";
-				var adminUser = await userManager.FindByEmailAsync(adminEmail);
-
-				if (adminUser == null)
-				{
-					adminUser = new User
-					{
-						UserName = "Admin",
-						Email = adminEmail,
-						FirstName = "TEST",
-						LastName = "ADMIN",
-						Currency = "USD",
-						EmailConfirmed = true
-					};
-
-					var result = await userManager.CreateAsync(adminUser, "Admin@123");
-					if (result.Succeeded)
-					{
-						await userManager.AddToRoleAsync(adminUser, "Administrator");
-					}
-				}
-				else if (!await userManager.IsInRoleAsync(adminUser, "Administrator"))
-				{
-					await userManager.AddToRoleAsync(adminUser, "Administrator");
-				}
-
-				// seeding test user
-				var userEmail = "testuser123@gmail.com";
-				var testUser = await userManager.FindByEmailAsync(userEmail);
-
-				if (testUser == null)
-				{
-					testUser = new User
-					{
-						UserName = "TestUser",
-						Email = userEmail,
-						FirstName = "Test",
-						LastName = "User",
-						Currency = "EUR",
-						EmailConfirmed = true
-					};
-
-					var result = await userManager.CreateAsync(testUser, "Test@123");
-					if (result.Succeeded)
-					{
-						await userManager.AddToRoleAsync(testUser, "User");
-					}
-				}
-				else if (!await userManager.IsInRoleAsync(testUser, "User"))
-				{
-					await userManager.AddToRoleAsync(testUser, "User");
-				}
-			}
 		}
 	}
 }

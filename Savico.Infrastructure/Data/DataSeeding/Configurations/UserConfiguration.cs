@@ -3,28 +3,28 @@
 	using Microsoft.AspNetCore.Identity;
 	using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Metadata.Builders;
-    using Savico.Core.Models;
+	using Savico.Core.Models;
 
-    public class UserConfiguration : IEntityTypeConfiguration<User>
-    {
-        public void Configure(EntityTypeBuilder<User> builder)
-        {
+	public class UserConfiguration : IEntityTypeConfiguration<User>
+	{
+		public void Configure(EntityTypeBuilder<User> builder)
+		{
 			IEnumerable<User> users = this.CreateUsers();
 			builder.HasData(users);
 		}
 
-        private IEnumerable<User> CreateUsers()
-        {
+		private IEnumerable<User> CreateUsers()
+		{
 			PasswordHasher<User> passwordHasher = new PasswordHasher<User>();
 			User userOne = new User()
 			{
-				Id = Guid.NewGuid().ToString(),
+				Id = "ad5a5ccb-2be1-4866-b151-0f09a58416f6",
 				UserName = "TestUser",
 				NormalizedUserName = "TESTUSER",
 				Email = "testuser123@gmail.com",
 				NormalizedEmail = "TESTUSER123@GMAIL.COM",
 				SecurityStamp = Guid.NewGuid().ToString(),
-				FirstName = "Test" ,
+				FirstName = "Test",
 				LastName = "User",
 				Currency = "EUR",
 				BudgetId = 1,
@@ -35,7 +35,7 @@
 
 			User adminUser = new User()
 			{
-				Id = Guid.NewGuid().ToString(),
+				Id = "7c55600b-d374-4bfb-8352-a65bf7d44cc1",
 				UserName = "Admin",
 				NormalizedUserName = "ADMIN",
 				Email = "admin@admin.com",
@@ -54,6 +54,5 @@
 
 			return users;
 		}
-
 	}
 }
