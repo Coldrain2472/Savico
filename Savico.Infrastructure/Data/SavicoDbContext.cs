@@ -149,7 +149,7 @@
             //modelBuilder.ApplyConfiguration(new ExpenseConfiguration());
             //modelBuilder.ApplyConfiguration(new GoalConfiguration());
             //modelBuilder.ApplyConfiguration(new IncomeConfiguration());
-            //modelBuilder.ApplyConfiguration(new UserConfiguration());
+            modelBuilder.ApplyConfiguration(new UserConfiguration());
             modelBuilder.ApplyConfiguration(new CategoryConfiguration());
             modelBuilder.ApplyConfiguration(new TipConfiguration());
 

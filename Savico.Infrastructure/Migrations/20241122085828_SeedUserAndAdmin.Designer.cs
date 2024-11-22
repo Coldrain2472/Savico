@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Savico.Infrastructure;
 
@@ -11,9 +12,11 @@ using Savico.Infrastructure;
 namespace Savico.Data.Migrations
 {
     [DbContext(typeof(SavicoDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241122085828_SeedUserAndAdmin")]
+    partial class SeedUserAndAdmin
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -437,43 +440,43 @@ namespace Savico.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "ad5a5ccb-2be1-4866-b151-0f09a58416f6",
+                            Id = "164abdf9-c8ce-43fb-93e3-53e78cd89369",
                             AccessFailedCount = 0,
                             BudgetId = 1,
-                            ConcurrencyStamp = "1ae11e18-b982-411d-b8e1-a247a4428011",
+                            ConcurrencyStamp = "febaf27a-f002-4882-9c9d-db6c7edb70d3",
                             Currency = "EUR",
                             Email = "testuser123@gmail.com",
-                            EmailConfirmed = true,
+                            EmailConfirmed = false,
                             FirstName = "Test",
                             IsDeleted = false,
                             LastName = "User",
                             LockoutEnabled = false,
                             NormalizedEmail = "TESTUSER123@GMAIL.COM",
                             NormalizedUserName = "TESTUSER",
-                            PasswordHash = "AQAAAAIAAYagAAAAENii02Fu+d8Qg4EYpPY8OoJjonETJyZw+mpgbnWo2u8XpDHZwNUgpeffBvPXm3o9sw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEMhgqviHlAvu4WKLiBnq0vOwtuloZPpTzNlNyzXKu8zcHWsQbDczNYJZFysdoz2NEQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "42fc174b-6f98-427c-a38f-25e3fcdbc2fd",
+                            SecurityStamp = "2952ed3d-feb3-4e11-aee8-fea63c2a9118",
                             TwoFactorEnabled = false,
                             UserName = "TestUser"
                         },
                         new
                         {
-                            Id = "7c55600b-d374-4bfb-8352-a65bf7d44cc1",
+                            Id = "89b0fffd-ea3f-4d8e-b2f3-85b80ab84693",
                             AccessFailedCount = 0,
                             BudgetId = 2,
-                            ConcurrencyStamp = "220bbfb2-d20e-4f9d-90b9-ab26db2dcfee",
+                            ConcurrencyStamp = "0ce264ec-e884-4bd0-b552-7d6bd89d37c6",
                             Currency = "USD",
                             Email = "admin@admin.com",
-                            EmailConfirmed = true,
+                            EmailConfirmed = false,
                             FirstName = "TEST",
                             IsDeleted = false,
                             LastName = "ADMIN",
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@ADMIN.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAIAAYagAAAAENuBmAloFASTCIXCNeyfyFWRxoZIh3OqHSyWiXQwjYOD19mN2xsZUCkWIN6EXQyDRQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEGvIvaQF1eOiPZbg12VnTiQz483TvHbsjZbjF6Qpr+dXUysgiDtfLlgUSNH8/9xMlw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "c243c0c8-8f66-4764-9510-a7fe403c6510",
+                            SecurityStamp = "ac8e5be0-1056-41ee-bc57-3b96f6a0b6dc",
                             TwoFactorEnabled = false,
                             UserName = "Admin"
                         });
