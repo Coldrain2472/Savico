@@ -16,13 +16,15 @@
 		private IEnumerable<User> CreateUsers()
 		{
 			PasswordHasher<User> passwordHasher = new PasswordHasher<User>();
-			User userOne = new User()
+			string userEmail = "testuser123@gmail.com";
+
+            User userOne = new User()
 			{
 				Id = "ad5a5ccb-2be1-4866-b151-0f09a58416f6",
-				UserName = "TestUser",
-				NormalizedUserName = "TESTUSER",
-				Email = "testuser123@gmail.com",
-				NormalizedEmail = "TESTUSER123@GMAIL.COM",
+				UserName = userEmail,
+				NormalizedUserName = userEmail.ToUpper(),
+				Email = userEmail,
+				NormalizedEmail = userEmail.ToUpper(),
 				SecurityStamp = Guid.NewGuid().ToString(),
 				FirstName = "Test",
 				LastName = "User",
@@ -32,14 +34,15 @@
 			};
 
 			userOne.PasswordHash = passwordHasher.HashPassword(userOne, "Test@123");
+			string adminEmail = "admin@admin.com";
 
-			User adminUser = new User()
+            User adminUser = new User()
 			{
 				Id = "7c55600b-d374-4bfb-8352-a65bf7d44cc1",
-				UserName = "Admin",
-				NormalizedUserName = "ADMIN",
-				Email = "admin@admin.com",
-				NormalizedEmail = "ADMIN@ADMIN.COM",
+				UserName = adminEmail,
+				NormalizedUserName = adminEmail.ToUpper(),
+				Email = adminEmail,
+				NormalizedEmail = adminEmail.ToUpper(),
 				SecurityStamp = Guid.NewGuid().ToString(),
 				FirstName = "TEST",
 				LastName = "ADMIN",
