@@ -1,146 +1,5 @@
-﻿@* <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Savico</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/Savico.styles.css" asp-append-version="true" />
-</head>
-<body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Savico</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Income" asp-action="Index">Income</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Expense" asp-action="Index">Expense</a>
-                        </li>
-                    </ul>
-                    <partial name="_LoginPartial" />
-                </div>
-            </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
-
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2024 - Savico <a asp-area="" asp-controller="Home" /> @* asp-action="Privacy">Privacy</a> *@
-   @*      </div>
-    </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
-</body>
-</html>
- *@
-
-@* <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Savico</title>
-
-    
-    <!-- FontAwesome Icons -->
-    <link rel="stylesheet" href="~/lib/fontawesome-free/css/all.min.css" />
-
-    <!-- SB Admin 2 CSS -->
-    <link rel="stylesheet" href="~/css/sb-admin-2.min.css" />
-
-    <!-- Custom site CSS -->
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/Savico.styles.css" asp-append-version="true" />
-</head>
-<body id="page-top">
-    <!-- Page Wrapper -->
-    <div id="wrapper">
-
-        <!-- Sidebar -->
-        @* Add SB Admin 2 sidebar HTML here if needed, or leave as is *@
-@* 
-        <!-- Content Wrapper -->
-        <div id="content-wrapper" class="d-flex flex-column">
-
-            <!-- Main Content -->
-            <div id="content">
-
-                <!-- Topbar -->
-                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-                    <div class="container-fluid">
-                        <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Savico</a>
-                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                                aria-expanded="false" aria-label="Toggle navigation">
-                            <span class="navbar-toggler-icon"></span>
-                        </button>
-                        <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                            <ul class="navbar-nav flex-grow-1">
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-area="" asp-controller="Income" asp-action="Index">Income</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-area="" asp-controller="Expense" asp-action="Index">Expense</a>
-                                </li>
-                            </ul>
-                            <partial name="_LoginPartial" />
-                        </div>
-                    </div>
-                </nav>
-
-                <!-- Begin Page Content -->
-                <div class="container-fluid">
-                    @RenderBody()
-                </div>
-                <!-- /.container-fluid -->
-            </div>
-            <!-- End of Main Content -->
-            <!-- Footer -->
-            <footer class="border-top footer text-muted">
-                <div class="container">
-                    &copy; 2024 - Savico <a asp-area="" asp-controller="Home" /> @* asp-action="Privacy">Privacy</a> *@
-   @*              </div>
-            </footer>
-        </div>
-        <!-- End of Content Wrapper -->
-    </div>
-    <!-- End of Page Wrapper -->
-    <!-- jQuery -->
-    <script src="~/lib/jquery/jquery.min.js"></script>
-
-    <!-- Bootstrap Core JavaScript -->
-    <script src="~/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
-
-    <!-- SB Admin 2 Custom Scripts -->
-    <script src="~/js/sb-admin-2.min.js"></script>
-
-    <!-- Custom Site Scripts -->
-    <script src="~/js/site.js" asp-append-version="true"></script>
-
-    @await RenderSectionAsync("Scripts", required: false)
-</body>
-</html>   *@
+﻿@using Microsoft.AspNetCore.Identity
+@using Savico.Core.Models
 
 <!DOCTYPE html>
 <html lang="en">
@@ -152,13 +11,12 @@
     <link href="~/css/sb-admin-2.min.css" rel="stylesheet" />
     <link href="~/css/site.css" rel="stylesheet" asp-append-version="true" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
-
 </head>
-@RenderSection("Scripts", required: false)
-<body id="page-top">
 
+@RenderSection("Scripts", required: false)
+
+<body id="page-top">
     <div id="wrapper">
-        <!-- Sidebar -->
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
             <li class="nav-item active">
                 <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">
@@ -168,13 +26,13 @@
             </li>
             <li class="nav-item">
                 <a class="nav-link" asp-area="" asp-controller="Income" asp-action="Index">
-                    <i class="fas fa-dollar-sign"></i> 
+                    <i class="fas fa-dollar-sign"></i>
                     <span>Income</span>
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" asp-area="" asp-controller="Expense" asp-action="Index">
-                    <i class="fas fa-money-bill-wave"></i> 
+                    <i class="fas fa-money-bill-wave"></i>
                     <span>Expense</span>
                 </a>
             </li>
@@ -190,6 +48,11 @@
                     <span>Reports</span>
                 </a>
             </li>
+
+            @if (User.IsInRole("Admin"))
+            {
+                <li><a href="@Url.Action("Index", "Dashboard", new { area = "Admin" })">Admin Dashboard</a></li>
+            }
         </ul>
 
         <!-- Content Wrapper -->
@@ -202,6 +65,13 @@
                 <div class="navbar-collapse">
                     <ul class="navbar-nav ml-auto">
                         <partial name="_LoginPartial" />
+
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item">
+                                <a class="btn btn-warning btn-sm ms-2" href="/Admin/Dashboard">Back to Admin Panel</a>
+                            </li>
+                        }
                     </ul>
                 </div>
             </nav>
@@ -210,7 +80,6 @@
             <div class="container-fluid">
                 @RenderBody()
             </div>
-            <!-- End Page Content -->
         </div>
     </div>
 
@@ -228,3 +97,4 @@
 </body>
 
 </html>
+

@@ -1,5 +1,56 @@
-﻿@section Title {
- "Admin Dashboard"
+﻿@{
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
-<h1>Welcome, Admin!</h1>
-<p>This is the Admin area.</p>
+
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@section Title {
+    Admin Dashboard
+}
+
+<div class="container-fluid px-4 mt-4">
+    <h1 class="mb-4 text-center">Admin Dashboard</h1>
+
+    <div class="row">
+        <!-- Manage All Users -->
+        <div class="col-md-4">
+            <div class="card shadow border-left-primary">
+                <div class="card-body text-center">
+                    <i class="fas fa-users fa-3x text-primary mb-3"></i>
+                    <h5 class="card-title">Manage All Users</h5>
+                    <p class="card-text">View and manage all registered users in Savico.</p>
+                    <a asp-area="Admin" asp-controller="UserManagement" asp-action="Index" class="btn btn-primary btn-sm">
+                        See All Users
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- View Active Users -->
+        <div class="col-md-4">
+            <div class="card shadow border-left-success">
+                <div class="card-body text-center">
+                    <i class="fas fa-user-check fa-3x text-success mb-3"></i>
+                    <h5 class="card-title">Active Users</h5>
+                    <p class="card-text">View the list of active users currently using Savico.</p>
+                    <a asp-area="Admin" asp-controller="UserManagement" asp-action="ActiveUsers" class="btn btn-success btn-sm">
+                        View Active Users
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- View Inactive Users -->
+        <div class="col-md-4">
+            <div class="card shadow border-left-danger">
+                <div class="card-body text-center">
+                    <i class="fas fa-user-slash fa-3x text-danger mb-3"></i>
+                    <h5 class="card-title">Inactive Users</h5>
+                    <p class="card-text">See all users who are currently inactive in Savico.</p>
+                    <a asp-area="Admin" asp-controller="UserManagement" asp-action="InactiveUsers" class="btn btn-danger btn-sm">
+                        View Inactive Users
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

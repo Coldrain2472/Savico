@@ -32,6 +32,7 @@ namespace Savico
             builder.Services.AddScoped<IReportService, ReportService>();
             builder.Services.AddScoped<IGoalService, GoalService>();
             builder.Services.AddScoped<ITipService, TipService>();
+            builder.Services.AddScoped<IUserService, UserService>();
 
             // configuring identity with roles
             builder.Services.AddDefaultIdentity<User>(options =>
@@ -77,6 +78,10 @@ namespace Savico
             app.MapControllerRoute(
                 name: "areas",
                 pattern: "{area:exists}/{controller=Dashboard}/{action=Index}/{id?}");
+
+            //app.MapControllerRoute(
+            //    name: "Admin",
+            //    pattern: "Admin/{controller=UserManagement}/{action=Index}/{id?}"); /// ?
 
             app.MapControllerRoute(
                 name: "default",

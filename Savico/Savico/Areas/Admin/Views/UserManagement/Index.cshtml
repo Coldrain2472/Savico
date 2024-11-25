@@ -1,0 +1,52 @@
+﻿@using Savico.Core.Models.ViewModels.Admin.UserManagement
+@model IEnumerable<AllUsersViewModel>
+
+@{
+    ViewData["Title"] = "User Management - All Users";
+}
+
+<div class="container-fluid">
+    <h1 class="h3 mb-4 text-gray-800">User Management</h1>
+
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">All Users</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Roles</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var user in Model)
+                        {
+                            <tr>
+                                <td>@user.Id</td>
+                                <td>@user.Email</td>
+                                <td>
+                                    @foreach (var role in user.Roles)
+                                    {
+                                        <span class="badge badge-info">@role</span>
+                                    }
+                                </td>
+                                <td>
+                                    <!-- Action buttons for user management -->
+                                    <a href="@Url.Action("Edit", "UserManagement", new { id = user.Id })" class="btn btn-warning btn-sm">Edit</a>
+                                    <a href="@Url.Action("Delete", "UserManagement", new { id = user.Id })" class="btn btn-danger btn-sm">Delete</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Optionally, add pagination or additional filtering options if needed -->

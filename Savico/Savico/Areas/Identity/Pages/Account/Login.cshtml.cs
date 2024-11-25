@@ -23,11 +23,13 @@ namespace Savico.Areas.Identity.Pages.Account
     {
         private readonly SignInManager<User> _signInManager;
         private readonly ILogger<LoginModel> _logger;
+        private readonly UserManager<User> _userManager; 
 
-        public LoginModel(SignInManager<User> signInManager, ILogger<LoginModel> logger)
+        public LoginModel(SignInManager<User> signInManager, ILogger<LoginModel> logger, UserManager<User> userManager)
         {
             _signInManager = signInManager;
             _logger = logger;
+            _userManager = userManager; 
         }
 
         /// <summary>
@@ -117,6 +119,16 @@ namespace Savico.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
+
+                    var user = await _userManager.FindByEmailAsync(Input.Email);
+                    if (user != null)
+                    {
+                        if (await _userManager.IsInRoleAsync(user, "Admin")) // if the user is in the Admin role, he has to be redirected to the Admin's panel (dashboard index)
+                        {
+                            return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
+                        }
+                    }
+
                     return LocalRedirect(returnUrl);
                 }
                 if (result.RequiresTwoFactor)
