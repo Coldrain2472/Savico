@@ -13,17 +13,35 @@
     public class UserManagementController : Controller
     {
         private readonly IUserService userService;
+        private readonly UserManager<User> userManager;
 
-        public UserManagementController(IUserService userService)
+        public UserManagementController(IUserService userService, UserManager<User> userManager)
         {
             this.userService = userService;
+            this.userManager = userManager;
         }
 
         public async Task<IActionResult> Index()
         {
-            // Logic to retrieve all users
             IEnumerable<AllUsersViewModel> allUsers = await userService.GetAllUsersAsync();
+
             return View(allUsers);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Ban(string userId)
+        {
+            await userService.BanUserAsync(userId);
+
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Promote(string userId)
+        {
+            await userService.PromoteUserAsync(userId);
+
+            return RedirectToAction("Index");
         }
 
         // Active Users

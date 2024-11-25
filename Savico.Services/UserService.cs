@@ -17,7 +17,7 @@
             this.userManager = userManager;
         }
 
-        public async Task<IEnumerable<AllUsersViewModel>> GetAllUsersAsync()
+        public async Task<IEnumerable<AllUsersViewModel>> GetAllUsersAsync() // retrieves all the users
         {
             IEnumerable<User> allUsers = await userManager.Users.ToArrayAsync();
 
@@ -29,13 +29,36 @@
 
                 allUsersViewModel.Add(new AllUsersViewModel()
                 {
-                    Id = user.Id.ToString(),
-                    Email = user.Email,
+                    Id = user.Id,
+                    Email = user.Email!,
                     Roles = roles
                 });
             }
 
             return allUsersViewModel;
+        }
+
+        public async Task BanUserAsync(string userId) // banning user and preventing him to log into his account
+        {
+            var user = await userManager.FindByIdAsync(userId);
+            if (user != null)
+            {
+                user.LockoutEnd = DateTime.UtcNow.AddYears(100); 
+                await userManager.UpdateAsync(user);
+            }
+        }
+
+        public async Task PromoteUserAsync(string userId) // promotes user to admin
+        {
+            var user = await userManager.FindByIdAsync(userId);
+            if (user != null)
+            {
+                var isInRole = await userManager.IsInRoleAsync(user, "Administrator");
+                if (!isInRole)
+                {
+                    await userManager.AddToRoleAsync(user, "Administrator");
+                }
+            }
         }
     }
 }
