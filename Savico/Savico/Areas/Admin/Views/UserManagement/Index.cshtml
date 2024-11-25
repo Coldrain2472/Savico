@@ -2,22 +2,22 @@
 @model IEnumerable<AllUsersViewModel>
 
 @{
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
     ViewData["Title"] = "User Management - All Users";
 }
 
-<div class="container-fluid">
-    <h1 class="h3 mb-4 text-gray-800">User Management</h1>
+<div class="container-fluid px-4 mt-4">
+    <h1 class="mb-4 text-center">User Management</h1>
 
     <div class="card shadow mb-4">
         <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">All Users</h6>
+            <h6 class="m-0 font-weight-bold text-primary">All Registered Users</h6>
         </div>
         <div class="card-body">
             <div class="table-responsive">
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
-                            <th>Username</th>
                             <th>Email</th>
                             <th>Roles</th>
                             <th>Actions</th>
@@ -27,12 +27,11 @@
                         @foreach (var user in Model)
                         {
                             <tr>
-                                <td>@user.Id</td>
                                 <td>@user.Email</td>
                                 <td>
                                     @foreach (var role in user.Roles)
                                     {
-                                        <span class="badge badge-info">@role</span>
+                                        <span class="badge badge-info text-dark">@role</span> 
                                     }
                                 </td>
                                 <td>
@@ -53,7 +52,7 @@
     </div>
 
     <div class="text-left mt-4">
-        <a href="@Url.Action("Index", "Dashboard")" class="btn btn-primary">
+        <a href="@Url.Action("Index", "Dashboard")" class="btn btn-primary btn-sm">
             <i class="fas fa-arrow-left"></i> Go Back
         </a>
     </div>
