@@ -1,4 +1,4 @@
-﻿@using Savico.Core.Models.ViewModels.Goal
+﻿﻿@using Savico.Core.Models.ViewModels.Goal
 @model GoalViewModel
 
 @{
@@ -9,14 +9,9 @@
     <h2>Goal Details</h2>
 
     <div class="card shadow-sm p-4 mb-4">
-        <p><strong>Target Amount:</strong> @Model.TargetAmount @Model.Currency</p>
-        <p><strong>Current Amount:</strong> @Model.CurrentAmount @Model.Currency</p>
         <p><strong>Target Date:</strong> @Model.TargetDate.ToString("dd.MM.yyyy")</p>
-      @*   <p><strong>Monthly Contribution:</strong> @Model.MonthlyContribution @Model.Currency</p> *@
-        <p><strong>Monthly Goal Contribution:</strong> @Model.MonthlyGoalContribution @Model.Currency</p>
         <p><strong>Description:</strong> @Model.Description</p>
     </div>
-
     <div class="mt-3">
         <a href="@Url.Action("Index", "Goal")" class="btn btn-secondary shadow-sm rounded-pill">
             <i class="fas fa-arrow-left"></i> Back to Goals
@@ -29,6 +24,3 @@
                 <i class="fas fa-trash"></i> Delete
             </button>
         </form>
-        
-    </div>
-</div>

@@ -1,5 +1,6 @@
 ﻿namespace Savico.Controllers
 {
+    using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Savico.Core.Models;
     using Savico.Core.Models.ViewModels.Goal;
@@ -114,27 +115,47 @@
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var userId = GetUserId();
-            //var goal = await goalService.GetGoalByIdAsync(id, userId);
-
-            //if (goal == null)
-            //{
-            //    return BadRequest();
-            //}
 
             await goalService.DeleteGoalAsync(id, userId);
             return RedirectToAction(nameof(Index));
         }
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Delete(int id)
-        //{
-        //    var userId = GetUserId();
 
-        //    await goalService.DeleteGoalAsync(id, userId);
+        [HttpGet]
+        public async Task<IActionResult> Contribute(int id)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var model = await goalService.GetGoalContributeViewModelAsync(id, userId);
 
-        //    return RedirectToAction(nameof(Index));
-        //}
+            if (model == null)
+            {
+                return BadRequest();
+            }
 
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Contribute(GoalContributeViewModel model)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    await goalService.ContributeToGoalAsync(model, userId);
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (InvalidOperationException ex)
+                {
+                    ModelState.AddModelError(string.Empty, ex.Message);
+                }
+            }
+
+            return View(model);
+        }
+    
         private string GetUserId()
         {
             return User.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty;

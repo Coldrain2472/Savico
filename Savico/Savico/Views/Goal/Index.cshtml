@@ -2,65 +2,66 @@
 @model IEnumerable<GoalViewModel>
 
 @{
-    ViewData["Title"] = "Goals";
+	ViewData["Title"] = "Goals";
 }
 
 <div class="container mt-5">
-    <div class="row mb-4">
-        <div class="col text-center">
-            <h1 class="display-4 text-primary font-weight-bold">
-                <i class="fas fa-trophy"></i> Your Goals
-            </h1>
-            <p class="lead text-muted">Track your financial goals and monitor your progress!</p>
-        </div>
-    </div>
+	<div class="row mb-4">
+		<div class="col text-center">
+			<h1 class="display-4 text-primary font-weight-bold">
+				<i class="fas fa-trophy"></i> Your Goals
+			</h1>
+			<p class="lead text-muted">Track your financial goals and monitor your progress!</p>
+		</div>
+	</div>
 
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>Target Amount</th>
-                <th>Current Amount</th>
-                <th>Target Date</th>
-                <th>Monthly Goal Contribution</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var goal in Model)
-            {
-                <tr class="@(goal.IsAchieved ? "achieved" : "")">
-                    <td>@goal.TargetAmount @goal.Currency</td>
-                    <td>@goal.CurrentAmount @goal.Currency</td>
-                    <td>@goal.TargetDate.ToString("dd.MM.yyyy")</td>
-                    <td>@goal.MonthlyGoalContribution @goal.Currency</td>
-                    <td>
-                        <a asp-action="Edit" asp-route-id="@goal.Id" class="btn btn-warning">
-                            <i class="fas fa-edit"></i> Edit
-                        </a>
-                        <a asp-action="Details" asp-route-id="@goal.Id" class="btn btn-info">
-                            <i class="fas fa-info-circle"></i> Details
-                        </a>
-                        <a asp-action="Delete" asp-route-id="@goal.Id" class="btn btn-danger">
-                            <i class="fas fa-trash-alt"></i> Delete
-                        </a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+	<table class="table table-bordered">
+		<thead>
+			<tr>
+				<th>Target Amount</th>
+				<th>Current Amount</th>
+				<th>Target Date</th>
+				<th>Actions</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var goal in Model)
+			{
+				<tr class="@(goal.IsAchieved ? "achieved" : "")">
+					<td>@goal.TargetAmount @goal.Currency</td>
+					<td>@goal.CurrentAmount @goal.Currency</td>
+					<td>@goal.TargetDate.ToString("dd.MM.yyyy")</td>
+					<td>
+						<a asp-action="Contribute" asp-route-id="@goal.Id" class="btn btn-primary">
+							<i class="fas fa-arrow-up"></i> Contribute
+						</a>
+						<a asp-action="Edit" asp-route-id="@goal.Id" class="btn btn-warning">
+							<i class="fas fa-edit"></i> Edit
+						</a>
+						<a asp-action="Details" asp-route-id="@goal.Id" class="btn btn-info">
+							<i class="fas fa-info-circle"></i> Details
+						</a>
+						<a asp-action="Delete" asp-route-id="@goal.Id" class="btn btn-danger">
+							<i class="fas fa-trash-alt"></i> Delete
+						</a>
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
 
-    <div class="mb-3">
-        <a href="@Url.Action("Create", "Goal")" class="btn btn-success btn-lg shadow-sm rounded-pill">
-            <i class="fas fa-plus-circle"></i> Create Goal
-        </a>
-    </div>
+	<div class="mb-3">
+		<a href="@Url.Action("Create", "Goal")" class="btn btn-success btn-lg shadow-sm rounded-pill">
+			<i class="fas fa-plus-circle"></i> Create Goal
+		</a>
+	</div>
 </div>
 
 <style>
-    .achieved {
-        color: green;
-        font-weight: bold;
-        background-color: #e6ffe6; /* Light green background to indicate achievement */
-    }
+	.achieved {
+		color: green;
+		font-weight: bold;
+		background-color: #e6ffe6; /* Light green background to indicate achievement */
+	}
 </style>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">

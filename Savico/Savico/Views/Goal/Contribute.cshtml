@@ -1,0 +1,35 @@
+﻿@using Savico.Core.Models.ViewModels.Goal
+@model GoalContributeViewModel
+
+@{
+    ViewData["Title"] = "Contribute to Goal";
+}
+
+<div class="container mt-5">
+    <div class="row mb-4">
+        <div class="col text-center">
+            <h1 class="display-4 text-primary font-weight-bold">Contribute to Your Goal</h1>
+            <p class="lead text-muted">Enter the amount you wish to contribute to your goal.</p>
+        </div>
+    </div>
+
+    <form method="post">
+        <div class="form-group">
+            <label for="ContributionAmount">Contribution Amount</label>
+            <input type="number" step="0.01" class="form-control" id="ContributionAmount" name="ContributionAmount" value="@Model.ContributionAmount" required>
+        </div>
+
+        <input type="hidden" name="GoalId" value="@Model.GoalId" />
+
+        <div class="form-group">
+            <button type="submit" class="btn btn-success btn-lg">
+                <i class="fas fa-arrow-up"></i> Contribute
+            </button>
+        </div>
+        <div class="form-group">
+            <a href="javascript:history.back()" class="btn btn-secondary btn-lg">
+                <i class="fas fa-arrow-left"></i> Go Back
+            </a>
+        </div>
+    </form>
+</div>
