@@ -26,7 +26,9 @@
 
         <div class="form-group">
             <label for="TargetDate">Target Date</label>
-            <input type="date" class="form-control" id="TargetDate" asp-for="TargetDate" />
+            <input type="text" class="form-control" id="TargetDate"
+                   value="@Model.TargetDate.ToString("dd.MM.yyyy")"
+                   placeholder="dd.MM.yyyy" asp-for="TargetDate" />
             <span asp-validation-for="TargetDate" class="text-danger"></span>
         </div>
 

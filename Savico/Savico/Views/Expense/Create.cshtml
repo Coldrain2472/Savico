@@ -29,7 +29,9 @@
         <label asp-for="Date">
             <i class="fas fa-calendar-alt"></i> Date
         </label>
-        <input asp-for="Date" type="date" class="form-control" />
+        <input asp-for="Date" type="text" class="form-control" placeholder="dd.MM.yyyy"
+               value="@Model.Date.ToString("dd.MM.yyyy")" />
+
         <span asp-validation-for="Date" class="text-danger"></span>
     </div>
 
