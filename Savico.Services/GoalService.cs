@@ -167,11 +167,21 @@
 
         public async Task ContributeToGoalAsync(GoalContributeViewModel model, string userId)
         {
-            var user = await userManager.FindByIdAsync(userId);
+            //var user = await userManager.FindByIdAsync(userId);
+            var user = await userManager.Users
+       .Include(u => u.Budget) // Ensure Budget is loaded
+       .FirstOrDefaultAsync(u => u.Id == userId);
+
             if (user == null)
             {
                 throw new InvalidOperationException("User not found.");
             }
+
+            if (user.Budget == null)
+            {
+                throw new InvalidOperationException("User does not have a budget.");
+            }
+
             var goal = await context.Goals
                  .FirstOrDefaultAsync(g => g.Id == model.GoalId && g.UserId == userId);
 
