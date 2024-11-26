@@ -69,8 +69,12 @@
                 .HasPrecision(18, 2);
 
             modelBuilder.Entity<Goal>()
-                .Property(p => p.MonthlyContribution)
+                .Property(p => p.ContributionAmount)
                 .HasPrecision(18, 2);
+
+            //modelBuilder.Entity<Goal>()
+            //    .Property(p => p.MonthlyContribution)
+            //    .HasPrecision(18, 2);
 
             //explicitly defining the relationships
 

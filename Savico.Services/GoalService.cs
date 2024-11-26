@@ -110,7 +110,7 @@
                 TargetDate = goal.TargetDate,
                 Currency = userCurrency,
                 Description = goal.Description,
-                MonthlyContribution = goal.MonthlyContribution,
+              //  MonthlyContribution = goal.MonthlyContribution,
                 IsAchieved = goal.IsAchieved
             };
 
@@ -167,9 +167,8 @@
 
         public async Task ContributeToGoalAsync(GoalContributeViewModel model, string userId)
         {
-            //var user = await userManager.FindByIdAsync(userId);
-            var user = await userManager.Users
-       .Include(u => u.Budget) // Ensure Budget is loaded
+            var user = await context.Users
+       .Include(u => u.Budget) 
        .FirstOrDefaultAsync(u => u.Id == userId);
 
             if (user == null)
@@ -197,7 +196,7 @@
             }
 
 
-            if (model.ContributionAmount > user.Budget.TotalAmount)
+            if (model.ContributionAmount > user.Budget.TotalAmount) // TO DO: fix functionality
             {
                 throw new InvalidOperationException("Insufficient budget for contribution.");
             }

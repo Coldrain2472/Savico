@@ -21,7 +21,7 @@
 
         public string? Currency {  get; set; }
 
-        public decimal MonthlyContribution {  get; set; }
+        public decimal ContributionAmount {  get; set; }
 
         [StringLength(DescriptionMaxLength, MinimumLength = DescriptionMinLength, ErrorMessage = LengthErrorMessage)]
         public string? Description {  get; set; } 

@@ -69,7 +69,7 @@
             //return remainingBudget;
             foreach (var goal in user.Goals.Where(g => !g.IsDeleted && !g.IsAchieved))
             {
-                totalGoalContribution += goal.MonthlyContribution;
+                totalGoalContribution += goal.ContributionAmount;
             }
 
             var remainingBudget = totalIncome - totalExpense - totalGoalContribution;
