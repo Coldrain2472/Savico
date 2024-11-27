@@ -1,5 +1,6 @@
 ﻿namespace Savico.Services.Contracts
 {
+    using Savico.Core.Models;
     using Savico.Core.Models.ViewModels.Admin.UserManagement;
 
     public interface IUserService
@@ -15,5 +16,7 @@
         Task<IEnumerable<AllUsersViewModel>> GetAllActiveUsersAsync();
 
         Task<IEnumerable<AllUsersViewModel>> GetAllInactiveUsersAsync();
+
+        Task<List<User>> GetBannedUsersAsync();
     }
 }

@@ -17,6 +17,8 @@
             this.userManager = userManager;
         }
 
+        // TO DO: maybe add a logic to remove ban or at least ask for confirmation before banning someone
+
         public async Task<IEnumerable<AllUsersViewModel>> GetAllUsersAsync() // retrieves all the users
         {
             IEnumerable<User> allUsers = await userManager.Users.ToArrayAsync();
@@ -54,11 +56,12 @@
             return users;
         }
 
-        public async Task<IEnumerable<AllUsersViewModel>> GetAllInactiveUsersAsync()
+        public async Task<IEnumerable<AllUsersViewModel>> GetAllInactiveUsersAsync() // TO DO: fix functionality
         {
+            var bannedUsers = GetBannedUsersAsync();
             var users = await userManager.Users
                 .AsNoTracking()
-                .Where(u => u.IsDeleted && u.LockoutEnabled) // in this case all deleted users and the ones with lockout would be the inactive ones
+                .Where(u => u.IsDeleted && bannedUsers.Result.Contains(u)) // in this case all deleted users and the ones with lockout would be the inactive ones
                 .Select(u => new AllUsersViewModel
                 {
                     Id = u.Id,
@@ -78,6 +81,13 @@
                 user.LockoutEnd = DateTime.UtcNow.AddYears(100); 
                 await userManager.UpdateAsync(user);
             }
+        }
+
+        public async Task<List<User>> GetBannedUsersAsync() // retrieves a list of banned users
+        {
+            var allUsers = userManager.Users.ToList();
+            var bannedUsers = allUsers.Where(u => u.LockoutEnd > DateTime.UtcNow).ToList();
+            return bannedUsers;
         }
 
         public async Task PromoteUserAsync(string userId) // promotes user to admin

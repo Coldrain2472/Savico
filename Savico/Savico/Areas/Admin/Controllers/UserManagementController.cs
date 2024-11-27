@@ -3,10 +3,8 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.EntityFrameworkCore;
     using Savico.Core.Models;
     using Savico.Core.Models.ViewModels.Admin.UserManagement;
-    using Savico.Services;
     using Savico.Services.Contracts;
 
     [Area("Admin")]
@@ -22,6 +20,7 @@
             this.userManager = userManager;
         }
 
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             IEnumerable<AllUsersViewModel> allUsers = await userService.GetAllUsersAsync();
@@ -62,7 +61,7 @@
         }
 
         [HttpGet]
-        public async Task<IActionResult> InactiveUsers() // to do: show all the inactive users
+        public async Task<IActionResult> InactiveUsers() 
         {
             var inactiveUsers = await userService.GetAllInactiveUsersAsync();
 
