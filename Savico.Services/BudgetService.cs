@@ -15,6 +15,14 @@
             this.context = context;
         }
 
+        public async Task<decimal> CalculateInitialBudgetAsync(string userId) // calculating the initial budget (sum of incomes)
+        {
+            var totalIncomes = await context.Incomes
+                .Where(i => i.UserId == userId && !i.IsDeleted)
+                .SumAsync(i => i.Amount);
+
+            return totalIncomes;
+        }
         public async Task<decimal?> CalculateRemainingBudgetAsync(string userId)
         // returns the budget (the money that we have after all the expenses and the contribution to the goal)
         {
@@ -36,43 +44,14 @@
 
             decimal totalGoalContribution = 0;
 
-            //foreach (var goal in user.Goals.Where(g => !g.IsDeleted))
-            //{
-            //    // checking if the goal has been updated in the current month
-            //    if (!goal.LastContributionDate.HasValue || goal.LastContributionDate.Value.Month != DateTime.Now.Month)
-            //    {
-            //        // calculates the number of months remaining to reach the goal
-            //        var monthsRemaining = (goal.TargetDate - DateTime.Now).Days / 30; // approximation
-            //        if (monthsRemaining > 0)
-            //        {
-            //            // adding the monthlycontribution to the goal
-            //            var monthlyContribution = (goal.TargetAmount - goal.CurrentAmount) / monthsRemaining;
-            //            totalGoalContribution += monthlyContribution;
-
-            //            // updating the goal's current amount
-            //            goal.CurrentAmount += monthlyContribution;
-
-            //            // updating the last contribution date to the current month
-            //            goal.LastContributionDate = DateTime.Now;
-
-            //            // saving the updated goal progress to the db
-            //            context.Goals.Update(goal);
-            //        }
-            //    }
-            //}
-
-
-            //await context.SaveChangesAsync();
-
-            //var remainingBudget = totalIncome - totalExpense - totalGoalContribution;
-
-            //return remainingBudget;
-            foreach (var goal in user.Goals.Where(g => !g.IsDeleted && !g.IsAchieved))
+            foreach (var goal in user.Goals.Where(g => !g.IsDeleted && !g.IsAchieved && g.CurrentAmount > 0))
             {
-                totalGoalContribution += goal.ContributionAmount;
+                totalGoalContribution += goal.CurrentAmount;
+                //totalGoalContribution += goal.ContributionAmount;
             }
 
             var remainingBudget = totalIncome - totalExpense - totalGoalContribution;
+
             return remainingBudget;
         }
 

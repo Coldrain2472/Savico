@@ -10,17 +10,17 @@
     public class GoalService : IGoalService
     {
         private readonly SavicoDbContext context;
-        private readonly UserManager<User> userManager;
+        private readonly IBudgetService budgetService;
 
-        public GoalService(SavicoDbContext context, UserManager<User> userManager)
+        public GoalService(SavicoDbContext context, IBudgetService budgetService)
         {
             this.context = context;
-            this.userManager = userManager;
+            this.budgetService = budgetService;
         }
 
         public async Task<GoalInputViewModel> GetGoalInputViewModelAsync(string userId)
         {
-            var user = await userManager.FindByIdAsync(userId);
+            var user = await context.Users.FindAsync(userId);
 
             var model = new GoalInputViewModel()
             {
@@ -35,7 +35,7 @@
             var goal = await context.Goals
                 .FirstOrDefaultAsync(g => g.Id == goalId && g.UserId == userId);
 
-            var user = await userManager.FindByIdAsync(userId);
+            var user = await context.Users.FindAsync(userId);
 
             var userCurrency = user?.Currency;
 
@@ -81,7 +81,8 @@
                 TargetDate = goal.TargetDate,
                 Currency = userCurrency,
                 Description = goal.Description,
-                IsAchieved = goal.IsAchieved
+                IsAchieved = goal.IsAchieved,
+                LastContributionDate = goal.LastContributionDate
             };
 
             return goalModel;
@@ -110,7 +111,6 @@
                 TargetDate = goal.TargetDate,
                 Currency = userCurrency,
                 Description = goal.Description,
-              //  MonthlyContribution = goal.MonthlyContribution,
                 IsAchieved = goal.IsAchieved
             };
 
@@ -122,7 +122,7 @@
         // get all active goals for the user
         public async Task<IEnumerable<GoalViewModel>> GetAllGoalsAsync(string userId)
         {
-            var user = await userManager.FindByIdAsync(userId);
+            var user = await context.Users.FindAsync(userId);
 
             var currency = user!.Currency;
 
@@ -138,7 +138,8 @@
                 TargetDate = g.TargetDate,
                 Description = g.Description,
                 Currency = currency,
-                IsAchieved = g.IsAchieved
+                IsAchieved = g.IsAchieved,
+                LastContributionDate = g.LastContributionDate
             })
                 .ToList();
 
@@ -147,7 +148,7 @@
         
         public async Task AddGoalAsync(GoalInputViewModel model, string userId)
         {
-            var user = await userManager.Users
+            var user = await context.Users
                 .Include(u => u.Budget)
                 .FirstOrDefaultAsync(u => u.Id == userId);
 
@@ -195,17 +196,19 @@
                 throw new InvalidOperationException("Contribution must be greater than zero.");
             }
 
+            var remainingBudget = await budgetService.CalculateRemainingBudgetAsync(userId);
 
-            if (model.ContributionAmount > user.Budget.TotalAmount) // TO DO: fix functionality
+            if (model.ContributionAmount > remainingBudget)
             {
                 throw new InvalidOperationException("Insufficient budget for contribution.");
             }
 
 
-            // Update goal's current amount
+            // updating the goal's current amount
             goal.CurrentAmount += model.ContributionAmount;
+            goal.LastContributionDate = DateTime.UtcNow;
 
-            // Deduct the contribution from the user's budget
+            // deducting the contribution from the user's budget
             user.Budget.TotalAmount -= model.ContributionAmount;
             context.Update(goal);
             context.Update(user);
@@ -242,7 +245,7 @@
             var goal = await context.Goals
                 .Where(g => g.Id == goalId && g.UserId == userId)
                 .FirstOrDefaultAsync();
-            var user = await userManager.FindByIdAsync(userId);
+            var user = await context.Users.FindAsync(userId);
 
             var currency = user!.Currency;
 
