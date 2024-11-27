@@ -8,17 +8,14 @@
     using Savico.Core.Models;
     using Savico.Infrastructure;
     using Microsoft.EntityFrameworkCore;
-    using Microsoft.AspNetCore.Identity;
 
     public class IncomeService : IIncomeService
     {
         private readonly SavicoDbContext context;
-        private readonly UserManager<User> userManager;
 
-        public IncomeService(SavicoDbContext context, UserManager<User> userManager)
+        public IncomeService(SavicoDbContext context)
         {
             this.context = context;
-            this.userManager = userManager;
         }
 
         public async Task AddIncomeAsync(IncomeInputViewModel model, string userId)
@@ -28,13 +25,8 @@
                 throw new ArgumentException("Income amount must be greater than zero.");
             }
 
-            // if the date is not in the future
-            //if (model.Date > DateTime.Now)
-            //{
-            //    throw new ArgumentException("Income date cannot be in the future.");
-            //}
+            var user = await context.Users.FindAsync(userId);
 
-            var user = await userManager.FindByIdAsync(userId);
             var userCurrency = user?.Currency;
 
             var income = new Income
@@ -63,7 +55,8 @@
 
         public async Task<IEnumerable<IncomeViewModel>> GetAllIncomesAsync(string userId)
         {
-            var user = await userManager.FindByIdAsync(userId);
+            var user = await context.Users.FindAsync(userId);
+
             var currency = user!.Currency;
 
             var incomes = await context.Incomes
@@ -125,7 +118,7 @@
 
         public async Task<IncomeInputViewModel> PrepareIncomeInputModelAsync(string userId)
         {
-            var user = await userManager.FindByIdAsync(userId);
+            var user = await context.Users.FindAsync(userId);
 
             var model = new IncomeInputViewModel()
             {
@@ -164,9 +157,11 @@
 
         public async Task<IEnumerable<Income>> GetIncomesForPeriodAsync(string userId, DateTime startDate, DateTime endDate)
         {
-            return await context.Incomes
-                .Where(i => i.UserId == userId && i.Date >= startDate && i.Date <= endDate)
+            var incomes = await context.Incomes
+                 .Where(i => i.UserId == userId && i.Date >= startDate && i.Date <= endDate)
                 .ToListAsync();
+
+            return incomes;
         }
 
     }

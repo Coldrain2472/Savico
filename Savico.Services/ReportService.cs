@@ -1,25 +1,20 @@
 ﻿namespace Savico.Services
 {
-    using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
-    using Savico.Core.Models;
     using Savico.Core.Models.ViewModels.Expense;
     using Savico.Core.Models.ViewModels.Income;
     using Savico.Core.Models.ViewModels.Report;
     using Savico.Infrastructure;
     using Savico.Infrastructure.Data.Models;
     using Savico.Services.Contracts;
-    using System.Security.Claims;
 
     public class ReportService : IReportService
     {
         private readonly SavicoDbContext context;
-        private readonly UserManager<User> userManager;
 
-        public ReportService(SavicoDbContext context, UserManager<User> userManager)
+        public ReportService(SavicoDbContext context)
         {
             this.context = context;
-            this.userManager = userManager;
         }
 
         public async Task<ReportViewModel> GenerateReportAsync(string userId, DateTime startDate, DateTime endDate)
@@ -158,7 +153,9 @@
             }
 
             report.IsDeleted = true;
+
             await context.SaveChangesAsync();
+
             return true;
         }
     }

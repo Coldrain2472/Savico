@@ -1,6 +1,5 @@
 ﻿namespace Savico.Services
 {
-    using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using Savico.Core.Models;
     using Savico.Core.Models.ViewModels.Category;
@@ -12,12 +11,10 @@
     public class ExpenseService : IExpenseService
     {
         private readonly SavicoDbContext context;
-        private readonly UserManager<User> userManager;
 
-        public ExpenseService(SavicoDbContext context, UserManager<User> userManager)
+        public ExpenseService(SavicoDbContext context)
         {
             this.context = context;
-            this.userManager = userManager;
         }
 
         public async Task<ExpenseInputViewModel> PrepareExpenseInputModelAsync(ExpenseInputViewModel inputModel, string userId)
@@ -102,7 +99,7 @@
 
         public async Task<IEnumerable<ExpenseViewModel>> GetAllExpensesAsync(string userId)
         {
-            var user = await userManager.FindByIdAsync(userId);
+            var user = await context.Users.FindAsync(userId);
 
             var currency = user!.Currency;
 
@@ -124,7 +121,7 @@
 
         public async Task<ExpenseViewModel> GetExpenseByIdAsync(int expenseId, string userId)
         {
-            var user = await userManager.FindByIdAsync(userId);
+            var user = await context.Users.FindAsync(userId);
             var currency = user!.Currency;
 
             var expense = await context.Expenses
@@ -197,20 +194,24 @@
 
         public async Task<ICollection<CategoryViewModel>> GetCategories()
         {
-            return await context.Categories
-                .Select(t => new CategoryViewModel()
+            var categories = await context.Categories
+                .Select(t => new CategoryViewModel
                 {
                     Id = t.Id,
                     Name = t.Name
                 })
                 .ToListAsync();
+
+            return categories;
         }
 
         public async Task<IEnumerable<Expense>> GetExpensesForPeriodAsync(string userId, DateTime startDate, DateTime endDate)
         {
-            return await context.Expenses
+            var expenses = await context.Expenses
                 .Where(e => e.UserId == userId && e.Date >= startDate && e.Date <= endDate && !e.IsDeleted)
                 .ToListAsync();
+
+            return expenses;
         }
     }
 }
