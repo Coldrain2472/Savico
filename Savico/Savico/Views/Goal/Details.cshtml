@@ -12,19 +12,33 @@
 		<p><strong>Target Date:</strong> @Model.TargetDate.ToString("dd.MM.yyyy")</p>
 		<p><strong>Target Amount:</strong> @Model.TargetAmount @Model.Currency</p>
 		<p><strong>Current Amount:</strong> @Model.CurrentAmount @Model.Currency</p>
+		<p>
+			@if (Model.LastContributionDate.HasValue)
+			{
+				<span>
+					<strong>
+						Last Contribution Date
+					</strong>
+					: @Model.LastContributionDate.Value.ToString("dd.MM.yyyy")
+				</span>
+			}
+			else
+			{
+				<span>No contributions yet.</span>
+			}
+		</p>
 		<p><strong>Description:</strong> @Model.Description</p>
 	</div>
 	<div class="mt-3">
-		<a href="@Url.Action("Index", "Goal")" class="btn btn-secondary shadow-sm rounded-pill">
+		<a asp-action="Index" class="btn btn-secondary">
 			<i class="fas fa-arrow-left"></i> Back to Goals
 		</a>
-		<a href="@Url.Action("Edit", "Goal", new { id = Model.Id })" class="btn btn-primary shadow-sm rounded-pill">
+		<a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">
 			<i class="fas fa-edit"></i> Edit
 		</a>
-		<form asp-action="Delete" asp-route-id="@Model.Id" method="post" class="d-inline">
-			<button type="submit" class="btn btn-danger shadow-sm rounded-pill" onclick="return confirm('Are you sure you want to delete this goal?');">
-				<i class="fas fa-trash"></i> Delete
-			</button>
-		</form>
+		<a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">
+			<i class="fas fa-trash-alt"></i> Delete
+		</a>
 	</div>
 </div>
+
