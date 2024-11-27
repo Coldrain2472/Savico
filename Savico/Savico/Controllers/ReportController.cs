@@ -16,6 +16,7 @@
             this.reportService = reportService;
         }
 
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             var userId = GetUserId();
