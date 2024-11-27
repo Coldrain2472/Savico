@@ -21,8 +21,11 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/">Back to Main Site</a>
                     </li>
-                    <li class="nav-item">
+                    @* <li class="nav-item">
                         <a class="nav-link" href="/Account/Logout">Logout</a>
+                    </li> *@
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="Identity" asp-page="/Account/Logout">Logout</a>
                     </li>
                 </ul>
             </div>
