@@ -6,6 +6,7 @@
     using Microsoft.EntityFrameworkCore;
     using Savico.Core.Models;
     using Savico.Core.Models.ViewModels.Admin.UserManagement;
+    using Savico.Services;
     using Savico.Services.Contracts;
 
     [Area("Admin")]
@@ -33,7 +34,7 @@
         {
             await userService.BanUserAsync(userId);
 
-            return RedirectToAction("Index");
+            return RedirectToAction(nameof(Index));
         }
 
         [HttpPost]
@@ -41,21 +42,31 @@
         {
             await userService.PromoteUserAsync(userId);
 
-            return RedirectToAction("Index");
+            return RedirectToAction(nameof(Index));
         }
 
-        // Active Users
-        public IActionResult ActiveUsers()
+        [HttpPost]
+        public async Task<IActionResult> Demote(string userId)
         {
-            // Logic to retrieve active users
-            return View();
+            await userService.DemoteAdminUserToUser(userId);
+
+            return RedirectToAction(nameof(Index));
         }
 
-        // Inactive Users
-        public IActionResult InactiveUsers()
+        [HttpGet]
+        public async Task<IActionResult> ActiveUsers() // to do: show all the active users
         {
-            // Logic to retrieve inactive users
-            return View();
+            var activeUsers = await userService.GetAllActiveUsersAsync();
+
+            return View(activeUsers);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> InactiveUsers() // to do: show all the inactive users
+        {
+            var inactiveUsers = await userService.GetAllInactiveUsersAsync();
+
+            return View(inactiveUsers);
         }
     }
 }

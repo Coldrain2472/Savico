@@ -1,7 +1,7 @@
-﻿using Savico.Core.Models.ViewModels.Admin.UserManagement;
-
-namespace Savico.Services.Contracts
+﻿namespace Savico.Services.Contracts
 {
+    using Savico.Core.Models.ViewModels.Admin.UserManagement;
+
     public interface IUserService
     {
         Task<IEnumerable<AllUsersViewModel>> GetAllUsersAsync();
@@ -9,5 +9,11 @@ namespace Savico.Services.Contracts
         Task BanUserAsync(string userId);
 
         Task PromoteUserAsync(string userId);
+
+        Task DemoteAdminUserToUser(string userId);
+
+        Task<IEnumerable<AllUsersViewModel>> GetAllActiveUsersAsync();
+
+        Task<IEnumerable<AllUsersViewModel>> GetAllInactiveUsersAsync();
     }
 }

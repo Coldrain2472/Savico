@@ -38,6 +38,38 @@
             return allUsersViewModel;
         }
 
+        public async Task<IEnumerable<AllUsersViewModel>> GetAllActiveUsersAsync() // TO DO: Fix functionality
+        {
+            var users = await userManager.Users
+                .AsNoTracking()
+                .Where(u => !u.IsDeleted) // in this case IsDeleted will help us check which are the active users
+                .Select(u => new AllUsersViewModel
+                {
+                    Id = u.Id,
+                    Email = u.Email!,
+                    Roles = userManager.GetRolesAsync(u).Result
+                })
+                .ToListAsync();
+
+            return users;
+        }
+
+        public async Task<IEnumerable<AllUsersViewModel>> GetAllInactiveUsersAsync()
+        {
+            var users = await userManager.Users
+                .AsNoTracking()
+                .Where(u => u.IsDeleted && u.LockoutEnabled) // in this case all deleted users and the ones with lockout would be the inactive ones
+                .Select(u => new AllUsersViewModel
+                {
+                    Id = u.Id,
+                    Email = u.Email!,
+                    Roles = userManager.GetRolesAsync(u).Result
+                })
+                .ToListAsync();
+
+            return users;
+        }
+
         public async Task BanUserAsync(string userId) // banning user and preventing him to log into his account
         {
             var user = await userManager.FindByIdAsync(userId);
@@ -54,9 +86,31 @@
             if (user != null)
             {
                 var isInRole = await userManager.IsInRoleAsync(user, "Admin");
-                if (!isInRole)
+                var isInUserRole = await userManager.IsInRoleAsync(user, "User");
+                if (isInUserRole && !isInRole)
+                {
+                    await userManager.RemoveFromRoleAsync(user, "User");
+                    await userManager.AddToRoleAsync(user, "Admin");
+                }
+
+                if (!isInUserRole)
                 {
                     await userManager.AddToRoleAsync(user, "Admin");
+                }
+            }
+        }
+
+        public async Task DemoteAdminUserToUser(string userId) // demotes a user from admin to user
+        {
+            var user = await userManager.FindByIdAsync(userId);
+            
+            if (user != null)
+            {
+                var isInRole = await userManager.IsInRoleAsync(user, "Admin");
+                if (isInRole)
+                {
+                    await userManager.RemoveFromRoleAsync(user, "Admin");
+                    await userManager.AddToRoleAsync(user, "User");
                 }
             }
         }
