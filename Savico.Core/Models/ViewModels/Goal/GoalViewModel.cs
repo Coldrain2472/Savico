@@ -15,5 +15,7 @@
         public string? Description { get; set; }
 
         public bool IsAchieved { get; set; }
+
+        public DateTime? LastContributionDate { get; set; }
     }
 }
