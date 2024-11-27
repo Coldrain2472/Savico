@@ -53,10 +53,10 @@
             var user = await userManager.FindByIdAsync(userId);
             if (user != null)
             {
-                var isInRole = await userManager.IsInRoleAsync(user, "Administrator");
+                var isInRole = await userManager.IsInRoleAsync(user, "Admin");
                 if (!isInRole)
                 {
-                    await userManager.AddToRoleAsync(user, "Administrator");
+                    await userManager.AddToRoleAsync(user, "Admin");
                 }
             }
         }
