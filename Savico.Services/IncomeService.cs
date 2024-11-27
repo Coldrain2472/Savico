@@ -163,6 +163,5 @@
 
             return incomes;
         }
-
     }
 }
