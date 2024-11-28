@@ -42,6 +42,12 @@
                                     <form method="post" action="@Url.Action("Ban", "UserManagement", new { userId = user.Id })" style="display:inline;">
                                         <button type="submit" class="btn btn-danger btn-sm" title="Ban User">Ban</button>
                                     </form>
+                                    @if (user.LockoutEnd.HasValue && user.LockoutEnd > DateTime.UtcNow) 
+                                    {
+                                        <form method="post" action="@Url.Action("RemoveBan", "UserManagement", new { userId = user.Id })" style="display:inline;">
+                                            <button type="submit" class="btn btn-primary btn-sm" title="Remove Ban">Remove Ban</button>
+                                        </form>
+                                    }
                                 </td>
                             </tr>
                         }
