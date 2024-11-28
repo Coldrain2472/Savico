@@ -59,12 +59,11 @@
         public async Task<IEnumerable<AllUsersViewModel>> GetAllInactiveUsersAsync() // TO DO: fix functionality
         {
             var users = await userManager.Users
-               .AsNoTracking()
-               .Where(u => u.IsDeleted || (u.LockoutEnd.HasValue && u.LockoutEnd > DateTime.UtcNow))
-               .ToListAsync();
+                .AsNoTracking()
+                .Where(u => u.IsDeleted || (u.LockoutEnd.HasValue && u.LockoutEnd > DateTime.UtcNow))
+                .ToListAsync();
 
             var userRoles = new Dictionary<string, IList<string>>();
-
             foreach (var user in users)
             {
                 userRoles[user.Id] = await userManager.GetRolesAsync(user);
@@ -74,7 +73,8 @@
             {
                 Id = user.Id,
                 Email = user.Email!,
-                Roles = userRoles[user.Id]
+                Roles = userRoles[user.Id],
+                Status = user.IsDeleted ? "Deleted" : (user.LockoutEnd.HasValue && user.LockoutEnd > DateTime.UtcNow ? "Banned" : "Active")
             });
 
             return userViewModels;
