@@ -19,7 +19,7 @@
 
         // TO DO: maybe add a logic to remove ban or at least ask for confirmation before banning someone
 
-        public async Task<IEnumerable<AllUsersViewModel>> GetAllUsersAsync() // retrieves all the users
+        public async Task<IEnumerable<AllUsersViewModel>> GetAllUsersAsync() // retrieves all the registered users
         {
             IEnumerable<User> allUsers = await userManager.Users.ToArrayAsync();
 
@@ -40,23 +40,30 @@
             return allUsersViewModel;
         }
 
-        public async Task<IEnumerable<AllUsersViewModel>> GetAllActiveUsersAsync() // TO DO: Fix functionality
+        public async Task<IEnumerable<AllUsersViewModel>> GetAllActiveUsersAsync() // shows all the active users (not deleted and not banned)
         {
             var users = await userManager.Users
                 .AsNoTracking()
-                .Where(u => !u.IsDeleted) // in this case IsDeleted will help us check which are the active users
-                .Select(u => new AllUsersViewModel
-                {
-                    Id = u.Id,
-                    Email = u.Email!,
-                    Roles = userManager.GetRolesAsync(u).Result
-                })
+                .Where(u => !u.IsDeleted && !u.LockoutEnd.HasValue)
                 .ToListAsync();
 
-            return users;
+            var userRoles = new Dictionary<string, IList<string>>();
+            foreach (var user in users)
+            {
+                userRoles[user.Id] = await userManager.GetRolesAsync(user);
+            }
+
+            var userViewModels = users.Select(user => new AllUsersViewModel
+            {
+                Id = user.Id,
+                Email = user.Email!,
+                Roles = userRoles[user.Id],
+            });
+
+            return userViewModels;
         }
 
-        public async Task<IEnumerable<AllUsersViewModel>> GetAllInactiveUsersAsync() // TO DO: fix functionality
+        public async Task<IEnumerable<AllUsersViewModel>> GetAllInactiveUsersAsync() // shows all the inactive users (banned and soft deleted)
         {
             var users = await userManager.Users
                 .AsNoTracking()
