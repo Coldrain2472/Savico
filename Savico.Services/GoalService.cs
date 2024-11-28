@@ -1,6 +1,5 @@
 ﻿namespace Savico.Services
 {
-    using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using Savico.Core.Models;
     using Savico.Core.Models.ViewModels.Goal;
@@ -57,7 +56,6 @@
             }
         } 
 
-        
         public async Task<GoalViewModel> GetGoalByIdAsync(int goalId, string userId)
         {
             var goal = await context.Goals
@@ -117,8 +115,6 @@
             return model;
         }
 
-       
-
         // get all active goals for the user
         public async Task<IEnumerable<GoalViewModel>> GetAllGoalsAsync(string userId)
         {
@@ -169,8 +165,8 @@
         public async Task ContributeToGoalAsync(GoalContributeViewModel model, string userId)
         {
             var user = await context.Users
-       .Include(u => u.Budget) 
-       .FirstOrDefaultAsync(u => u.Id == userId);
+               .Include(u => u.Budget) 
+               .FirstOrDefaultAsync(u => u.Id == userId);
 
             if (user == null)
             {
@@ -207,6 +203,16 @@
             // updating the goal's current amount
             goal.CurrentAmount += model.ContributionAmount;
             goal.LastContributionDate = DateTime.UtcNow;
+
+            // checking if the goal has been achieved
+            await UpdateGoalAsync(goal.Id, new GoalInputViewModel
+            {
+                Description = goal.Description,
+                TargetDate = goal.TargetDate,
+                CurrentAmount = goal.CurrentAmount,
+                TargetAmount = goal.TargetAmount,
+                IsAchieved = goal.IsAchieved
+            }, userId);
 
             // deducting the contribution from the user's budget
             user.Budget.TotalAmount -= model.ContributionAmount;
