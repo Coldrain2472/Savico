@@ -2,7 +2,7 @@
 {
     public static class DataConstants
     {
-        public const string DateTimeDefaultFormat = "dd/MM/yyyy";
+        public const string DateTimeDefaultFormat = "dd.MM.yyyy";
 
         public const string LengthErrorMessage = "{0} must be between {2} and {1} characters long!";
 
@@ -22,7 +22,7 @@
             public const int EmailMinLength = 1;
             public const int EmailMaxLength = 30;
 
-            public const int PasswordMinLength = 1;
+            public const int PasswordMinLength = 5;
             public const int PasswordMaxLength = 30;
 
             public const int CurrencyMinLength = 2;
