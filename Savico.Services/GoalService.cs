@@ -43,7 +43,7 @@
             {
                 goal.Description = model.Description;
                 goal.TargetDate = model.TargetDate;
-                goal.CurrentAmount = model.CurrentAmount; // ?
+                goal.CurrentAmount = model.CurrentAmount; 
                 goal.TargetAmount = model.TargetAmount;
 
                 // mark as achieved if the current amount meets or exceeds the target amount
