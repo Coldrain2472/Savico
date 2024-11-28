@@ -37,6 +37,14 @@
         }
 
         [HttpPost]
+        public async Task<IActionResult> RemoveBan(string userId)
+        {
+            await userService.RemoveBanAsync(userId);
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
         public async Task<IActionResult> Promote(string userId)
         {
             await userService.PromoteUserAsync(userId);

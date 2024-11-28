@@ -33,7 +33,8 @@
                 {
                     Id = user.Id,
                     Email = user.Email!,
-                    Roles = roles
+                    Roles = roles,
+                    LockoutEnd = user.LockoutEnd?.DateTime
                 });
             }
 
@@ -90,9 +91,22 @@
         public async Task BanUserAsync(string userId) // banning user and preventing him to log into his account
         {
             var user = await userManager.FindByIdAsync(userId);
+
             if (user != null)
             {
                 user.LockoutEnd = DateTime.UtcNow.AddYears(100);
+                await userManager.UpdateAsync(user);
+            }
+        }
+
+        public async Task RemoveBanAsync(string userId) // removes a ban from a banned user
+        {
+            var user = await userManager.FindByIdAsync(userId);
+
+            if (user != null)
+            {
+                user.LockoutEnd = null;
+
                 await userManager.UpdateAsync(user);
             }
         }

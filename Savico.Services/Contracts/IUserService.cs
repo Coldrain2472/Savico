@@ -9,6 +9,8 @@
 
         Task BanUserAsync(string userId);
 
+        Task RemoveBanAsync(string userId);
+
         Task PromoteUserAsync(string userId);
 
         Task DemoteAdminUserToUser(string userId);
