@@ -7,5 +7,7 @@
         public string Email { get; set; } = null!;
 
         public IEnumerable<string> Roles { get; set; } = null!;
+
+        public string Status { get; set; } = null!;
     }
 }
