@@ -67,8 +67,9 @@
                     Source = i.Source,
                     Amount = i.Amount,
                     Date = i.Date,
-                    Currency = currency! 
+                    Currency = currency!
                 })
+                .OrderBy(i => i.Date)
                 .ToListAsync();
 
             return incomes;
