@@ -182,6 +182,11 @@
             var goal = await context.Goals
                  .FirstOrDefaultAsync(g => g.Id == model.GoalId && g.UserId == userId);
 
+            if (goal.IsAchieved)
+            {
+                throw new InvalidOperationException("Cannot contribute to an achieved goal.");
+            }
+
             if (goal == null)
             {
                 throw new InvalidOperationException("Goal not found or does not belong to the user.");
@@ -205,7 +210,6 @@
             goal.CurrentAmount += model.ContributionAmount;
             goal.LastContributionDate = DateTime.UtcNow;
 
-            // checking if the goal has been achieved
             await UpdateGoalAsync(goal.Id, new GoalInputViewModel
             {
                 Description = goal.Description,
