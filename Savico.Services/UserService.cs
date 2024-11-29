@@ -17,8 +17,6 @@
             this.userManager = userManager;
         }
 
-        // TO DO: maybe add a logic to remove ban or at least ask for confirmation before banning someone
-
         public async Task<IEnumerable<AllUsersViewModel>> GetAllUsersAsync() // retrieves all the registered users
         {
             IEnumerable<User> allUsers = await userManager.Users.ToArrayAsync();
@@ -111,20 +109,15 @@
             }
         }
 
-        public async Task<List<User>> GetBannedUsersAsync() // retrieves a list of banned users
-        {
-            var allUsers = userManager.Users.ToList();
-            var bannedUsers = allUsers.Where(u => u.LockoutEnd > DateTime.UtcNow).ToList();
-            return bannedUsers;
-        }
-
         public async Task PromoteUserAsync(string userId) // promotes user to admin
         {
             var user = await userManager.FindByIdAsync(userId);
+
             if (user != null)
             {
                 var isInRole = await userManager.IsInRoleAsync(user, "Admin");
                 var isInUserRole = await userManager.IsInRoleAsync(user, "User");
+
                 if (isInUserRole && !isInRole)
                 {
                     await userManager.RemoveFromRoleAsync(user, "User");
