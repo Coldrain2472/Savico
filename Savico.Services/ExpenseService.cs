@@ -114,7 +114,8 @@
                    CategoryName = e.Category!.Name,
                    Currency = currency!
                })
-             .ToListAsync();
+               .OrderBy(e=>e.Date)
+               .ToListAsync();
 
             return expenses;
         }
