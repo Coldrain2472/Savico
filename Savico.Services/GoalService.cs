@@ -182,16 +182,15 @@
             var goal = await context.Goals
                  .FirstOrDefaultAsync(g => g.Id == model.GoalId && g.UserId == userId);
 
-            if (goal.IsAchieved)
-            {
-                throw new InvalidOperationException("Cannot contribute to an achieved goal.");
-            }
-
             if (goal == null)
             {
                 throw new InvalidOperationException("Goal not found or does not belong to the user.");
             }
 
+            if (goal.IsAchieved)
+            {
+                throw new InvalidOperationException("Cannot contribute to an achieved goal.");
+            }
 
             if (model.ContributionAmount <= 0)
             {
@@ -205,25 +204,19 @@
                 throw new InvalidOperationException("Insufficient budget for contribution.");
             }
 
-
             // updating the goal's current amount
             goal.CurrentAmount += model.ContributionAmount;
             goal.LastContributionDate = DateTime.UtcNow;
-
-            await UpdateGoalAsync(goal.Id, new GoalInputViewModel
+            if (goal.CurrentAmount >= goal.TargetAmount)
             {
-                Description = goal.Description,
-                TargetDate = goal.TargetDate,
-                CurrentAmount = goal.CurrentAmount,
-                TargetAmount = goal.TargetAmount,
-                IsAchieved = goal.IsAchieved
-            }, userId);
+                goal.IsAchieved = true;
+            }
 
-            // deducting the contribution from the user's budget
+            // deducting the contribution from the user's total budget
             user.Budget.TotalAmount -= model.ContributionAmount;
-            context.Update(goal);
-            context.Update(user);
 
+            context.Goals.Update(goal);
+            context.Users.Update(user);
             await context.SaveChangesAsync();
         }
 

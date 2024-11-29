@@ -32,13 +32,13 @@
 
             var totalIncome = user.Incomes?.Where(i => !i.IsDeleted).Sum(i => i.Amount); 
 
-            var totalExpense = user.Expenses?.Where(e => !e.IsDeleted).Sum(e => e.Amount); 
+            var totalExpense = user.Expenses?.Where(e => !e.IsDeleted).Sum(e => e.Amount);
 
-            var achievedGoalContributions = user.Goals
-                  .Where(g => g.IsAchieved && !g.IsDeleted)
-                  .Sum(g => g.CurrentAmount);
+            var totalGoalContributions = user.Goals
+                .Where(g => !g.IsDeleted)
+                .Sum(g => g.CurrentAmount);
 
-            var remainingBudget = totalIncome - totalExpense - achievedGoalContributions;
+            var remainingBudget = totalIncome - totalExpense - totalGoalContributions;
 
             return remainingBudget;
         }
