@@ -27,7 +27,7 @@
             };
 
             return model;
-        } 
+        }
 
         public async Task UpdateGoalAsync(int goalId, GoalInputViewModel model, string userId)
         {
@@ -42,7 +42,7 @@
             {
                 goal.Description = model.Description;
                 goal.TargetDate = model.TargetDate;
-                goal.CurrentAmount = model.CurrentAmount; 
+                goal.CurrentAmount = model.CurrentAmount;
                 goal.TargetAmount = model.TargetAmount;
 
                 // mark as achieved if the current amount meets or exceeds the target amount
@@ -54,7 +54,7 @@
                 context.Goals.Update(goal);
                 await context.SaveChangesAsync();
             }
-        } 
+        }
 
         public async Task<GoalViewModel> GetGoalByIdAsync(int goalId, string userId)
         {
@@ -84,7 +84,7 @@
             };
 
             return goalModel;
-        } 
+        }
 
         public async Task<GoalInputViewModel> GetGoalForEditAsync(int goalId, string userId)
         {
@@ -137,11 +137,12 @@
                 IsAchieved = g.IsAchieved,
                 LastContributionDate = g.LastContributionDate
             })
+                .OrderBy(g => g.TargetDate)
                 .ToList();
 
             return goalViewModels;
         }
-        
+
         public async Task AddGoalAsync(GoalInputViewModel model, string userId)
         {
             var user = await context.Users
@@ -160,12 +161,12 @@
 
             await context.Goals.AddAsync(newGoal);
             await context.SaveChangesAsync();
-        } 
+        }
 
         public async Task ContributeToGoalAsync(GoalContributeViewModel model, string userId)
         {
             var user = await context.Users
-               .Include(u => u.Budget) 
+               .Include(u => u.Budget)
                .FirstOrDefaultAsync(u => u.Id == userId);
 
             if (user == null)
@@ -220,7 +221,7 @@
             context.Update(user);
 
             await context.SaveChangesAsync();
-        } 
+        }
 
         public async Task DeleteGoalAsync(int goalId, string userId)
         {
@@ -244,7 +245,7 @@
                 context.Entry(goal.User.Budget).State = EntityState.Modified;
                 await context.SaveChangesAsync();
             }
-        } 
+        }
 
         public async Task<GoalContributeViewModel> GetGoalContributeViewModelAsync(int goalId, string userId)
         {
@@ -265,7 +266,7 @@
                 GoalId = goal.Id,
                 Currency = currency
             };
-        } 
+        }
 
     }
 }
