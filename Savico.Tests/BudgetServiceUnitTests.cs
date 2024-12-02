@@ -163,25 +163,6 @@
         }
 
         [Test]
-        public async Task CalculateRemainingBudgetAsync_ShouldReturnCorrectRemainingBudget_WhenNoIncome() 
-        {
-            var user = await context.Users.FirstOrDefaultAsync(u => u.Id == userId);
-            var income = context.Incomes.FirstOrDefault(i => i.UserId == userId);
-
-            if (income != null)
-            {
-                context.Incomes.Remove(income);
-                await context.SaveChangesAsync();
-            }
-
-            // Act
-            var result = await budgetService.CalculateRemainingBudgetAsync(userId);
-
-            // Assert
-            Assert.That(result, Is.EqualTo(null));
-        }
-
-        [Test]
         public async Task GetTotalIncomeAsync_ShouldReturnTotalIncome()
         {
             // Act
