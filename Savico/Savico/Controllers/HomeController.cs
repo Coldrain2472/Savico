@@ -5,9 +5,7 @@ namespace Savico.Controllers
     using Microsoft.AspNetCore.Mvc;
     using Savico.Core.Models;
     using Savico.Core.Models.ViewModels.Home;
-    using Savico.Models;
     using Savico.Services.Contracts;
-    using System.Diagnostics;
 
     [Authorize]
     public class HomeController : Controller
@@ -16,13 +14,15 @@ namespace Savico.Controllers
         private readonly IBudgetService budgetService;
         private readonly UserManager<User> userManager;
         private readonly ITipService tipService;
+        private readonly IExpenseService expenseService;
 
-        public HomeController(ILogger<HomeController> logger, IBudgetService budgetService, UserManager<User> userManager, ITipService tipService)
+        public HomeController(ILogger<HomeController> logger, IBudgetService budgetService, UserManager<User> userManager, ITipService tipService, IExpenseService expenseService)
         {
             this.logger = logger;
             this.budgetService = budgetService;
             this.userManager = userManager;
             this.tipService = tipService;
+            this.expenseService = expenseService;
         }
 
         [Authorize]
@@ -41,6 +41,10 @@ namespace Savico.Controllers
             var totalExpenses = await budgetService.GetTotalExpenseAsync(userId);
             var budget = await budgetService.CalculateRemainingBudgetAsync(userId);
 
+            var expenseCategories = await expenseService.GetExpenseCategories(userId); 
+            var expenseCategoryNames = expenseCategories.Select(x => x.Name).ToList();
+            var expenseCategoryValues = expenseCategories.Select(x => x.TotalAmount).ToList();
+
             var viewModel = new HomeViewModel
             {
                 FirstName = user.FirstName,
@@ -48,7 +52,9 @@ namespace Savico.Controllers
                 TotalIncome = totalIncome,
                 TotalExpense = totalExpenses,
                 Budget = (decimal)budget,
-                Currency = user.Currency
+                Currency = user.Currency,
+                ExpenseCategoryNames = expenseCategoryNames,  
+                ExpenseCategoryValues = expenseCategoryValues  
             };
 
             var tip = await tipService.GetRandomTipAsync();

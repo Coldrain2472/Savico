@@ -27,7 +27,9 @@
 
         Task UpdateExpenseAsync(int expenseId, ExpenseInputViewModel model, string userId); // updates and expense
 
-        Task<IEnumerable<Expense>> GetExpensesForPeriodAsync(string userId, DateTime startDate, DateTime endDate); 
+        Task<IEnumerable<Expense>> GetExpensesForPeriodAsync(string userId, DateTime startDate, DateTime endDate);
         // get expenses for a specific period for the Report service
+
+        Task<List<CategoryExpenseViewModel>> GetExpenseCategories(string userId); // shows expenses by category names (used it for the chart on home index page)
     }
 }

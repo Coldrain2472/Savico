@@ -5,6 +5,7 @@
     using Savico.Core.Models.ViewModels.Category;
     using Savico.Core.Models.ViewModels.Expense;
     using Savico.Infrastructure;
+    using Savico.Infrastructure.Data.Models;
     using Savico.Services.Contracts;
 
 
@@ -213,6 +214,19 @@
                 .ToListAsync();
 
             return expenses;
+        }
+
+        public async Task<List<CategoryExpenseViewModel>> GetExpenseCategories(string userId)
+        {
+            return await context.Expenses
+                .Where(e => e.UserId == userId && !e.IsDeleted) 
+                .GroupBy(e => e.Category) 
+                .Select(g => new CategoryExpenseViewModel
+                {
+                    Name = g.Key.Name!,
+                    TotalAmount = g.Sum(e => e.Amount)
+                })
+                .ToListAsync();
         }
     }
 }

@@ -13,5 +13,8 @@
         public decimal TotalExpense { get; set; }
 
         public decimal Budget { get; set; }
+
+        public List<string> ExpenseCategoryNames { get; set; } = new List<string>();
+        public List<decimal> ExpenseCategoryValues { get; set; }=  new List<decimal>();
     }
 }
