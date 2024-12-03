@@ -17,5 +17,7 @@
         Task<IEnumerable<AllUsersViewModel>> GetAllActiveUsersAsync(); // retrieves all active users (not banned and not deleted)
 
         Task<IEnumerable<AllUsersViewModel>> GetAllInactiveUsersAsync(); // retrieves all inactive users (banned and deleted)
+
+       // Task DeleteUserAsync(string userId); // deletes a user, will probably add this feature later
     }
 }

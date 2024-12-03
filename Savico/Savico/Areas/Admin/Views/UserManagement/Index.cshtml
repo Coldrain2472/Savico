@@ -39,6 +39,9 @@
                                     <form method="post" action="@Url.Action("Demote", "UserManagement", new { userId = user.Id })" style="display:inline;">
                                         <button type="submit" class="btn btn-warning btn-sm" title="Demote to User">Demote</button>
                                     </form>
+                                    @* <form method="post" action="@Url.Action("Delete", "UserManagement", new { userId = user.Id })" style="display:inline;">
+                                        <button type="submit" class="btn btn-danger btn-sm" title="Delete User">Delete</button>
+                                    </form> *@
                                     <form method="post" action="@Url.Action("Ban", "UserManagement", new { userId = user.Id })" style="display:inline;">
                                         <button type="submit" class="btn btn-danger btn-sm" title="Ban User">Ban</button>
                                     </form>

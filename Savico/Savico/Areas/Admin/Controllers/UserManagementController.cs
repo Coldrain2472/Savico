@@ -61,7 +61,7 @@
         }
 
         [HttpGet]
-        public async Task<IActionResult> ActiveUsers() // to do: show all the active users
+        public async Task<IActionResult> ActiveUsers() 
         {
             var activeUsers = await userService.GetAllActiveUsersAsync();
 

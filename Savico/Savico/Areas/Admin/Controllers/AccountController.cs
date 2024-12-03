@@ -12,6 +12,7 @@
         {
             this.signInManager = signInManager;
         }
+
         [HttpPost]
         public async Task<IActionResult> Logout()
         {
