@@ -291,5 +291,30 @@ namespace Savico.Tests
             Assert.IsTrue(result.All(e => e.Date >= startDate && e.Date <= endDate));
         }
 
+        [Test]
+        public async Task GetExpenseCategories_ShouldReturnCorrectCategories_ForUser()
+        {
+            // Arrange
+            var userId = this.userId;
+
+            // Act
+            var result = await expenseService.GetExpenseCategories(userId);
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.That(result.Count, Is.EqualTo(3)); //  Utilities, Subscription, Groceries
+
+            var utilitiesCategory = result.FirstOrDefault(c => c.Name == "Utilities");
+            Assert.IsNotNull(utilitiesCategory);
+            Assert.That(utilitiesCategory.TotalAmount, Is.EqualTo(300));
+
+            var subscriptionCategory = result.FirstOrDefault(c => c.Name == "Subscription");
+            Assert.IsNotNull(subscriptionCategory);
+            Assert.That(subscriptionCategory.TotalAmount, Is.EqualTo(15));
+
+            var groceriesCategory = result.FirstOrDefault(c => c.Name == "Groceries");
+            Assert.IsNotNull(groceriesCategory);
+            Assert.That(groceriesCategory.TotalAmount, Is.EqualTo(100));
+        }
     }
 }
