@@ -78,7 +78,7 @@
         public async Task AddIncomeAsync_ShouldThrowException_WhenAmountIsInvalid()
         {
             // Arrange
-            var inputModel = new IncomeInputViewModel
+            var model = new IncomeInputViewModel
             {
                 Amount = 0,
                 Source = "Salary",
@@ -87,7 +87,7 @@
 
             // Act & Assert
             Assert.ThrowsAsync<ArgumentException>(async () =>
-                await incomeService.AddIncomeAsync(inputModel, userId));
+                await incomeService.AddIncomeAsync(model, userId));
         }
 
         [Test]
