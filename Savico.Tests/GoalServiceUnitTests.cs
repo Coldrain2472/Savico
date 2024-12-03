@@ -348,21 +348,14 @@
         }
 
         [Test]
-        public async Task DeleteGoalAsync_ShouldMarkGoalAsDeletedAndUpdateBudget() // TO DO
+        public async Task DeleteGoalAsync_ShouldMarkGoalAsDeleted()
         {
+            // Act
+            await goalService.DeleteGoalAsync(1, userId);
 
-        }
-
-        [Test]
-        public async Task DeleteGoalAsync_ShouldMarkAchievedGoalAsDeletedAndUpdateBudget() // TO DO
-        {
-
-        }
-
-        [Test]
-        public async Task DeleteGoalAsync_ShouldNotDelete_WhenGoalIsAlreadyDeleted() // TO DO
-        {
-
+            // Assert
+            var deletedGoal = await context.Goals.FindAsync(1);
+            Assert.IsTrue(deletedGoal.IsDeleted);
         }
 
         [Test]
@@ -393,6 +386,35 @@
             // Assert
             var goal = await context.Goals.FirstOrDefaultAsync(g => g.Id == nonExistingGoalId);
             Assert.IsNull(goal);
+        }
+
+        [Test]
+        public async Task GetGoalContributeViewModelAsync_ShouldReturnViewModel_WhenGoalExists()
+        {
+            // Arrange
+            var goalId = 1;
+            var expectedCurrency = "EUR";
+
+            // Act
+            var result = await goalService.GetGoalContributeViewModelAsync(goalId, userId);
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.That(result.Currency, Is.EqualTo(expectedCurrency));
+            Assert.That(result.GoalId, Is.EqualTo(goalId));
+        }
+
+        [Test]
+        public async Task GetGoalContributeViewModelAsync_ShouldReturnNull_WhenGoalDoesNotExist()
+        {
+            // Arrange
+            var invalidGoalId = 999;
+
+            // Act
+            var result = await goalService.GetGoalContributeViewModelAsync(invalidGoalId, userId);
+
+            // Assert
+            Assert.IsNull(result);
         }
     }
 }
