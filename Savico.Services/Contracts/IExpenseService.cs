@@ -31,5 +31,7 @@
         // get expenses for a specific period for the Report service
 
         Task<List<CategoryExpenseViewModel>> GetExpenseCategories(string userId); // shows expenses by category names (used it for the chart on home index page)
+
+        Task<IEnumerable<ExpenseViewModel>> GetFilteredExpensesAsync(string userId, string filterBy); // will use this method for the expense filtering function
     }
 }

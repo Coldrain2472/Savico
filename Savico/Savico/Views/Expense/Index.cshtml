@@ -7,37 +7,54 @@
 
 <h2>Expenses</h2>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Date</th>
-            <th>Amount</th>
-            <th>Category</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var expense in Model)
-        {
+<form asp-controller="Expense" asp-action="Filter" method="get" class="form-inline mb-3">
+    <label for="filterBy" class="mr-2">Filter by:</label>
+    <select name="filterBy" id="filterBy" class="form-control mr-2">
+        <option value="recent">Most Recent</option>
+        <option value="amount">Amount</option>
+    </select>
+    <button type="submit" class="btn btn-primary mr-2">Apply</button>
+    <a asp-action="Index" class="btn btn-secondary">Reset Filter</a>
+</form>
+
+@if (Model == null || !Model.Any())
+{
+    <p>No expenses found. Please add some or adjust the filter criteria.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
             <tr>
-                <td>@expense.Date.ToString("dd.MM.yyyy")</td>
-                <td>@expense.Amount @expense.Currency</td>
-                <td>@expense.CategoryName</td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@expense.Id" class="btn btn-warning">
-                        <i class="fas fa-edit"></i> Edit
-                    </a>
-                    <a asp-action="Details" asp-route-id="@expense.Id" class="btn btn-info">
-                        <i class="fas fa-info-circle"></i> Details
-                    </a>
-                    <a asp-action="Delete" asp-route-id="@expense.Id" class="btn btn-danger">
-                        <i class="fas fa-trash-alt"></i> Delete
-                    </a>
-                </td>
+                <th>Date</th>
+                <th>Amount</th>
+                <th>Category</th>
+                <th>Actions</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var expense in Model)
+            {
+                <tr>
+                    <td>@expense.Date.ToString("dd.MM.yyyy")</td>
+                    <td>@expense.Amount @expense.Currency</td>
+                    <td>@expense.CategoryName</td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@expense.Id" class="btn btn-warning">
+                            <i class="fas fa-edit"></i> Edit
+                        </a>
+                        <a asp-action="Details" asp-route-id="@expense.Id" class="btn btn-info">
+                            <i class="fas fa-info-circle"></i> Details
+                        </a>
+                        <a asp-action="Delete" asp-route-id="@expense.Id" class="btn btn-danger">
+                            <i class="fas fa-trash-alt"></i> Delete
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
 
 <a asp-action="Create" class="btn btn-primary">
     <i class="fas fa-plus-circle"></i> Add New Expense

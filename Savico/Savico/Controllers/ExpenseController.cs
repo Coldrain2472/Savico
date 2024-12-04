@@ -5,6 +5,7 @@
 	using Savico.Core.Models.ViewModels.Expense;
 	using Savico.Services.Contracts;
 	using Microsoft.AspNetCore.Authorization;
+    using Savico.Services;
 
     [Authorize]
 	public class ExpenseController : Controller
@@ -125,6 +126,15 @@
             await expenseService.DeleteExpenseAsync(id, userId);
 
             return RedirectToAction(nameof(Index));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Filter(string filterBy)
+        {
+			var userId = GetUserId();
+            var expenses = await expenseService.GetFilteredExpensesAsync(userId, filterBy);
+			 return View("Index", expenses); 
+			//return View(nameof(Index));
         }
 
         private string GetUserId()

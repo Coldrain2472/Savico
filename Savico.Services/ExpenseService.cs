@@ -228,5 +228,38 @@
                 })
                 .ToListAsync();
         }
+
+        public async Task<IEnumerable<ExpenseViewModel>> GetFilteredExpensesAsync(string userId, string filterBy)
+        {
+            var query = context.Expenses
+                .Where(e => e.UserId == userId && !e.IsDeleted);
+
+            switch (filterBy?.ToLower())
+            {
+                case "recent":
+                    query = query.OrderByDescending(e => e.Date);
+                    break;
+                case "amount":
+                    query = query.OrderByDescending(e => e.Amount);
+                    break;
+                default:
+                    query = query.OrderByDescending(e => e.Date);
+                    break;
+            }
+
+            var result = await query
+                 .Select(e => new ExpenseViewModel
+                 {
+                     Id = e.Id,
+                     Amount = e.Amount,
+                     Description = e.Description,
+                     Date = e.Date,
+                     Currency = e.User!.Currency,
+                     CategoryName = e.Category!.Name
+                 })
+                 .ToListAsync();
+
+            return result;
+        }
     }
 }
