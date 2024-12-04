@@ -31,9 +31,6 @@
         [Comment("Target date for reaching the goal")]
         public DateTime TargetDate { get; set; }
 
-        //[Comment("Monthly contribution towards the set goal")]
-        //public decimal MonthlyContribution { get; set; } = 0;
-
         [Comment("Contribution towards the set goal")]
         public decimal ContributionAmount {  get; set; }
 
