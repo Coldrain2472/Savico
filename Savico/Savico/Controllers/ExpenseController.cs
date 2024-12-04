@@ -5,7 +5,6 @@
 	using Savico.Core.Models.ViewModels.Expense;
 	using Savico.Services.Contracts;
 	using Microsoft.AspNetCore.Authorization;
-    using Savico.Services;
 
     [Authorize]
 	public class ExpenseController : Controller
@@ -17,17 +16,25 @@
 			this.expenseService = expenseService;
 		}
 
-		[HttpGet]
-		public async Task<IActionResult> Index()
-		{
-			var userId = GetUserId();
+        [HttpGet]
+        public async Task<IActionResult> Index(string filterBy, int pageNumber = 1)
+        {
+            var userId = GetUserId(); 
 
-			var expenses = await expenseService.GetAllExpensesAsync(userId);
+            const int pageSize = 10;
 
-			return View(expenses);
-		}
+            var (expenses, totalItems) = await expenseService.GetPaginatedExpensesAsync(userId, pageNumber, pageSize, filterBy);
 
-		[HttpGet]
+            var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+
+            ViewData["FilterOption"] = filterBy;
+            ViewData["CurrentPage"] = pageNumber;
+            ViewData["TotalPages"] = totalPages;
+
+            return View(expenses);
+        }
+
+        [HttpGet]
 		public async Task<IActionResult> Details(int id)
 		{
 			var userId = GetUserId();
@@ -132,9 +139,10 @@
         public async Task<IActionResult> Filter(string filterBy)
         {
 			var userId = GetUserId();
+
             var expenses = await expenseService.GetFilteredExpensesAsync(userId, filterBy);
+
 			 return View("Index", expenses); 
-			//return View(nameof(Index));
         }
 
         private string GetUserId()

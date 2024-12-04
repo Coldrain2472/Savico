@@ -33,5 +33,8 @@
         Task<List<CategoryExpenseViewModel>> GetExpenseCategories(string userId); // shows expenses by category names (used it for the chart on home index page)
 
         Task<IEnumerable<ExpenseViewModel>> GetFilteredExpensesAsync(string userId, string filterBy); // will use this method for the expense filtering function
+
+        Task<(IEnumerable<ExpenseViewModel> Expenses, int TotalItems)> GetPaginatedExpensesAsync(string userId, int pageNumber, int pageSize, string filterOption = "");
+        // will use this method for the pagination function
     }
 }

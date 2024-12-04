@@ -5,7 +5,6 @@
     using Savico.Core.Models.ViewModels.Category;
     using Savico.Core.Models.ViewModels.Expense;
     using Savico.Infrastructure;
-    using Savico.Infrastructure.Data.Models;
     using Savico.Services.Contracts;
 
 
@@ -243,7 +242,7 @@
                     query = query.OrderByDescending(e => e.Amount);
                     break;
                 default:
-                    query = query.OrderByDescending(e => e.Date);
+                    query = query.OrderBy(e => e.Date);
                     break;
             }
 
@@ -260,6 +259,45 @@
                  .ToListAsync();
 
             return result;
+        }
+
+        public async Task<(IEnumerable<ExpenseViewModel> Expenses, int TotalItems)> GetPaginatedExpensesAsync(string userId, int pageNumber, int pageSize, string filterOption = "")
+        {
+            var query = context.Expenses
+                .Where(e => e.UserId == userId && !e.IsDeleted)
+                .AsQueryable();
+
+            switch (filterOption)
+            {
+                case "recent":
+                    query = query.OrderByDescending(e => e.Date);  
+                    break;
+                case "amount":
+                    query = query.OrderByDescending(e => e.Amount); 
+                    break;
+                case "reset": 
+                default:
+                    query = query.OrderBy(e => e.Date); 
+                    break;
+            }
+
+            var totalItems = await query.CountAsync();
+
+            var expenses = await query
+                .Skip((pageNumber - 1) * pageSize) 
+                .Take(pageSize)
+                .Select(e => new ExpenseViewModel
+                {
+                    Id = e.Id,
+                    Amount = e.Amount,
+                    Date = e.Date,
+                    CategoryName = e.Category!.Name,
+                    Description = e.Description,
+                    Currency = e.User!.Currency
+                })
+                .ToListAsync();
+
+            return (expenses, totalItems);
         }
     }
 }

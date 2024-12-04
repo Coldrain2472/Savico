@@ -3,15 +3,17 @@
 
 @{
     ViewData["Title"] = "All Expenses";
+    int currentPage = ViewData["CurrentPage"] != null ? (int)ViewData["CurrentPage"] : 1;
+    int totalPages = ViewData["TotalPages"] != null ? (int)ViewData["TotalPages"] : 1;
 }
 
 <h2>Expenses</h2>
 
-<form asp-controller="Expense" asp-action="Filter" method="get" class="form-inline mb-3">
+<form asp-controller="Expense" asp-action="Index" method="get" class="form-inline mb-3">
     <label for="filterBy" class="mr-2">Filter by:</label>
     <select name="filterBy" id="filterBy" class="form-control mr-2">
-        <option value="recent">Most Recent</option>
-        <option value="amount">Amount</option>
+        <option value="recent" selected="@((ViewData["FilterOption"]?.ToString() == "recent") ? "selected" : "")">Most Recent</option>
+        <option value="amount" selected="@((ViewData["FilterOption"]?.ToString() == "amount") ? "selected" : "")">Amount</option>
     </select>
     <button type="submit" class="btn btn-primary mr-2">Apply</button>
     <a asp-action="Index" class="btn btn-secondary">Reset Filter</a>
@@ -56,7 +58,27 @@ else
     </table>
 }
 
-<a asp-action="Create" class="btn btn-primary">
+<div class="d-flex justify-content-between align-items-center">
+    <div>
+        @if (currentPage > 1)
+        {
+            <a asp-action="Index" asp-route-pageNumber="1" asp-route-filterBy="@ViewData["FilterOption"]" class="btn btn-secondary">First</a>
+            <a asp-action="Index" asp-route-pageNumber="@(currentPage - 1)" asp-route-filterBy="@ViewData["FilterOption"]" class="btn btn-secondary">Previous</a>
+        }
+    </div>
+
+    <div>Page @currentPage of @totalPages</div>
+
+    <div>
+        @if (currentPage < totalPages)
+        {
+            <a asp-action="Index" asp-route-pageNumber="@(currentPage + 1)" asp-route-filterBy="@ViewData["FilterOption"]" class="btn btn-secondary">Next</a>
+            <a asp-action="Index" asp-route-pageNumber="@totalPages" asp-route-filterBy="@ViewData["FilterOption"]" class="btn btn-secondary">Last</a>
+        }
+    </div>
+</div>
+
+<a asp-action="Create" class="btn btn-primary mt-3">
     <i class="fas fa-plus-circle"></i> Add New Expense
 </a>
 
