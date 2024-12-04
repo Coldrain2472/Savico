@@ -22,8 +22,6 @@
 
         public DbSet<Budget> Budgets { get; set; } = null!;
 
-        //public DbSet<ExpenseCategory> ExpenseCategories { get; set; } = null!;
-
         public DbSet<Category> Categories { get; set; } = null!;
 
         public DbSet<Report> Reports { get; set; } = null!;
@@ -71,10 +69,6 @@
             modelBuilder.Entity<Goal>()
                 .Property(p => p.ContributionAmount)
                 .HasPrecision(18, 2);
-
-            //modelBuilder.Entity<Goal>()
-            //    .Property(p => p.MonthlyContribution)
-            //    .HasPrecision(18, 2);
 
             //explicitly defining the relationships
 
@@ -128,21 +122,6 @@
             modelBuilder.Entity<Category>()
            .HasKey(bc => bc.Id);
 
-            //modelBuilder.Entity<ExpenseCategory>()
-            //    .HasKey(ec => new { ec.CategoryId, ec.ExpenseId });
-
-            //modelBuilder.Entity<ExpenseCategory>()
-            // .HasOne(ec => ec.Expense)          
-            // .WithMany(e => e.ExpenseCategories) 
-            // .HasForeignKey(ec => ec.ExpenseId)  
-            // .OnDelete(DeleteBehavior.Restrict);  
-
-            //// Each ExpenseCategory can have one Category
-            //modelBuilder.Entity<ExpenseCategory>()
-            //    .HasOne(ec => ec.Category)        
-            //    .WithMany(c => c.ExpenseCategories) 
-            //    .HasForeignKey(ec => ec.CategoryId);
-
             modelBuilder.Entity<Tip>()
                 .HasKey(t => t.Id);
 
@@ -155,10 +134,11 @@
                 .HasForeignKey(r => r.UserId)
                 .OnDelete(DeleteBehavior.NoAction);
 
-            //modelBuilder.ApplyConfiguration(new BudgetConfiguration());
-            //modelBuilder.ApplyConfiguration(new ExpenseConfiguration());
-            //modelBuilder.ApplyConfiguration(new GoalConfiguration());
-            //modelBuilder.ApplyConfiguration(new IncomeConfiguration());
+            modelBuilder.ApplyConfiguration(new BudgetConfiguration());
+            modelBuilder.ApplyConfiguration(new IncomeConfiguration());
+            modelBuilder.ApplyConfiguration(new ExpenseConfiguration());
+            modelBuilder.ApplyConfiguration(new GoalConfiguration());
+            modelBuilder.ApplyConfiguration(new ReportConfiguration());
             modelBuilder.ApplyConfiguration(new UserConfiguration());
 			modelBuilder.ApplyConfiguration(new RoleConfiguration());
 			modelBuilder.ApplyConfiguration(new CategoryConfiguration());
@@ -171,7 +151,6 @@
             modelBuilder.Entity<Goal>().HasQueryFilter(g => !g.IsDeleted);
             modelBuilder.Entity<Expense>().HasQueryFilter(e => !e.IsDeleted);
             modelBuilder.Entity<Budget>().HasQueryFilter(b => !b.IsDeleted);
-            // modelBuilder.Entity<ExpenseCategory>().HasQueryFilter(ec => !ec.IsDeleted);
             modelBuilder.Entity<Report>().HasQueryFilter(r => !r.IsDeleted);
         }
     }

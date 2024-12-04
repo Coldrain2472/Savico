@@ -3,17 +3,20 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Savico.Infrastructure;
 
 #nullable disable
 
-namespace Savico.Data.Migrations
+namespace Savico.Infrastructure.Migrations
 {
     [DbContext(typeof(SavicoDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241204112438_SeedDb")]
+    partial class SeedDb
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -244,15 +247,6 @@ namespace Savico.Data.Migrations
                             StartDate = new DateTime(2024, 12, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             TotalAmount = 1000000.00m,
                             UserId = "ad5a5ccb-2be1-4866-b151-0f09a58416f6"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            EndDate = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDeleted = false,
-                            StartDate = new DateTime(2024, 12, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            TotalAmount = 1000000.00m,
-                            UserId = "7c55600b-d374-4bfb-8352-a65bf7d44cc1"
                         });
                 });
 
@@ -445,148 +439,6 @@ namespace Savico.Data.Migrations
                             Description = "Disney+ monthly subscription",
                             IsDeleted = false,
                             UserId = "ad5a5ccb-2be1-4866-b151-0f09a58416f6"
-                        },
-                        new
-                        {
-                            Id = 14,
-                            Amount = 80m,
-                            BudgetId = 1,
-                            CategoryId = 1,
-                            Date = new DateTime(2024, 12, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Electricity bill",
-                            IsDeleted = false,
-                            UserId = "7c55600b-d374-4bfb-8352-a65bf7d44cc1"
-                        },
-                        new
-                        {
-                            Id = 15,
-                            Amount = 100m,
-                            BudgetId = 1,
-                            CategoryId = 3,
-                            Date = new DateTime(2024, 12, 3, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Supermarket shopping",
-                            IsDeleted = false,
-                            UserId = "7c55600b-d374-4bfb-8352-a65bf7d44cc1"
-                        },
-                        new
-                        {
-                            Id = 16,
-                            Amount = 5m,
-                            BudgetId = 1,
-                            CategoryId = 10,
-                            Date = new DateTime(2024, 12, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Amazon Prime monthly subscription",
-                            IsDeleted = false,
-                            UserId = "7c55600b-d374-4bfb-8352-a65bf7d44cc1"
-                        },
-                        new
-                        {
-                            Id = 17,
-                            Amount = 10m,
-                            BudgetId = 1,
-                            CategoryId = 10,
-                            Date = new DateTime(2024, 12, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Netflix monthly subscription",
-                            IsDeleted = false,
-                            UserId = "7c55600b-d374-4bfb-8352-a65bf7d44cc1"
-                        },
-                        new
-                        {
-                            Id = 18,
-                            Amount = 13m,
-                            BudgetId = 1,
-                            CategoryId = 10,
-                            Date = new DateTime(2024, 12, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "World of Warcraft monthly subscription",
-                            IsDeleted = false,
-                            UserId = "7c55600b-d374-4bfb-8352-a65bf7d44cc1"
-                        },
-                        new
-                        {
-                            Id = 19,
-                            Amount = 70m,
-                            BudgetId = 1,
-                            CategoryId = 11,
-                            Date = new DateTime(2024, 12, 6, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDeleted = false,
-                            UserId = "7c55600b-d374-4bfb-8352-a65bf7d44cc1"
-                        },
-                        new
-                        {
-                            Id = 20,
-                            Amount = 35m,
-                            BudgetId = 1,
-                            CategoryId = 13,
-                            Date = new DateTime(2024, 12, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Bought a new pair of jeans",
-                            IsDeleted = false,
-                            UserId = "7c55600b-d374-4bfb-8352-a65bf7d44cc1"
-                        },
-                        new
-                        {
-                            Id = 21,
-                            Amount = 50m,
-                            BudgetId = 1,
-                            CategoryId = 12,
-                            Date = new DateTime(2024, 12, 3, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Donated to a local animal shelter",
-                            IsDeleted = false,
-                            UserId = "7c55600b-d374-4bfb-8352-a65bf7d44cc1"
-                        },
-                        new
-                        {
-                            Id = 22,
-                            Amount = 40m,
-                            BudgetId = 1,
-                            CategoryId = 4,
-                            Date = new DateTime(2024, 12, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Bought a new video game from Steam",
-                            IsDeleted = false,
-                            UserId = "7c55600b-d374-4bfb-8352-a65bf7d44cc1"
-                        },
-                        new
-                        {
-                            Id = 23,
-                            Amount = 50m,
-                            BudgetId = 1,
-                            CategoryId = 9,
-                            Date = new DateTime(2024, 12, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Went to check my teeth",
-                            IsDeleted = false,
-                            UserId = "7c55600b-d374-4bfb-8352-a65bf7d44cc1"
-                        },
-                        new
-                        {
-                            Id = 24,
-                            Amount = 30m,
-                            BudgetId = 1,
-                            CategoryId = 1,
-                            Date = new DateTime(2024, 12, 4, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Water bill",
-                            IsDeleted = false,
-                            UserId = "7c55600b-d374-4bfb-8352-a65bf7d44cc1"
-                        },
-                        new
-                        {
-                            Id = 25,
-                            Amount = 90m,
-                            BudgetId = 1,
-                            CategoryId = 13,
-                            Date = new DateTime(2024, 12, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Bought a new pair of sneakers",
-                            IsDeleted = false,
-                            UserId = "7c55600b-d374-4bfb-8352-a65bf7d44cc1"
-                        },
-                        new
-                        {
-                            Id = 26,
-                            Amount = 27m,
-                            BudgetId = 1,
-                            CategoryId = 10,
-                            Date = new DateTime(2024, 12, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Disney+ monthly subscription",
-                            IsDeleted = false,
-                            UserId = "7c55600b-d374-4bfb-8352-a65bf7d44cc1"
                         });
                 });
 
@@ -669,30 +521,6 @@ namespace Savico.Data.Migrations
                             TargetAmount = 500m,
                             TargetDate = new DateTime(2025, 3, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             UserId = "ad5a5ccb-2be1-4866-b151-0f09a58416f6"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            ContributionAmount = 0m,
-                            CurrentAmount = 0m,
-                            Description = "Saving for my trip to Denmark",
-                            IsAchieved = false,
-                            IsDeleted = false,
-                            TargetAmount = 1500m,
-                            TargetDate = new DateTime(2025, 8, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            UserId = "7c55600b-d374-4bfb-8352-a65bf7d44cc1"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            ContributionAmount = 0m,
-                            CurrentAmount = 0m,
-                            Description = "Saving for my PC upgrade",
-                            IsAchieved = false,
-                            IsDeleted = false,
-                            TargetAmount = 500m,
-                            TargetDate = new DateTime(2025, 3, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            UserId = "7c55600b-d374-4bfb-8352-a65bf7d44cc1"
                         });
                 });
 
@@ -766,24 +594,6 @@ namespace Savico.Data.Migrations
                             IsDeleted = false,
                             Source = "Investments",
                             UserId = "ad5a5ccb-2be1-4866-b151-0f09a58416f6"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Amount = 2350m,
-                            Date = new DateTime(2024, 12, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDeleted = false,
-                            Source = "Salary",
-                            UserId = "7c55600b-d374-4bfb-8352-a65bf7d44cc1"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Amount = 150m,
-                            Date = new DateTime(2024, 12, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDeleted = false,
-                            Source = "Freelance",
-                            UserId = "7c55600b-d374-4bfb-8352-a65bf7d44cc1"
                         });
                 });
 
@@ -882,7 +692,7 @@ namespace Savico.Data.Migrations
                             Id = "ad5a5ccb-2be1-4866-b151-0f09a58416f6",
                             AccessFailedCount = 0,
                             BudgetId = 1,
-                            ConcurrencyStamp = "b4a07b8e-fc4a-4b3b-9a48-1331363e19c6",
+                            ConcurrencyStamp = "85e27472-e031-4b42-9f93-f22a6d75b65d",
                             Currency = "EUR",
                             Email = "testuser123@gmail.com",
                             EmailConfirmed = true,
@@ -892,9 +702,9 @@ namespace Savico.Data.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "TESTUSER123@GMAIL.COM",
                             NormalizedUserName = "TESTUSER123@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEFUCjmMrfspY8lSBatM2CVpoFXkgfg9wmw6vKRRWTqiImUKWFm+l8G+k+JDAAJ4kUQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEIrhIt6ilPPRbjHGzGPucCD5qZ3PeK+uTzQn65XKvqGF8WDzynhRDywUPVn6DcP3Qg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "0302f72c-0a75-46b9-80fa-86c8058a9a47",
+                            SecurityStamp = "3ab17732-0e19-42c3-a34f-937187fb13c7",
                             TwoFactorEnabled = false,
                             UserName = "testuser123@gmail.com"
                         },
@@ -903,7 +713,7 @@ namespace Savico.Data.Migrations
                             Id = "7c55600b-d374-4bfb-8352-a65bf7d44cc1",
                             AccessFailedCount = 0,
                             BudgetId = 2,
-                            ConcurrencyStamp = "35bb4e58-cc3b-418d-8e6f-7b27594dc913",
+                            ConcurrencyStamp = "187d17be-8508-4a9d-a9cd-e964249307a2",
                             Currency = "USD",
                             Email = "admin@admin.com",
                             EmailConfirmed = true,
@@ -913,9 +723,9 @@ namespace Savico.Data.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@ADMIN.COM",
                             NormalizedUserName = "ADMIN@ADMIN.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEMuEl97P63qfTaa6RbojB4xevE33UHgm7MqUvHBJfkqtKxaYfv0sWVBNz9xrQIz+5A==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEAlGD/UoRqZTaWYA/uYmFG9sPsXD2IMGmrRIPE56hrL/uU3z3796iNi7b+SPtT2NrA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "06cecd91-e57c-43d2-9669-ff7734c5d7c7",
+                            SecurityStamp = "896df298-29f7-470f-8efa-8e3bc2a495e7",
                             TwoFactorEnabled = false,
                             UserName = "admin@admin.com"
                         });
@@ -1073,26 +883,6 @@ namespace Savico.Data.Migrations
                             TotalExpense = 700m,
                             TotalIncome = 3000m,
                             UserId = "ad5a5ccb-2be1-4866-b151-0f09a58416f6"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            EndDate = new DateTime(2024, 1, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDeleted = false,
-                            StartDate = new DateTime(2024, 10, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            TotalExpense = 0m,
-                            TotalIncome = 0m,
-                            UserId = "7c55600b-d374-4bfb-8352-a65bf7d44cc1"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            EndDate = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDeleted = false,
-                            StartDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            TotalExpense = 600m,
-                            TotalIncome = 2500m,
-                            UserId = "7c55600b-d374-4bfb-8352-a65bf7d44cc1"
                         });
                 });
 
