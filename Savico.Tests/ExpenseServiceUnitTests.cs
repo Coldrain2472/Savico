@@ -350,5 +350,65 @@ namespace Savico.Tests
             // Assert
             Assert.That(result.Count(), Is.EqualTo(3));
         }
+
+        [Test]
+        public async Task GetPaginatedExpensesAsync_ShouldReturnExpensesOrderedByDate_WhenNoFilterIsApplied()
+        {
+            // Act
+            var (expenses, totalItems) = await expenseService.GetPaginatedExpensesAsync(userId, 1, 10);
+
+            // Assert
+            Assert.That(totalItems, Is.EqualTo(3));
+            Assert.That(expenses.Count(), Is.EqualTo(3));
+            Assert.That(expenses.First().Date, Is.EqualTo(new DateTime(2024, 11, 30)));
+        }
+
+        [Test]
+        public async Task GetPaginatedExpensesAsync_ShouldReturnExpensesOrderedByDateDescending_WhenFilterIsRecent()
+        {
+            // Act
+            var (expenses, totalItems) = await expenseService.GetPaginatedExpensesAsync(userId, 1, 10, "recent");
+
+            // Assert
+            Assert.That(totalItems, Is.EqualTo(3));
+            Assert.That(expenses.Count(), Is.EqualTo(3));
+            Assert.That(expenses.First().Date, Is.EqualTo(new DateTime(2024, 12, 1)));
+        }
+
+        [Test]
+        public async Task GetPaginatedExpensesAsync_ShouldReturnExpensesOrderedByAmountDescending_WhenFilterIsAmount()
+        {
+            // Act
+            var (expenses, totalItems) = await expenseService.GetPaginatedExpensesAsync(userId, 1, 10, "amount");
+
+            // Assert
+            Assert.That(totalItems, Is.EqualTo(3));
+            Assert.That(expenses.Count(), Is.EqualTo(3));
+            Assert.That(expenses.First().Amount, Is.EqualTo(300));
+        }
+
+        [Test]
+        public async Task GetPaginatedExpensesAsync_ShouldReturnCorrectPageOfExpenses_WhenPaginated()
+        {
+            // Act
+            var (expenses, totalItems) = await expenseService.GetPaginatedExpensesAsync(userId, 1, 2);
+
+            // Assert
+            Assert.That(totalItems, Is.EqualTo(3));
+            Assert.That(expenses.Count(), Is.EqualTo(2));
+            Assert.That(expenses.First().Id, Is.EqualTo(2));
+        }
+
+        [Test]
+        public async Task GetPaginatedExpensesAsync_ShouldReturnCorrectPageOfExpenses_WhenPageNumberIs2()
+        {
+            // Act
+            var (expenses, totalItems) = await expenseService.GetPaginatedExpensesAsync(userId, 2, 2);
+
+            // Assert
+            Assert.That(totalItems, Is.EqualTo(3));
+            Assert.That(expenses.Count(), Is.EqualTo(1));
+            Assert.That(expenses.First().Id, Is.EqualTo(3));
+        }
     }
 }
