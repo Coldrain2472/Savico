@@ -316,5 +316,39 @@ namespace Savico.Tests
             Assert.IsNotNull(groceriesCategory);
             Assert.That(groceriesCategory.TotalAmount, Is.EqualTo(100));
         }
+
+        [Test]
+        public async Task FilterExpenses_ByDate_ReturnsMostRecent()
+        {
+            // Act
+            var result = await expenseService.GetFilteredExpensesAsync(userId, "recent");
+
+            // Assert
+            Assert.That(result.Count(), Is.EqualTo(3));
+            Assert.That(result.First().Date, Is.EqualTo(new DateTime(2024, 12, 1))); 
+            Assert.That(result.Last().Date, Is.EqualTo(new DateTime(2024, 11, 30))); 
+        }
+
+        [Test]
+        public async Task FilterExpenses_ByAmount_ReturnsSortedByAmount()
+        {
+            // Act
+            var result = await expenseService.GetFilteredExpensesAsync(userId, "amount");
+
+            // Assert
+            Assert.That(result.Count(), Is.EqualTo(3));
+            Assert.That(result.First().Amount, Is.EqualTo(300));
+            Assert.That(result.Last().Amount, Is.EqualTo(15));
+        }
+
+        [Test]
+        public async Task FilterExpenses_NoFilter_ReturnsAllExpenses()
+        {
+            // Act
+            var result = await expenseService.GetFilteredExpensesAsync(userId, "");
+
+            // Assert
+            Assert.That(result.Count(), Is.EqualTo(3));
+        }
     }
 }
