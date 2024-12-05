@@ -165,6 +165,40 @@
         }
 
         [Test]
+        public void AddGoalAsync_ShouldThrowArgumentException_WhenTargetAmountIsZeroOrNegative()
+        {
+            var model = new GoalInputViewModel
+            {
+                Description = "Saving for a new phone",
+                TargetAmount = 0, 
+                TargetDate = new DateTime(2025, 12, 31),
+                IsAchieved = false
+            };
+
+            // Assert
+            var ex = Assert.ThrowsAsync<ArgumentException>(async () => await goalService.AddGoalAsync(model, userId));
+
+            Assert.That(ex.Message, Is.EqualTo("The target amount must be greater than zero and a positive number."));
+        }
+
+        [Test]
+        public void AddGoalAsync_ShouldThrowArgumentException_WhenTargetDateIsInThePast()
+        {
+            var model = new GoalInputViewModel
+            {
+                Description = "Saving for a new phone",
+                TargetAmount = 1000,
+                TargetDate = DateTime.Now.AddDays(-1), 
+                IsAchieved = false
+            };
+
+            // Assert 
+            var ex = Assert.ThrowsAsync<ArgumentException>(async () => await goalService.AddGoalAsync(model, userId));
+
+            Assert.That(ex.Message, Is.EqualTo("The target date must be in the future."));
+        }
+
+        [Test]
         public async Task ContributeToGoalAsync_ShouldContributeToGoal()
         {
             var model = new GoalContributeViewModel
@@ -282,6 +316,42 @@
         }
 
         [Test]
+        public void UpdateGoalAsync_ShouldThrowArgumentException_WhenTargetAmountIsZeroOrNegative()
+        {
+            // Arrange
+            var model = new GoalInputViewModel
+            {
+                Description = "Saving for a new phone",
+                TargetAmount = 0,
+                CurrentAmount = 100,
+                TargetDate = new DateTime(2025, 12, 31)
+            };
+
+            // Assert 
+            var ex = Assert.ThrowsAsync<ArgumentException>(async () => await goalService.UpdateGoalAsync(1, model, userId));
+
+            Assert.That(ex.Message, Is.EqualTo("The target amount must be greater than zero and a positive number."));
+        }
+
+        [Test]
+        public void UpdateGoalAsync_ShouldThrowArgumentException_WhenTargetDateIsInThePast()
+        {
+            // Arrange
+            var model = new GoalInputViewModel
+            {
+                Description = "Saving for a new phone",
+                TargetAmount = 1000,
+                CurrentAmount = 200,
+                TargetDate = DateTime.Now.AddDays(-1) 
+            };
+
+            // Assert
+            var ex = Assert.ThrowsAsync<ArgumentException>(async () => await goalService.UpdateGoalAsync(1, model, userId));
+
+            Assert.That(ex.Message,Is.EqualTo("The target date must be in the future."));
+        }
+
+        [Test]
         public async Task UpdateGoalAsync_ShouldNotUpdate_WhenGoalDoesNotExist()
         {
             // Arrange
@@ -386,6 +456,31 @@
             // Assert
             var goal = await context.Goals.FirstOrDefaultAsync(g => g.Id == nonExistingGoalId);
             Assert.IsNull(goal);
+        }
+
+        [Test]
+        public void DeleteGoalAsync_ShouldThrowInvalidOperationException_WhenGoalIsAchieved()
+        {
+            // Arrange
+            var goalAchieved = new Goal()
+            {
+                Id = 2,
+                TargetAmount = 500,
+                TargetDate = new DateTime(2025, 05, 05),
+                Description = "Achieved goal",
+                UserId = userId,
+                CurrentAmount = 500,
+                IsDeleted = false,
+                IsAchieved = true
+            };
+
+            context.Goals.Add(goalAchieved);
+            context.SaveChanges();
+
+            // Assert 
+            var ex = Assert.ThrowsAsync<InvalidOperationException>(async () => await goalService.DeleteGoalAsync(goalAchieved.Id, userId));
+
+            Assert.That(ex.Message, Is.EqualTo("Cannot delete an achieved goal."));
         }
 
         [Test]

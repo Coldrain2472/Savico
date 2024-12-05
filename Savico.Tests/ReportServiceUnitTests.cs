@@ -185,6 +185,41 @@
         }
 
         [Test]
+        public async Task GenerateReportAsync_ShouldThrowArgumentException_WhenStartDateIsBefore2023()
+        {
+            // Arrange
+            var startDate = new DateTime(2022, 12, 1);
+            var endDate = new DateTime(2024, 12, 1);
+
+            // Act & Assert
+            var exception = Assert.ThrowsAsync<ArgumentException>(async () =>
+                await reportService.GenerateReportAsync(userId, startDate, endDate)
+            );
+
+            Assert.That(exception.Message, Is.EqualTo("Start Date must be a valid date"));
+        }
+
+        [Test]
+        public async Task GenerateReportAsync_ShouldReturnReport_WhenValidDatesAreProvided()
+        {
+            // Arrange
+            var startDate = new DateTime(2024, 12, 1);
+            var endDate = new DateTime(2024, 12, 31);
+
+            // Act
+            var result = await reportService.GenerateReportAsync(userId, startDate, endDate);
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.That(result.UserId, Is.EqualTo(userId));
+            Assert.That(result.StartDate, Is.EqualTo(startDate));
+            Assert.That(result.EndDate, Is.EqualTo(endDate));
+            Assert.That(result.TotalIncome, Is.EqualTo(2000));
+            Assert.That(result.TotalExpense, Is.EqualTo(400));
+            Assert.That(result.Currency, Is.EqualTo("EUR"));
+        }
+
+        [Test]
         public async Task GetReportsByUserIdAsync_ShouldReturnReports_WhenReportsExist()
         {
             // Arrange
