@@ -23,57 +23,128 @@
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            IEnumerable<AllUsersViewModel> allUsers = await userService.GetAllUsersAsync();
+            try
+            {
+                IEnumerable<AllUsersViewModel> allUsers = await userService.GetAllUsersAsync();
 
-            return View(allUsers);
+                return View(allUsers);
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = "An error occurred while fetching the users. Please try again later.";
+
+                return View(Enumerable.Empty<AllUsersViewModel>());
+            }
         }
 
         [HttpPost]
         public async Task<IActionResult> Ban(string userId)
         {
-            await userService.BanUserAsync(userId);
+            try
+            {
+                await userService.BanUserAsync(userId);
 
-            return RedirectToAction(nameof(Index));
+                TempData["SuccessMessage"] = "User banned successfully.";
+
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = "An error occurred while banning the user. Please try again later.";
+
+                return RedirectToAction(nameof(Index));
+            }
         }
 
         [HttpPost]
         public async Task<IActionResult> RemoveBan(string userId)
         {
-            await userService.RemoveBanAsync(userId);
+            try
+            {
+                await userService.RemoveBanAsync(userId);
 
-            return RedirectToAction(nameof(Index));
+                TempData["SuccessMessage"] = "Ban removed successfully.";
+
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = "An error occurred while removing the ban. Please try again later.";
+
+                return RedirectToAction(nameof(Index));
+            }
         }
 
         [HttpPost]
         public async Task<IActionResult> Promote(string userId)
         {
-            await userService.PromoteUserAsync(userId);
+            try
+            {
+                await userService.PromoteUserAsync(userId);
 
-            return RedirectToAction(nameof(Index));
+                TempData["SuccessMessage"] = "User promoted to admin successfully.";
+
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = "An error occurred while promoting the user. Please try again later.";
+
+                return RedirectToAction(nameof(Index));
+            }
         }
 
         [HttpPost]
         public async Task<IActionResult> Demote(string userId)
         {
-            await userService.DemoteAdminUserToUser(userId);
+            try
+            {
+                await userService.DemoteAdminUserToUser(userId);
 
-            return RedirectToAction(nameof(Index));
+                TempData["SuccessMessage"] = "User demoted successfully.";
+
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = "An error occurred while demoting the user. Please try again later.";
+
+                return RedirectToAction(nameof(Index));
+            }
         }
 
         [HttpGet]
         public async Task<IActionResult> ActiveUsers() 
         {
-            var activeUsers = await userService.GetAllActiveUsersAsync();
+            try
+            {
+                var activeUsers = await userService.GetAllActiveUsersAsync();
 
-            return View(activeUsers);
+                return View(activeUsers);
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = "An error occurred while fetching active users. Please try again later.";
+
+                return View(Enumerable.Empty<AllUsersViewModel>());
+            }
         }
 
         [HttpGet]
         public async Task<IActionResult> InactiveUsers() 
         {
-            var inactiveUsers = await userService.GetAllInactiveUsersAsync();
+            try
+            {
+                var inactiveUsers = await userService.GetAllInactiveUsersAsync();
 
-            return View(inactiveUsers);
+                return View(inactiveUsers);
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = "An error occurred while fetching inactive users. Please try again later.";
+
+                return View(Enumerable.Empty<AllUsersViewModel>());
+            }
         }
     }
 }
