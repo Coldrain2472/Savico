@@ -20,15 +20,36 @@
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var userId = userManager.GetUserId(User);
-            var remainingBudget = await budgetService.CalculateRemainingBudgetAsync(userId);
-
-            var model = new BudgetViewModel
+            try
             {
-                TotalAmount = (decimal)remainingBudget
-            };
+                var userId = userManager.GetUserId(User);
 
-            return View(model);
+                if (userId == null)
+                {
+                    return Unauthorized();
+                }
+
+                var remainingBudget = await budgetService.CalculateRemainingBudgetAsync(userId);
+
+                var model = new BudgetViewModel
+                {
+                    TotalAmount = (decimal)remainingBudget
+                };
+
+                return View(model);
+            }
+            catch (ArgumentException ex)
+            {
+                ModelState.AddModelError(string.Empty, ex.Message);
+
+                return View(new BudgetViewModel());
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, "An unexpected error occurred. Please try again later.");
+
+                return View(new BudgetViewModel());
+            }
         }
 
     }

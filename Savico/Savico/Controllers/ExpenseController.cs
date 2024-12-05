@@ -20,18 +20,26 @@
         public async Task<IActionResult> Index(string filterBy, int pageNumber = 1)
         {
             var userId = GetUserId();
-
             const int pageSize = 10;
 
-            var (expenses, totalItems) = await expenseService.GetPaginatedExpensesAsync(userId, pageNumber, pageSize, filterBy);
+            try
+            {
+                var (expenses, totalItems) = await expenseService.GetPaginatedExpensesAsync(userId, pageNumber, pageSize, filterBy);
 
-            var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+                var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
 
-            ViewData["FilterOption"] = filterBy;
-            ViewData["CurrentPage"] = pageNumber;
-            ViewData["TotalPages"] = totalPages;
+                ViewData["FilterOption"] = filterBy;
+                ViewData["CurrentPage"] = pageNumber;
+                ViewData["TotalPages"] = totalPages;
 
-            return View(expenses);
+                return View(expenses);
+            }
+            catch (Exception)
+            {
+                ModelState.AddModelError(string.Empty, "An unexpected error occurred. Please try again.");
+
+                return View();
+            }
         }
 
         [HttpGet]
@@ -39,9 +47,23 @@
         {
             var userId = GetUserId();
 
-            var expense = await expenseService.GetExpenseByIdAsync(id, userId);
+            try
+            {
+                var expense = await expenseService.GetExpenseByIdAsync(id, userId);
 
-            return View(expense);
+                if (expense == null)
+                {
+                    return NotFound();
+                }
+
+                return View(expense);
+            }
+            catch (Exception)
+            {
+                ModelState.AddModelError(string.Empty, "An unexpected error occurred. Please try again.");
+
+                return View();
+            }
         }
 
         [HttpGet]
@@ -49,9 +71,18 @@
         {
             var userId = GetUserId();
 
-            var model = await expenseService.PrepareExpenseInputModelAsync(new ExpenseInputViewModel(), userId);
+            try
+            {
+                var model = await expenseService.PrepareExpenseInputModelAsync(new ExpenseInputViewModel(), userId);
 
-            return View(model);
+                return View(model);
+            }
+            catch (Exception)
+            {
+                ModelState.AddModelError(string.Empty, "An unexpected error occurred. Please try again.");
+
+                return View();
+            }
         }
 
 
@@ -95,14 +126,24 @@
         public async Task<IActionResult> Edit(int id)
         {
             var userId = GetUserId();
-            var expense = await expenseService.GetExpenseForEditAsync(id, userId);
 
-            if (expense == null)
+            try
             {
-                return BadRequest();
-            }
+                var expense = await expenseService.GetExpenseForEditAsync(id, userId);
 
-            return View(expense);
+                if (expense == null)
+                {
+                    return NotFound();
+                }
+
+                return View(expense);
+            }
+            catch (Exception)
+            {
+                ModelState.AddModelError(string.Empty, "An unexpected error occurred. Please try again.");
+
+                return View();
+            }
         }
 
         [HttpPost]
@@ -144,14 +185,23 @@
         {
             var userId = GetUserId();
 
-            var expense = await expenseService.GetExpenseByIdAsync(id, userId);
-
-            if (expense == null)
+            try
             {
-                return BadRequest();
-            }
+                var expense = await expenseService.GetExpenseByIdAsync(id, userId);
 
-            return View(expense);
+                if (expense == null)
+                {
+                    return NotFound();
+                }
+
+                return View(expense);
+            }
+            catch (Exception)
+            {
+                ModelState.AddModelError(string.Empty, "An unexpected error occurred. Please try again.");
+
+                return View();
+            }
         }
 
         [HttpPost]
@@ -160,11 +210,25 @@
         {
             var userId = GetUserId();
 
-            var expense = await expenseService.GetExpenseByIdAsync(id, userId);
+            try
+            {
+                var expense = await expenseService.GetExpenseByIdAsync(id, userId);
 
-            await expenseService.DeleteExpenseAsync(id, userId);
+                if (expense == null)
+                {
+                    return NotFound();
+                }
 
-            return RedirectToAction(nameof(Index));
+                await expenseService.DeleteExpenseAsync(id, userId);
+
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception)
+            {
+                ModelState.AddModelError(string.Empty, "An unexpected error occurred. Please try again.");
+
+                return RedirectToAction(nameof(Index));
+            }
         }
 
         [HttpGet]
@@ -172,9 +236,18 @@
         {
             var userId = GetUserId();
 
-            var expenses = await expenseService.GetFilteredExpensesAsync(userId, filterBy);
+            try
+            {
+                var expenses = await expenseService.GetFilteredExpensesAsync(userId, filterBy);
 
-            return View("Index", expenses);
+                return View("Index", expenses);
+            }
+            catch (Exception)
+            {
+                ModelState.AddModelError(string.Empty, "An unexpected error occurred. Please try again.");
+
+                return View("Index");
+            }
         }
 
         private string GetUserId()

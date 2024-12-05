@@ -19,9 +19,18 @@
         {
             var userId = GetUserId();
 
-            var goals = await goalService.GetAllGoalsAsync(userId);
+            try
+            {
+                var goals = await goalService.GetAllGoalsAsync(userId);
 
-            return View(goals);
+                return View(goals);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, "An error occurred while retrieving your goals. Please try again later.");
+
+                return View(new List<GoalViewModel>()); 
+            }
         }
 
         [HttpGet]
@@ -29,14 +38,23 @@
         {
             var userId = GetUserId();
 
-            var goal = await goalService.GetGoalByIdAsync(id, userId);
-
-            if (goal != null)
+            try
             {
-                return View(goal);
-            }
+                var goal = await goalService.GetGoalByIdAsync(id, userId);
 
-            return BadRequest();
+                if (goal != null)
+                {
+                    return View(goal);
+                }
+
+                return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, "An error occurred while retrieving the goal details. Please try again later.");
+
+                return View();
+            }
         }
 
         [HttpGet]
@@ -44,9 +62,18 @@
         {
             var userId = GetUserId();
 
-            var model = await goalService.GetGoalInputViewModelAsync(userId);
+            try
+            {
+                var model = await goalService.GetGoalInputViewModelAsync(userId);
 
-            return View(model);
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, "An error occurred while preparing the goal creation form. Please try again later.");
+
+                return View(new GoalInputViewModel());
+            }
         }
 
         [HttpPost]
@@ -96,14 +123,23 @@
         {
             var userId = GetUserId();
 
-            var goal = await goalService.GetGoalForEditAsync(id, userId);
-
-            if (goal != null)
+            try
             {
-                return View(goal);
-            }
+                var goal = await goalService.GetGoalForEditAsync(id, userId);
 
-            return BadRequest();
+                if (goal != null)
+                {
+                    return View(goal);
+                }
+
+                return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, "An error occurred while retrieving the goal for editing. Please try again later.");
+
+                return View();
+            }
         }
 
         [HttpPost]
@@ -143,14 +179,24 @@
         public async Task<IActionResult> Delete(int id)
         {
             var userId = GetUserId();
-            var goal = await goalService.GetGoalByIdAsync(id, userId);
 
-            if (goal == null)
+            try
             {
-                return BadRequest();
-            }
+                var goal = await goalService.GetGoalByIdAsync(id, userId);
 
-            return View(goal);
+                if (goal == null)
+                {
+                    return BadRequest();
+                }
+
+                return View(goal);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, "An error occurred while retrieving the goal for deletion. Please try again later.");
+
+                return View();
+            }
         }
 
         [HttpPost]
@@ -178,14 +224,23 @@
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            var model = await goalService.GetGoalContributeViewModelAsync(id, userId);
-
-            if (model == null)
+            try
             {
-                return BadRequest();
-            }
+                var model = await goalService.GetGoalContributeViewModelAsync(id, userId);
 
-            return View(model);
+                if (model == null)
+                {
+                    return BadRequest();
+                }
+
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, "An error occurred while retrieving the contribution form. Please try again later.");
+
+                return View();
+            }
         }
 
         [HttpPost]
@@ -205,6 +260,11 @@
                 catch (InvalidOperationException ex)
                 {
                     ModelState.AddModelError(string.Empty, ex.Message);
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError(string.Empty, "An unexpected error occurred. Please try again later.");
+                    return View(model);
                 }
             }
 

@@ -19,23 +19,42 @@
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var userId = GetUserId();
-            if (userId == null)
+            try
             {
-                return Unauthorized();
+                var userId = GetUserId();
+
+                if (userId == null)
+                {
+                    return Unauthorized();
+                }
+
+                var reports = await reportService.GetReportsByUserIdAsync(userId);
+
+                return View(reports);
             }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, "An unexpected error occurred. Please try again later.");
 
-            var reports = await reportService.GetReportsByUserIdAsync(userId);
-
-            return View(reports);
+                return View();
+            }
         }
 
         [HttpGet]
         public async Task<IActionResult> Generate()
         {
-            var model = new ReportInputViewModel();
+            try
+            {
+                var model = new ReportInputViewModel();
 
-            return View(model);
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, "An unexpected error occurred. Please try again later.");
+
+                return View(new ReportInputViewModel());
+            }
         }
 
         [HttpPost]
@@ -87,41 +106,68 @@
         [HttpGet]
         public async Task<IActionResult> Details(int id)
         {
-            var report = await reportService.GetReportByIdAsync(id);
-
-            if (report == null)
+            try
             {
+                var report = await reportService.GetReportByIdAsync(id);
+
+                if (report == null)
+                {
+                    return BadRequest();
+                }
+
+                return View(report);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, "An unexpected error occurred. Please try again later.");
+
                 return BadRequest();
             }
-
-            return View(report);
         }
 
         [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
-            var report = await reportService.GetReportByIdAsync(id);
-
-            if (report == null)
+            try
             {
+                var report = await reportService.GetReportByIdAsync(id);
+
+                if (report == null)
+                {
+                    return BadRequest();
+                }
+
+                return View(report);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, "An unexpected error occurred. Please try again later.");
+
                 return BadRequest();
             }
-
-            return View(report);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var result = await reportService.DeleteReportAsync(id);
-
-            if (result)
+            try
             {
-                return RedirectToAction(nameof(Index));
-            }
+                var result = await reportService.DeleteReportAsync(id);
 
-            return BadRequest();
+                if (result)
+                {
+                    return RedirectToAction(nameof(Index));
+                }
+
+                return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, "An unexpected error occurred. Please try again later.");
+
+                return BadRequest();
+            }
         }
 
         private string GetUserId()

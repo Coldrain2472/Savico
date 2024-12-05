@@ -19,21 +19,39 @@
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            string userId = GetUserId();
+            try
+            {
+                string userId = GetUserId();
 
-            var incomes = await incomeService.GetAllIncomesAsync(userId);
+                var incomes = await incomeService.GetAllIncomesAsync(userId);
 
-            return View(incomes);
+                return View(incomes);
+            }
+            catch (Exception)
+            {
+                ModelState.AddModelError(string.Empty, "An unexpected error occurred while retrieving incomes.");
+
+                return View();
+            }
         }
 
         [HttpGet]
         public async Task<IActionResult> Create()
         {
-            string userId = GetUserId();
+            try
+            {
+                string userId = GetUserId();
 
-            var model = await incomeService.PrepareIncomeInputModelAsync(userId);
+                var model = await incomeService.PrepareIncomeInputModelAsync(userId);
 
-            return View(model);
+                return View(model);
+            }
+            catch (Exception)
+            {
+                ModelState.AddModelError(string.Empty, "An unexpected error occurred while preparing the income form.");
+
+                return View();
+            }
         }
 
         [HttpPost]
@@ -67,16 +85,25 @@
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
-            var userId = GetUserId();
-
-            var income = await incomeService.GetIncomeForEditAsync(id, userId);
-
-            if (income == null)
+            try
             {
-                return BadRequest();
-            }
+                var userId = GetUserId();
 
-            return View(income);
+                var income = await incomeService.GetIncomeForEditAsync(id, userId);
+
+                if (income == null)
+                {
+                    return BadRequest();
+                }
+
+                return View(income);
+            }
+            catch (Exception)
+            {
+                ModelState.AddModelError(string.Empty, "An unexpected error occurred while retrieving the income.");
+
+                return View();
+            }
         }
 
         [HttpPost]
@@ -111,31 +138,52 @@
         [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
-            var userId = GetUserId();
-            var income = await incomeService.GetIncomeByIdAsync(id, userId);
-
-            if (income == null)
+            try
             {
-                return BadRequest(); 
-            }
+                var userId = GetUserId();
 
-            return View(income); 
+                var income = await incomeService.GetIncomeByIdAsync(id, userId);
+
+                if (income == null)
+                {
+                    return BadRequest();
+                }
+
+                return View(income);
+            }
+            catch (Exception)
+            {
+                ModelState.AddModelError(string.Empty, "An unexpected error occurred while retrieving the income to delete.");
+
+                return View();
+            }
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var userId = GetUserId();
-            var income = await incomeService.GetIncomeByIdAsync(id, userId);
-
-            if (income == null)
+            try
             {
-                return BadRequest();
-            }
+                var userId = GetUserId();
 
-            await incomeService.DeleteIncomeAsync(id, userId); 
-            return RedirectToAction(nameof(Index)); 
+                var income = await incomeService.GetIncomeByIdAsync(id, userId);
+
+                if (income == null)
+                {
+                    return BadRequest();
+                }
+
+                await incomeService.DeleteIncomeAsync(id, userId);
+
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception)
+            {
+                ModelState.AddModelError(string.Empty, "An unexpected error occurred while deleting the income.");
+
+                return RedirectToAction(nameof(Index));
+            }
         }
 
         private string GetUserId()
