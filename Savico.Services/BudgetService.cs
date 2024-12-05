@@ -32,11 +32,6 @@
 
             var totalIncome = user.Incomes?.Where(i => !i.IsDeleted).Sum(i => i.Amount);
 
-            //if (totalIncome <= 0) // TO DO
-            //{
-            //    return null;
-            //}
-
             var totalExpense = user.Expenses?.Where(e => !e.IsDeleted).Sum(e => e.Amount);
 
             var totalGoalContributions = user.Goals
