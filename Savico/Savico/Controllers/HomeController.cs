@@ -1,10 +1,12 @@
 namespace Savico.Controllers
 {
+    using System.Diagnostics;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Savico.Core.Models;
     using Savico.Core.Models.ViewModels.Home;
+    using Savico.Models;
     using Savico.Services.Contracts;
 
     [Authorize]
@@ -66,15 +68,20 @@ namespace Savico.Controllers
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error(int statusCode)
         {
+            var model = new ErrorViewModel
+            {
+                RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
+            };
+
             if (statusCode == 404 || statusCode == 400)
             {
-                return View("Error404");
+                return View("Error404", model);
             }
             else if (statusCode == 500)
             {
-                return View("Error500");
+                return View("Error500", model);
             }
-            return View("Error");
+            return View("Error", model);
         }
     }
 }
