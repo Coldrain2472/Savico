@@ -169,6 +169,101 @@ namespace Savico.Tests
         }
 
         [Test]
+        public async Task AddExpenseAsync_ShouldAddExpense_WhenValidData()
+        {
+            var inputModel = new ExpenseInputViewModel
+            {
+                Amount = 50,
+                Date = new DateTime(2024, 12, 5),
+                CategoryId = 1,
+                Description = "New electricity bill"
+            };
+
+            await expenseService.AddExpenseAsync(inputModel, userId);
+
+            var addedExpense = await context.Expenses.FirstOrDefaultAsync(e => e.UserId == userId && e.Amount == 50);
+
+            //Assert
+            Assert.IsNotNull(addedExpense);
+            Assert.That(addedExpense.Description, Is.EqualTo("New electricity bill"));
+            Assert.That(addedExpense.Date, Is.EqualTo(new DateTime(2024, 12, 5)));
+            Assert.That(addedExpense.CategoryId, Is.EqualTo(1));
+        }
+
+        [Test]
+        public void AddExpenseAsync_ShouldThrowArgumentException_WhenAmountIsZeroOrNegative()
+        {
+            var inputModel = new ExpenseInputViewModel
+            {
+                Amount = 0,
+                Date = new DateTime(2024, 12, 5),
+                CategoryId = 1,
+                Description = "Electricity bill"
+            };
+
+            // Assert
+            var ex = Assert.ThrowsAsync<ArgumentException>(async () => await expenseService.AddExpenseAsync(inputModel, userId));
+
+            Assert.That(ex.Message, Is.EqualTo("The amount must be greater than zero and a positive number."));
+        }
+
+        [Test]
+        public void AddExpenseAsync_ShouldThrowArgumentException_WhenCategoryIdIsInvalid()
+        {
+            var inputModel = new ExpenseInputViewModel
+            {
+                Amount = 50,
+                Date = new DateTime(2024, 12, 5),
+                CategoryId = 0,  
+                Description = "Electricity bill"
+            };
+
+            var ex = Assert.ThrowsAsync<ArgumentException>(async () => await expenseService.AddExpenseAsync(inputModel, userId));
+
+            // Assert
+            Assert.That(ex.Message, Is.EqualTo("Please select a valid category."));
+        }
+
+        [Test]
+        public void AddExpenseAsync_ShouldThrowArgumentException_WhenDateIsInvalid()
+        {
+            var inputModel = new ExpenseInputViewModel
+            {
+                Amount = 50,
+                Date = new DateTime(2022, 12, 5),  
+                CategoryId = 1,
+                Description = "Electricity bill"
+            };
+
+            var ex = Assert.ThrowsAsync<ArgumentException>(async () => await expenseService.AddExpenseAsync(inputModel, userId));
+
+            //Assert
+            Assert.That(ex.Message, Is.EqualTo("The date must be a valid date"));
+        }
+
+        [Test]
+        public async Task AddExpenseAsync_ShouldCreateBudget_WhenNoBudgetExistsForUser()
+        {
+            var inputModel = new ExpenseInputViewModel
+            {
+                Amount = 200,
+                Date = new DateTime(2024, 12, 5),
+                CategoryId = 1,
+                Description = "Test expense without budget"
+            };
+
+            var newUserId = Guid.NewGuid().ToString();
+
+            await expenseService.AddExpenseAsync(inputModel, newUserId);
+
+            var budget = await context.Budgets.FirstOrDefaultAsync(b => b.UserId == newUserId);
+
+            //Assert
+            Assert.IsNotNull(budget);
+            Assert.That(budget.TotalAmount, Is.EqualTo(0));
+        }
+
+        [Test]
         public async Task GetExpenseForEditAsync_ShouldReturnCorrectExpense()
         {
             // Arrange
@@ -253,6 +348,57 @@ namespace Savico.Tests
 
             Assert.That(updatedExpense.Amount.Equals(model.Amount));
             Assert.That(updatedExpense.Description.Equals(model.Description));
+        }
+
+        [Test]
+        public void UpdateExpenseAsync_ShouldThrowArgumentException_WhenAmountIsZeroOrNegative()
+        {
+            var inputModel = new ExpenseInputViewModel
+            {
+                Amount = 0,
+                Date = new DateTime(2024, 12, 5),
+                CategoryId = 1,
+                Description = "Electricity bill"
+            };
+
+            // Assert
+            var ex = Assert.ThrowsAsync<ArgumentException>(async () => await expenseService.UpdateExpenseAsync(1, inputModel, userId));
+
+            Assert.That(ex.Message, Is.EqualTo("The amount must be greater than zero and a positive number."));
+        }
+
+        [Test]
+        public void UpdateExpenseAsync_ShouldThrowArgumentException_WhenCategoryIdIsInvalid()
+        {
+            var inputModel = new ExpenseInputViewModel
+            {
+                Amount = 50,
+                Date = new DateTime(2024, 12, 5),
+                CategoryId = 0,  
+                Description = "Electricity bill"
+            };
+
+            // Assert 
+            var ex = Assert.ThrowsAsync<ArgumentException>(async () => await expenseService.UpdateExpenseAsync(1, inputModel, userId));
+
+            Assert.That(ex.Message, Is.EqualTo("Please select a valid category."));
+        }
+
+        [Test]
+        public void UpdateExpenseAsync_ShouldThrowArgumentException_WhenDateIsInvalid()
+        {
+            var inputModel = new ExpenseInputViewModel
+            {
+                Amount = 50,
+                Date = new DateTime(2022, 12, 5), 
+                CategoryId = 1,
+                Description = "Electricity bill"
+            };
+
+            // Assert 
+            var ex = Assert.ThrowsAsync<ArgumentException>(async () => await expenseService.UpdateExpenseAsync(1, inputModel, userId));
+
+            Assert.That(ex.Message, Is.EqualTo("The date must be a valid date"));
         }
 
         [Test]

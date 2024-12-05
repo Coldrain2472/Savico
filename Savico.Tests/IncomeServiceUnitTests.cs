@@ -91,6 +91,76 @@
         }
 
         [Test]
+        public async Task AddIncomeAsync_ShouldAddIncome_WhenValidData()
+        {
+            var model = new IncomeInputViewModel
+            {
+                Amount = 1500,
+                Date = new DateTime(2024, 12, 5),
+                Source = "Bonus"
+            };
+
+            await incomeService.AddIncomeAsync(model, userId);
+
+            var addedIncome = await context.Incomes.FirstOrDefaultAsync(i => i.UserId == userId && i.Amount == 1500);
+
+            // Assert
+            Assert.IsNotNull(addedIncome);
+            Assert.That(addedIncome.Source, Is.EqualTo("Bonus"));
+            Assert.That(addedIncome.Date, Is.EqualTo(new DateTime(2024, 12, 5)));
+        }
+
+        [Test]
+        public void AddIncomeAsync_ShouldThrowArgumentException_WhenAmountIsZeroOrNegative()
+        {
+            var model = new IncomeInputViewModel
+            {
+                Amount = 0,
+                Date = new DateTime(2024, 12, 5),
+                Source = "Bonus"
+            };
+
+            // Assert
+            var ex = Assert.ThrowsAsync<ArgumentException>(async () => await incomeService.AddIncomeAsync(model, userId));
+
+            Assert.That(ex.Message, Is.EqualTo("Income amount must be greater than zero."));
+        }
+
+        [Test]
+        public void AddIncomeAsync_ShouldThrowArgumentException_WhenDateIsBefore2023()
+        {
+            var model = new IncomeInputViewModel
+            {
+                Amount = 1500,
+                Date = new DateTime(2022, 12, 5),
+                Source = "Bonus"
+            };
+
+            // Assert 
+            var ex = Assert.ThrowsAsync<ArgumentException>(async () => await incomeService.AddIncomeAsync(model, userId));
+
+            Assert.That(ex.Message, Is.EqualTo("Date must be realistic."));
+        }
+
+        [Test]
+        public void AddIncomeAsync_ShouldThrowArgumentException_WhenUserNotFound()
+        {
+            var model = new IncomeInputViewModel
+            {
+                Amount = 1500,
+                Date = new DateTime(2024, 12, 5),
+                Source = "Bonus"
+            };
+
+            var invalidUserId = Guid.NewGuid().ToString();
+
+            // Assert
+            var ex = Assert.ThrowsAsync<ArgumentException>(async () => await incomeService.AddIncomeAsync(model, invalidUserId));
+
+            Assert.That(ex.Message, Is.EqualTo("User not found."));
+        }
+
+        [Test]
         public async Task AddIncomeAsync_ShouldAddIncomeSuccessfully() 
         {
             // Arrange
@@ -179,6 +249,73 @@
             Assert.That(updatedIncome.Amount.Equals(model.Amount));
             Assert.That(updatedIncome.Source.Equals(model.Source));
             Assert.That(updatedIncome.Date.Equals(model.Date));
+        }
+
+        [Test]
+        public async Task UpdateIncomeAsync_ShouldUpdateIncome_WhenValidData()
+        {
+            var model = new IncomeInputViewModel
+            {
+                Amount = 2500,
+                Date = new DateTime(2024, 12, 3),
+                Source = "Bonus"
+            };
+
+            await incomeService.UpdateIncomeAsync(1, model, userId);
+
+            var updatedIncome = await context.Incomes.FirstOrDefaultAsync(i => i.Id == 1 && i.UserId == userId);
+
+            Assert.IsNotNull(updatedIncome);
+            Assert.That(updatedIncome.Amount, Is.EqualTo(2500));
+            Assert.That(updatedIncome.Source, Is.EqualTo("Bonus"));
+            Assert.That(updatedIncome.Date, Is.EqualTo(new DateTime(2024, 12, 3)));
+        }
+
+        [Test]
+        public void UpdateIncomeAsync_ShouldThrowArgumentException_WhenAmountIsZeroOrNegative()
+        {
+            var model = new IncomeInputViewModel
+            {
+                Amount = 0,
+                Date = new DateTime(2024, 12, 3),
+                Source = "Bonus"
+            };
+
+            var ex = Assert.ThrowsAsync<ArgumentException>(async () => await incomeService.UpdateIncomeAsync(1, model, userId));
+
+            Assert.That(ex.Message, Is.EqualTo("Income amount must be greater than zero."));
+        }
+
+        [Test]
+        public void UpdateIncomeAsync_ShouldThrowArgumentException_WhenDateIsBefore2023()
+        {
+            var model = new IncomeInputViewModel
+            {
+                Amount = 2500,
+                Date = new DateTime(2022, 12, 3),
+                Source = "Bonus"
+            };
+
+            var ex = Assert.ThrowsAsync<ArgumentException>(async () => await incomeService.UpdateIncomeAsync(1, model, userId));
+
+            Assert.That(ex.Message, Is.EqualTo("Date must be realistic."));
+        }
+
+        [Test]
+        public async Task UpdateIncomeAsync_ShouldNotUpdate_WhenIncomeNotFound()
+        {
+            var model = new IncomeInputViewModel
+            {
+                Amount = 2500,
+                Date = new DateTime(2024, 12, 3),
+                Source = "Bonus"
+            };
+
+            await incomeService.UpdateIncomeAsync(999, model, userId);
+
+            var income = await context.Incomes.FirstOrDefaultAsync(i => i.Id == 999 && i.UserId == userId);
+
+            Assert.IsNull(income);
         }
 
 
