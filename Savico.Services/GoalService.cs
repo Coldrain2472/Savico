@@ -31,6 +31,16 @@
 
         public async Task UpdateGoalAsync(int goalId, GoalInputViewModel model, string userId)
         {
+            if (model.TargetAmount <= 0)
+            {
+                throw new ArgumentException("The target amount must be greater than zero and a positive number.");
+            }
+
+            if (model.TargetDate <= DateTime.Now)
+            {
+                throw new ArgumentException("The target date must be in the future.");
+            }
+
             var goal = await context.Goals
                 .FirstOrDefaultAsync(g => g.Id == goalId && g.UserId == userId);
 
@@ -148,6 +158,16 @@
             var user = await context.Users
                 .Include(u => u.Budget)
                 .FirstOrDefaultAsync(u => u.Id == userId);
+
+            if (model.TargetAmount <= 0)
+            {
+                throw new ArgumentException("The target amount must be greater than zero and a positive number.");
+            }
+
+            if (model.TargetDate <= DateTime.Now)
+            {
+                throw new ArgumentException("The target date must be in the future.");
+            }
 
             var newGoal = new Goal
             {

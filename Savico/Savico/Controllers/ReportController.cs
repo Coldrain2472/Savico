@@ -42,21 +42,46 @@
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Generate(ReportInputViewModel model)
         {
-            if (!ModelState.IsValid)
+            try
             {
+                if (model.StartDate == DateTime.MinValue || model.EndDate == DateTime.MinValue)
+                {
+                    ModelState.AddModelError(string.Empty, "Start Date and End Date must be valid dates.");
+                }
+
+                if (model.StartDate > model.EndDate)
+                {
+                    ModelState.AddModelError(string.Empty, "Start Date cannot be later than End Date.");
+                }
+
+                if (!ModelState.IsValid)
+                {
+                    return View(model);
+                }
+
+                var userId = GetUserId();
+
+                if (userId == null)
+                {
+                    return Unauthorized();
+                }
+
+                var report = await reportService.GenerateReportAsync(userId, model.StartDate, model.EndDate);
+
+                return RedirectToAction(nameof(Details), new { id = report.Id });
+            }
+            catch (ArgumentException ex)
+            {
+                ModelState.AddModelError(string.Empty, ex.Message);
+
                 return View(model);
             }
-
-            var userId = GetUserId();
-
-            if (userId == null)
+            catch (Exception ex)
             {
-                return Unauthorized();
+                ModelState.AddModelError(string.Empty, "An unexpected error occurred. Please try again later.");
+
+                return View(model);
             }
-
-            var report = await reportService.GenerateReportAsync(userId, model.StartDate, model.EndDate);
-
-            return RedirectToAction(nameof(Details), new { id = report.Id });
         }
 
         [HttpGet]
@@ -96,7 +121,7 @@
                 return RedirectToAction(nameof(Index));
             }
 
-            return BadRequest(); 
+            return BadRequest();
         }
 
         private string GetUserId()

@@ -7,7 +7,7 @@
 
     public interface IIncomeService
     {
-        Task AddIncomeAsync(IncomeInputViewModel model, string userId); // adds an income
+       Task AddIncomeAsync(IncomeInputViewModel model, string userId); // adds an income
 
         Task DeleteIncomeAsync(int incomeId, string userId);  // deletes an income
 

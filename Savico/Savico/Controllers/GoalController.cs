@@ -1,10 +1,7 @@
 ﻿namespace Savico.Controllers
 {
-    using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
-    using Savico.Core.Models;
     using Savico.Core.Models.ViewModels.Goal;
-    using Savico.Services;
     using Savico.Services.Contracts;
     using System.Security.Claims;
 
@@ -56,14 +53,42 @@
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(GoalInputViewModel model)
         {
-            if (ModelState.IsValid)
+            try
             {
-                var userId = GetUserId();
-                await goalService.AddGoalAsync(model, userId);
-                return RedirectToAction(nameof(Index));
-            }
+                if (ModelState.IsValid)
+                {
+                    if (model.TargetAmount <= 0)
+                    {
+                        ModelState.AddModelError("TargetAmount", "Target amount must be greater than zero.");
+                    }
 
-            return View(model);
+                    if (model.TargetDate <= DateTime.Now)
+                    {
+                        ModelState.AddModelError("TargetDate", "Target date must be in the future.");
+                    }
+
+                    if (ModelState.IsValid) 
+                    {
+                        var userId = GetUserId();
+
+                        await goalService.AddGoalAsync(model, userId); 
+
+                        return RedirectToAction(nameof(Index)); 
+                    }
+                }
+
+                return View(model);
+            }
+            catch (ArgumentException ex)
+            {
+                ModelState.AddModelError(string.Empty, ex.Message); 
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, "An unexpected error occurred. Please try again later.");
+                return View(model); 
+            }
         }
 
         [HttpGet]
@@ -87,13 +112,31 @@
         {
             var userId = GetUserId();
 
-            if (!ModelState.IsValid)
+            try
             {
+                if (!ModelState.IsValid)
+                {
+                    return View(model);
+                }
+                else
+                {
+                    await goalService.UpdateGoalAsync(id, model, userId);
+
+                    return RedirectToAction(nameof(Index));
+                }
+            }
+            catch (ArgumentException ex)
+            {
+                ModelState.AddModelError(string.Empty, ex.Message);
+
                 return View(model);
             }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, "An unexpected error occurred. Please try again later.");
 
-            await goalService.UpdateGoalAsync(id, model, userId);
-            return RedirectToAction(nameof(Index));
+                return View(model);
+            }
         }
 
         [HttpGet]
@@ -116,14 +159,25 @@
         {
             var userId = GetUserId();
 
-            await goalService.DeleteGoalAsync(id, userId);
-            return RedirectToAction(nameof(Index));
+            try
+            {
+                await goalService.DeleteGoalAsync(id, userId);
+
+                return RedirectToAction(nameof(Index));
+            }
+            catch (InvalidOperationException ex)
+            {
+                TempData["ErrorMessage"] = ex.Message;
+
+                return RedirectToAction("Delete", new { id });
+            }
         }
 
         [HttpGet]
         public async Task<IActionResult> Contribute(int id)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
             var model = await goalService.GetGoalContributeViewModelAsync(id, userId);
 
             if (model == null)
@@ -145,6 +199,7 @@
                 try
                 {
                     await goalService.ContributeToGoalAsync(model, userId);
+
                     return RedirectToAction(nameof(Index));
                 }
                 catch (InvalidOperationException ex)

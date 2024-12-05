@@ -9,7 +9,7 @@
         public int Id { get; set; }
 
         [Required]
-        [Range(0.01, double.MaxValue, ErrorMessage = RangeErrorMessage)]
+        [Range(0.1, double.MaxValue, ErrorMessage = RangeErrorMessage)]
         public decimal TargetAmount { get; set; }
 
         [Required]

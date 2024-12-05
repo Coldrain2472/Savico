@@ -25,15 +25,28 @@
                 throw new ArgumentException("Income amount must be greater than zero.");
             }
 
-            var user = await context.Users.FindAsync(userId);
+            if (!DateTime.TryParseExact(model.Date.ToString("dd.MM.yyyy"),"dd.MM.yyyy",System.Globalization.CultureInfo.InvariantCulture,
+                    System.Globalization.DateTimeStyles.None, out DateTime parsedDate))
+            {
+                throw new ArgumentException("Invalid date format. Please use dd.MM.yyyy.");
+            }
 
-            var userCurrency = user?.Currency;
+            if (parsedDate.Year < 2023)
+            {
+                throw new ArgumentException("Date must be realistic.");
+            }
+
+            var user = await context.Users.FindAsync(userId);
+            if (user == null)
+            {
+                throw new ArgumentException("User not found.");
+            }
 
             var income = new Income
             {
                 Amount = model.Amount,
                 Source = model.Source,
-                Date = model.Date,
+                Date = parsedDate,
                 UserId = userId
             };
 
@@ -105,6 +118,22 @@
         {
             var income = await context.Incomes
               .FirstOrDefaultAsync(i => i.Id == incomeId && i.UserId == userId);
+
+            if (model.Amount <= 0)
+            {
+                throw new ArgumentException("Income amount must be greater than zero.");
+            }
+
+            if (!DateTime.TryParseExact(model.Date.ToString("dd.MM.yyyy"), "dd.MM.yyyy", System.Globalization.CultureInfo.InvariantCulture,
+                    System.Globalization.DateTimeStyles.None, out DateTime parsedDate))
+            {
+                throw new ArgumentException("Invalid date format. Please use dd.MM.yyyy.");
+            }
+
+            if (parsedDate.Year < 2023)
+            {
+                throw new ArgumentException("Date must be realistic.");
+            }
 
             if (income != null && income.UserId == userId)
             {

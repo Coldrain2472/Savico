@@ -37,7 +37,6 @@
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(IncomeInputViewModel model)
         {
             if (!ModelState.IsValid)
@@ -45,27 +44,42 @@
                 return View(model);
             }
 
-            string userId = GetUserId();
+            try
+            {
+                await incomeService.AddIncomeAsync(model, GetUserId());
 
-            await incomeService.AddIncomeAsync(model, userId);
+                return RedirectToAction("Index", "Income");
+            }
+            catch (ArgumentException ex)
+            {
+                ModelState.AddModelError(string.Empty, ex.Message);
 
-            return RedirectToAction(nameof(Index));
+                return View(model);
+            }
+            catch (Exception)
+            {
+                ModelState.AddModelError(string.Empty, "An unexpected error occurred. Please try again later.");
+
+                return View(model);
+            }
         }
 
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
             var userId = GetUserId();
+
             var income = await incomeService.GetIncomeForEditAsync(id, userId);
+
             if (income == null)
             {
                 return BadRequest();
             }
+
             return View(income);
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, IncomeInputViewModel model)
         {
             if (!ModelState.IsValid)
@@ -74,8 +88,24 @@
             }
 
             string userId = GetUserId();
-            await incomeService.UpdateIncomeAsync(id, model, userId);
-            return RedirectToAction(nameof(Index));
+
+            try
+            {
+                await incomeService.UpdateIncomeAsync(id, model, userId);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (ArgumentException ex)
+            {
+                ModelState.AddModelError(string.Empty, ex.Message);
+
+                return View(model);
+            }
+            catch (Exception)
+            {
+                ModelState.AddModelError(string.Empty, "An unexpected error occurred. Please try again later.");
+
+                return View(model);
+            }
         }
 
         [HttpGet]

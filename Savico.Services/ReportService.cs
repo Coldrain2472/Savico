@@ -23,6 +23,10 @@
             {
                 throw new ArgumentException("Start Date cannot be later than End Date.");
             }
+            if (startDate.Year < 2023)
+            {
+                throw new ArgumentException("Start Date must be a valid date");
+            }
 
             var incomes = await context.Incomes
                 .Where(i => i.UserId == userId && i.Date >= startDate && i.Date <= endDate && !i.IsDeleted)

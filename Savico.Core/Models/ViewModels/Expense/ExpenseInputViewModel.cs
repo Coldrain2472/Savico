@@ -13,11 +13,13 @@
         public decimal Amount { get; set; }
 
         [Required]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}", ApplyFormatInEditMode = true)]
         public DateTime Date { get; set; }
 
         public string? Description { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "You must choose a category")]
         public int CategoryId { get; set; }
 
         public ICollection<CategoryViewModel> Categories { get; set; } = new HashSet<CategoryViewModel>();

@@ -39,6 +39,21 @@
 
         public async Task AddExpenseAsync(ExpenseInputViewModel inputModel, string userId)
         {
+            if (inputModel.Amount <= 0)
+            {
+                throw new ArgumentException("The amount must be greater than zero and a positive number.");
+            }
+
+            if (inputModel.CategoryId <= 0)
+            {
+                throw new ArgumentException("Please select a valid category.");
+            }
+
+            if (inputModel.Date == default || inputModel.Date.Year < 2023)
+            {
+                throw new ArgumentException("The date must be a valid date");
+            }
+
             var budget = await context.Budgets
                .FirstOrDefaultAsync(b => b.UserId == userId);
 
@@ -153,6 +168,21 @@
 
         public async Task UpdateExpenseAsync(int expenseId, ExpenseInputViewModel model, string userId)
         {
+            if (model.Amount <= 0)
+            {
+                throw new ArgumentException("The amount must be greater than zero and a positive number.");
+            }
+
+            if (model.CategoryId <= 0)
+            {
+                throw new ArgumentException("Please select a valid category.");
+            }
+
+            if (model.Date == default || model.Date.Year < 2023)
+            {
+                throw new ArgumentException("The date must be a valid date");
+            }
+
             var expense = await context.Expenses
                .FirstOrDefaultAsync(e => e.Id == expenseId && e.UserId == userId);
 
