@@ -54,9 +54,9 @@ It’s that simple: input your incomes, expenses, and goals, and let Savico calc
 # 💻 Technologies
 - **Backend**: ASP.NET Core with MVC pattern.
 - **Frontend**: Razor Pages with Bootstrap Theme SB Admin 2.
-- **Database**: MS SQL Server
+- **Database**: MS SQL Server.
 - **Charting**: Chart.js (utilizing HTML5 canvas).
-- **Testing**: NUnit
+- **Testing**: NUnit.
 
 # 📄 License:
 This project is licensed under the Apache-2.0 license - see the LICENSE.md file for details.
