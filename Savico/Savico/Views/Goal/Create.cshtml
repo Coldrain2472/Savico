@@ -9,6 +9,7 @@
     <h1>Create Goal</h1>
 
     <form asp-action="Create" method="post">
+        @Html.AntiForgeryToken()
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group">
             <label for="TargetAmount">Target Amount</label>

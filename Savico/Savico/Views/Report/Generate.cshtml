@@ -21,6 +21,7 @@
     }
 
     <form asp-action="Generate" method="post">
+        @Html.AntiForgeryToken()
         <div class="form-group">
             <label asp-for="StartDate" class="form-label">Start Date</label>
             <input type="text" asp-for="StartDate" class="form-control"

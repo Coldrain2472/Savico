@@ -55,6 +55,7 @@
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(IncomeInputViewModel model)
         {
             if (!ModelState.IsValid)
@@ -107,6 +108,7 @@
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, IncomeInputViewModel model)
         {
             if (!ModelState.IsValid)

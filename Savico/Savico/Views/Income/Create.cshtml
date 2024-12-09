@@ -10,6 +10,7 @@
 </h1>
 
 <form asp-action="Create" method="post">
+    @Html.AntiForgeryToken()
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
     <div class="form-group">
