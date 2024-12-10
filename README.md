@@ -43,7 +43,7 @@ It’s that simple: input your incomes, expenses, and goals, and let Savico calc
 - Available Budget.
 
 📈 **Visualizations:**
-- A small, hidden (in the Home Index View, click on the Total Expenses card) and interactive pie chart providing a quick financial overview (powered by Chart.js and HTML5 Canvas).
+- A small, hidden (in the Home Index View, click on the Total Expenses card) and interactive pie chart providing a quick financial overview - expense breakdown by category (powered by Chart.js and HTML5 Canvas).
 
 # 🔐 Security:
 - **CSRF Protection**: Implemented via `@Html.AntiForgeryToken()` in the views and `[ValidateAntiForgeryToken]` in the controllers.
@@ -67,5 +67,6 @@ This project is licensed under the Apache-2.0 license - see the LICENSE.md file 
 - **Multi-Currency Support**: Enable users to set their preferred currency and convert between currencies based on real-time exchange rates.
 - **Notifications**: Provide notifications or alerts for users when they’re approaching or exceeding their budget limits.
 - **Advanced Reporting**: Implement more advanced reporting options like trend analysis and forecast based on user’s spending habits.
+- **Pagination**: Implement pagination for the reports (currently, pagination is only available for the expenses).
   
 # :construction: THIS PROJECT IS STILL UNDER CONSTRUCTION :construction:
