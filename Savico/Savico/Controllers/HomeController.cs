@@ -83,5 +83,11 @@ namespace Savico.Controllers
             }
             return View("Error", model);
         }
+
+        // use this method to test the custom error500 view -> write in the URL /Home/Test
+        //public IActionResult Test()
+        //{
+        //    return StatusCode(500);
+        //}
     }
 }
