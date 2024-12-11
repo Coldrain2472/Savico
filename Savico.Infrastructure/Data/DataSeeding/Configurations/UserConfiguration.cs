@@ -15,6 +15,7 @@
 
         private IEnumerable<User> CreateUsers()
         {
+            // test user
             string userEmail = "testuser123@gmail.com";
 
             User userOne = new User()
@@ -36,6 +37,7 @@
 
             userOne.PasswordHash = passwordHasher.HashPassword(userOne, "Test@123");
 
+            // test admin
             string adminEmail = "admin@admin.com";
 
             User adminUser = new User()
