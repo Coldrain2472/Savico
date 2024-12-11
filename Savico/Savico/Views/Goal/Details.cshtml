@@ -1,44 +1,49 @@
-﻿﻿@using Savico.Core.Models.ViewModels.Goal
+﻿@using Savico.Core.Models.ViewModels.Goal
 @model GoalViewModel
 
 @{
-	ViewData["Title"] = "Goal Details";
+    ViewData["Title"] = "Goal Details";
 }
 
 <div class="container mt-5">
-	<h2>Goal Details</h2>
+    <h2>Goal Details</h2>
 
-	<div class="card shadow-sm p-4 mb-4">
-		<p><strong>Target Date:</strong> @Model.TargetDate.ToString("dd.MM.yyyy")</p>
-		<p><strong>Target Amount:</strong> @Model.TargetAmount @Model.Currency</p>
-		<p><strong>Current Amount:</strong> @Model.CurrentAmount @Model.Currency</p>
-		<p>
-			@if (Model.LastContributionDate.HasValue)
-			{
-				<span>
-					<strong>
-						Last Contribution Date
-					</strong>
-					: @Model.LastContributionDate.Value.ToString("dd.MM.yyyy")
-				</span>
-			}
-			else
-			{
-				<span>No contributions yet.</span>
-			}
-		</p>
-		<p><strong>Description:</strong> @Model.Description</p>
-	</div>
-	<div class="mt-3">
-		<a asp-action="Index" class="btn btn-secondary">
-			<i class="fas fa-arrow-left"></i> Back to Goals
-		</a>
-		<a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">
-			<i class="fas fa-edit"></i> Edit
-		</a>
-		<a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">
-			<i class="fas fa-trash-alt"></i> Delete
-		</a>
-	</div>
+    <div class="card shadow-sm p-4 mb-4">
+        <p><strong>Target Date:</strong> @Model.TargetDate.ToString("dd.MM.yyyy")</p>
+        <p><strong>Target Amount:</strong> @Model.TargetAmount @Model.Currency</p>
+        <p><strong>Current Amount:</strong> @Model.CurrentAmount @Model.Currency</p>
+        <p>
+            @if (Model.LastContributionDate.HasValue)
+            {
+                <span>
+                    <strong>
+                        Last Contribution Date
+                    </strong>
+                    : @Model.LastContributionDate.Value.ToString("dd.MM.yyyy")
+                </span>
+            }
+            else
+            {
+                <span>No contributions yet.</span>
+            }
+        </p>
+        <p><strong>Description:</strong> @Model.Description</p>
+    </div>
+
+    <div class="mt-3">
+        <a asp-action="Index" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Back to Goals
+        </a>
+
+        @if (!Model.IsAchieved)
+        {
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">
+                <i class="fas fa-edit"></i> Edit
+            </a>
+
+            <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">
+                <i class="fas fa-trash-alt"></i> Delete
+            </a>
+        }
+    </div>
 </div>
-
