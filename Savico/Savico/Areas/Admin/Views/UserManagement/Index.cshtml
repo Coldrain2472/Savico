@@ -4,6 +4,7 @@
 @{
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
     ViewData["Title"] = "All Users";
+    var loggedInUserId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value; // Get the logged-in user's ID
 }
 
 <div class="container-fluid px-4 mt-4">
@@ -33,32 +34,39 @@
                                     }
                                 </td>
                                 <td>
-                                    @if (!user.Roles.Contains("Admin"))
+                                    @if (user.Id != loggedInUserId) 
                                     {
-                                        <form method="post" action="@Url.Action("Promote", "UserManagement", new { userId = user.Id })" style="display:inline;">
-                                            <button type="submit" class="btn btn-success btn-sm" title="Promote to Admin">Promote</button>
-                                        </form>
-                                    }
+                                        @if (!user.Roles.Contains("Admin"))
+                                        {
+                                            <form method="post" action="@Url.Action("Promote", "UserManagement", new { userId = user.Id })" style="display:inline;">
+                                                <button type="submit" class="btn btn-success btn-sm" title="Promote to Admin">Promote</button>
+                                            </form>
+                                        }
 
-                                    @if (user.Roles.Contains("Admin"))
-                                    {
-                                        <form method="post" action="@Url.Action("Demote", "UserManagement", new { userId = user.Id })" style="display:inline;">
-                                            <button type="submit" class="btn btn-warning btn-sm" title="Demote to User">Demote</button>
-                                        </form>
-                                    }
+                                        @if (user.Roles.Contains("Admin"))
+                                        {
+                                            <form method="post" action="@Url.Action("Demote", "UserManagement", new { userId = user.Id })" style="display:inline;">
+                                                <button type="submit" class="btn btn-warning btn-sm" title="Demote to User">Demote</button>
+                                            </form>
+                                        }
 
-                                    @if (user.LockoutEnd == null || user.LockoutEnd <= DateTime.UtcNow)
-                                    {
-                                        <form method="post" action="@Url.Action("Ban", "UserManagement", new { userId = user.Id })" style="display:inline;">
-                                            <button type="submit" class="btn btn-danger btn-sm" title="Ban User">Ban</button>
-                                        </form>
-                                    }
+                                        @if (user.LockoutEnd == null || user.LockoutEnd <= DateTime.UtcNow)
+                                        {
+                                            <form method="post" action="@Url.Action("Ban", "UserManagement", new { userId = user.Id })" style="display:inline;">
+                                                <button type="submit" class="btn btn-danger btn-sm" title="Ban User">Ban</button>
+                                            </form>
+                                        }
 
-                                    @if (user.LockoutEnd.HasValue && user.LockoutEnd > DateTime.UtcNow)
+                                        @if (user.LockoutEnd.HasValue && user.LockoutEnd > DateTime.UtcNow)
+                                        {
+                                            <form method="post" action="@Url.Action("RemoveBan", "UserManagement", new { userId = user.Id })" style="display:inline;">
+                                                <button type="submit" class="btn btn-primary btn-sm" title="Remove Ban">Remove Ban</button>
+                                            </form>
+                                        }
+                                    }
+                                    else
                                     {
-                                        <form method="post" action="@Url.Action("RemoveBan", "UserManagement", new { userId = user.Id })" style="display:inline;">
-                                            <button type="submit" class="btn btn-primary btn-sm" title="Remove Ban">Remove Ban</button>
-                                        </form>
+                                        <span class="text-muted">No actions available.</span>
                                     }
                                 </td>
                             </tr>
