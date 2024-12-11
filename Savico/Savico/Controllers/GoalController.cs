@@ -1,10 +1,12 @@
 ﻿namespace Savico.Controllers
 {
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Savico.Core.Models.ViewModels.Goal;
     using Savico.Services.Contracts;
     using System.Security.Claims;
 
+    [Authorize]
     public class GoalController : Controller
     {
         private readonly IGoalService goalService;
@@ -247,12 +249,12 @@
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Contribute(GoalContributeViewModel model)
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
             if (ModelState.IsValid)
             {
                 try
                 {
+                    var userId = GetUserId();
+
                     await goalService.ContributeToGoalAsync(model, userId);
 
                     return RedirectToAction(nameof(Index));
@@ -260,10 +262,13 @@
                 catch (InvalidOperationException ex)
                 {
                     ModelState.AddModelError(string.Empty, ex.Message);
+
+                    return View(model);
                 }
                 catch (Exception ex)
                 {
                     ModelState.AddModelError(string.Empty, "An unexpected error occurred. Please try again later.");
+
                     return View(model);
                 }
             }
