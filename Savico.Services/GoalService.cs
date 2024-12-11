@@ -52,8 +52,12 @@
             {
                 goal.Description = model.Description;
                 goal.TargetDate = model.TargetDate;
-                goal.CurrentAmount = model.CurrentAmount;
                 goal.TargetAmount = model.TargetAmount;
+
+                if (model.CurrentAmount != 0)
+                {
+                    goal.CurrentAmount = model.CurrentAmount;
+                }
 
                 // mark as achieved if the current amount meets or exceeds the target amount
                 if (goal.CurrentAmount >= goal.TargetAmount)
@@ -224,9 +228,17 @@
                 throw new InvalidOperationException("Insufficient budget for contribution.");
             }
 
+            var maxAllowedContribution = goal.TargetAmount - goal.CurrentAmount;
+
+            if (model.ContributionAmount > maxAllowedContribution)
+            {
+                throw new InvalidOperationException($"Contribution exceeds the required amount. You can contribute up to {maxAllowedContribution} {goal.User!.Currency}.");
+            }
+
             // updating the goal's current amount
             goal.CurrentAmount += model.ContributionAmount;
             goal.LastContributionDate = DateTime.UtcNow;
+
             if (goal.CurrentAmount >= goal.TargetAmount)
             {
                 goal.IsAchieved = true;
